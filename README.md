@@ -52,5 +52,5 @@ Veja [docs/security-2015.md](docs/security-2015.md) para a lista completa das me
   + [~~Download Point 3 - Mediafire~~](https://www.mediafire.com/file/sipe7u37cn3f3l8/January_14.tar/file)
   + [Download Point 4 - CatBox](https://files.catbox.moe/xdux95.7z)
 
-* Fiddler Classic (opcional, o DNS do Raspberry Pi ou o web proxy do launcher substituem):
+* Fiddler Classic (opcional, só para os executáveis oficiais de 2015; o DNS do Raspberry Pi cuida do resto):
   + [Download Point 1 - Telerik](https://www.telerik.com/download/fiddler)

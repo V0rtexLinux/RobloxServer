@@ -213,7 +213,8 @@ def main():
     check("[====[Noob_1]====]" in text and "game:SetPlaceID(%d)" % place_id in text, "Visit.ashx personalised")
     check("player:SetSuperSafeChat(true)" in text, "under 13 account gets SuperSafeChat")
     status, _, body = anon.get("/game/studio.ashx")
-    check(json.loads(body)["BaseUrl"] == "http://www.roblox.com/", "Game/Studio.ashx")
+    check(json.loads(body)["BaseUrl"] == BASE + "/", "Game/Studio.ashx uses the address the request came in on")
+    check("roblox.com" not in text.replace("roblox.xsd", ""), "Visit.ashx does not point at roblox.com")
 
     print("Game servers, tickets and join")
     status, headers, body = admin.post_form("/Game/Servers.ashx", {"action": "register", "placeId": place_id,
@@ -230,7 +231,8 @@ def main():
     status, _, body = player.get("/Game/PlaceLauncher.ashx?request=RequestGame&placeId=%d" % place_id)
     launch = json.loads(body)
     check(launch["status"] == 2 and launch["jobId"] == job["jobId"], "PlaceLauncher finds the job")
-    status, _, body = player.get(launch["joinScriptUrl"].replace("http://www.roblox.com", BASE))
+    check(launch["joinScriptUrl"].startswith(BASE + "/Game/Join.ashx"), "joinScriptUrl uses the request address")
+    status, _, body = player.get(launch["joinScriptUrl"])
     text = body.decode()
     check(verify_rbxsig(text, key_xml), "Join.ashx signature verifies")
     join = json.loads(text.split("%", 2)[2])

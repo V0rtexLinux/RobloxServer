@@ -6,7 +6,7 @@ O Pi fica ligado 24 h gastando ~1 W e faz o papel de "borda" da rede:
 Internet ──► roteador ──► Raspberry Pi Zero 2W (192.168.1.2)
                              ├─ nginx :80  ──────────► site ASP.NET (IIS no PC, ou Mono no próprio Pi)
                              ├─ iptables UDP 53640 ──► PC que hospeda o jogo pelo launcher
-                             ├─ dnsmasq: www.roblox.com → 192.168.1.2 (sem Fiddler/hosts na rede)
+                             ├─ dnsmasq: robloxserver.lan → 192.168.1.2 (domínio próprio, sem hosts na rede)
                              └─ upnpc: abre as portas no roteador a cada 30 min (+ DDNS opcional)
 ```
 
@@ -37,14 +37,14 @@ Para ver o que seria gerado sem instalar nada: `RENDER_ONLY=1 ./install.sh` (arq
 | `SITE_HOST` / `SITE_PORT` | `192.168.1.10` / `80` | onde está o IIS (modo `remote`) |
 | `GAME_FORWARDS` | `53640:192.168.1.10 53641:192.168.1.11:53640` | `porta_externa:ip_do_pc[:porta_interna]`, um por anfitrião |
 | `GAME_PROTOCOLS` | `udp` | o Roblox usa UDP; adicione `tcp` só se precisar |
-| `DNS_ENABLED` / `DNS_HOSTS` | `yes` | nomes do Roblox 2015 que passam a apontar para o Pi |
+| `DNS_ENABLED` / `DNS_HOSTS` | `yes` / `robloxserver.lan www.robloxserver.lan api.robloxserver.lan` | nomes próprios do servidor que passam a apontar para o Pi (o `www.roblox.com` não é tocado) |
 | `UPNP_ENABLED` | `yes` | pede ao roteador para abrir a porta 80/TCP e as portas de jogo |
 | `DDNS_URL` | URL do DuckDNS | atualiza o DNS dinâmico junto com o UPnP |
 
 ## 3. Depois de instalar
 
 * **Roteador:** se não tiver UPnP, encaminhe manualmente a porta 80/TCP e as portas de jogo (UDP) para o `PI_IP`.
-  Configure o **DNS do DHCP** do roteador para o `PI_IP` (assim todo PC da casa acha o `www.roblox.com` falso).
+  Configure o **DNS do DHCP** do roteador para o `PI_IP` (assim todo PC da casa acha `http://robloxserver.lan/`).
 * **Web.config do site:** coloque o `PI_IP` em `TrustedProxies` (modo `remote`) e o seu IP público / nome
   DDNS em `PublicGameAddress`. Jogadores de fora recebem esse endereço; os da rede recebem o IP local do PC.
 * **Launcher de quem hospeda:** use a porta configurada em `GAME_FORWARDS` e, em *Alternate Server IP*,

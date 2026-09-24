@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Hosting;
 
 namespace RobloxServer
@@ -42,26 +44,70 @@ namespace RobloxServer
         public static string SiteName { get { return Get("SiteName", "ROBLOX"); } }
 
         /// <summary>
-        /// The URL clients use to reach this site, with a trailing slash. 2015 clients hardcode
-        /// http://www.roblox.com/, so by default we keep that and redirect the domain with
-        /// DNS (Raspberry Pi dnsmasq), the hosts file, Fiddler or the Novetus web proxy.
+        /// The URL clients use, with a trailing slash. Empty (the default) means "the address this
+        /// request came in on", so the site works as http://192.168.1.2/, http://robloxserver.lan/
+        /// or a DDNS name without configuration. Set it to pin one address in every script.
         /// </summary>
         public static string BaseUrl
         {
             get
             {
-                string url = Get("BaseUrl", "http://www.roblox.com/");
+                string url = Get("BaseUrl", "");
+                if (url.Length == 0)
+                {
+                    url = RequestBaseUrl();
+                }
                 return url.EndsWith("/") ? url : url + "/";
             }
         }
 
+        /// <summary>Base for the api.roblox.com style endpoints. Defaults to BaseUrl.</summary>
         public static string ApiUrl
         {
             get
             {
-                string url = Get("ApiUrl", "http://api.roblox.com/");
+                string url = Get("ApiUrl", "");
+                if (url.Length == 0)
+                {
+                    return BaseUrl;
+                }
                 return url.EndsWith("/") ? url : url + "/";
             }
+        }
+
+        static string RequestBaseUrl()
+        {
+            HttpContext context = HttpContext.Current;
+            if (context == null)
+            {
+                return "http://localhost/";
+            }
+
+            HttpRequest request;
+            try
+            {
+                request = context.Request;
+            }
+            catch (HttpException)
+            {
+                // Application_Start has no request.
+                return "http://localhost/";
+            }
+
+            string host = request.Headers["Host"];
+            if (string.IsNullOrEmpty(host) || !Regex.IsMatch(host, @"^[A-Za-z0-9.\-]+(:[0-9]{1,5})?$|^\[[0-9A-Fa-f:.]+\](:[0-9]{1,5})?$"))
+            {
+                host = request.Url.Authority;
+            }
+
+            string scheme = request.Url.Scheme;
+            string forwardedProto = request.Headers["X-Forwarded-Proto"];
+            if ((forwardedProto == "https" || forwardedProto == "http") && TrustedProxies.Contains(request.UserHostAddress ?? ""))
+            {
+                scheme = forwardedProto;
+            }
+
+            return scheme + "://" + host + "/";
         }
 
         /// <summary>RCC-style shared secret passed as ?apiKey= by game servers (2015 behaviour).</summary>

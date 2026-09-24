@@ -23,7 +23,7 @@ namespace RobloxServer
             }
 
             ScriptSigner.EnsureKey();
-            Logging.Log(LogType.Backend, "Started RobloxServer, clients should use " + Config.BaseUrl);
+            Logging.Log(LogType.Backend, "Started RobloxServer");
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
