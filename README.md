@@ -8,6 +8,21 @@
 
 ## Procurando a documentação? Clique [aqui](docs/welcome.md).
 
+### Rodando no seu PC (Windows) em 1 minuto
+
+> O `127.0.0.1:8081` que aparece nos logs do GitHub Actions é uma máquina temporária do GitHub, usada só
+> para testar e apagada logo depois. O site precisa rodar no **seu** computador.
+
+1. Baixe o site já compilado: aba **Actions** → última execução verde → **Artifacts** → `RobloxServer-site`
+   (ou clone o repositório e tenha o Visual Studio / Build Tools instalado, o script compila sozinho).
+2. Instale o [IIS Express](https://www.microsoft.com/download/details.aspx?id=48264) se ainda não tiver.
+3. Dê dois cliques em **`iniciar-servidor.bat`**. O navegador abre `http://localhost:8080/`.
+4. Crie a primeira conta em *Sign Up* (ela vira administradora) e publique um jogo em *Develop*.
+5. No launcher: *Server Browser* → *ROBLOXSERVER GAMES...* → endereço `localhost:8080`.
+
+O IIS Express só atende este PC. Para outros PCs da rede, a Internet e o Raspberry Pi, use o IIS completo:
+[docs/setting-up.md](docs/setting-up.md).
+
 RobloxServer agora é um site **ASP.NET clássico (Web Forms, .NET Framework 4.6, C# 6 / Visual Studio 2015)**,
 com handlers `.ashx` e páginas `.aspx` como o roblox.com de 2015. Todo o JavaScript (Node/Express) foi removido.
 

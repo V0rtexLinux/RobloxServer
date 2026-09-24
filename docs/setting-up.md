@@ -3,6 +3,14 @@
 O site é um *Web Application* ASP.NET 4.6 (Visual Studio 2015). Ele roda no IIS, no IIS Express
 ou no Mono (veja o [modo local do Raspberry Pi](raspberry-pi.md)).
 
+## Teste rápido (só neste PC)
+
+Dê dois cliques em `iniciar-servidor.bat` na raiz do repositório (precisa do
+[IIS Express](https://www.microsoft.com/download/details.aspx?id=48264)). Ele compila o site se ainda não
+estiver compilado e abre `http://localhost:8080/`. Outra porta: `iniciar-servidor.bat 80`.
+
+Para a rede, a Internet e o Raspberry Pi, siga os passos abaixo com o IIS completo.
+
 ## 1. Compilar
 
 * Instale o Visual Studio 2015 (ou mais novo) com "ASP.NET and web development" e o .NET Framework 4.6.
