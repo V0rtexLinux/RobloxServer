@@ -2,8 +2,8 @@
 .vs/
 *.suo
 *.user
-bin/
-obj/
+RobloxServer.Web/bin/
+RobloxServer.Web/obj/
 packages/
 
 # Runtime data written by the site (users, places, keys, logs)
