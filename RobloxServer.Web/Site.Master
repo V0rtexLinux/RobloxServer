@@ -1,0 +1,43 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="RobloxServer.SiteMaster" %>
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%: Page.Title %> - <%: RobloxServer.Config.SiteName %></title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" runat="server" />
+</head>
+<body>
+    <form id="MainForm" runat="server">
+        <div id="Banner">
+            <div class="container">
+                <a class="logo" href="<%: ResolveUrl("~/Default.aspx") %>"><%: RobloxServer.Config.SiteName %></a>
+                <ul class="nav">
+                    <li><a href="<%: ResolveUrl("~/Default.aspx") %>">Games</a></li>
+                    <li><a href="<%: ResolveUrl("~/Develop.aspx") %>">Develop</a></li>
+                    <asp:PlaceHolder ID="AdminLink" runat="server" Visible="false">
+                        <li><a href="<%: ResolveUrl("~/Admin.aspx") %>">Admin</a></li>
+                    </asp:PlaceHolder>
+                </ul>
+                <div class="account">
+                    <asp:PlaceHolder ID="LoggedIn" runat="server" Visible="false">
+                        <span class="username"><asp:Literal ID="UserNameLiteral" runat="server" /></span>
+                        <asp:LinkButton ID="LogoutButton" runat="server" OnClick="LogoutButton_Click" CausesValidation="false">Logout</asp:LinkButton>
+                    </asp:PlaceHolder>
+                    <asp:PlaceHolder ID="LoggedOut" runat="server">
+                        <a href="<%: ResolveUrl("~/Register.aspx") %>">Sign Up</a>
+                        <a href="<%: ResolveUrl("~/Login.aspx") %>">Log In</a>
+                    </asp:PlaceHolder>
+                </div>
+            </div>
+        </div>
+        <div id="Body" class="container">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+        </div>
+        <div id="Footer" class="container">
+            <%: RobloxServer.Config.SiteName %> private server &middot; ASP.NET <%: Environment.Version %> &middot;
+            Not affiliated with Roblox Corporation.
+        </div>
+    </form>
+</body>
+</html>

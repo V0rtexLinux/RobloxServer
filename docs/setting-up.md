@@ -1,20 +1,49 @@
-<div align=center>
-  <img src="https://cdn.discordapp.com/attachments/1168613040040710144/1168613089315389571/Roblox-Logo-2015-500x281.png?ex=655266c0&is=653ff1c0&hm=69be43efadd5290b3533620cd5d7ae9a88a7f07fa536d7a7a37b93fc0cfcd93e&" alt="RS Logo">
+# Instalando o RobloxServer (Windows / IIS)
 
-  ### RobloxServer is an open-source 2015 Roblox private server!
-  
-</div>
-<br>
+O site é um *Web Application* ASP.NET 4.6 (Visual Studio 2015). Ele roda no IIS, no IIS Express
+ou no Mono (veja o [modo local do Raspberry Pi](raspberry-pi.md)).
 
-## First of all, download these apps:
+## 1. Compilar
 
-* Roblox Studio 2015 Version (January 14):
-  + [~~Download Point 1 - Archive~~](https://archive.frickinfire.com/ROBLOX/Executables/Windows/RobloxStudio/ROBLOXArchive/2015/January%2014/)
-  + [~~Download Point 2 - Ufile~~](https://ufile.io/2n226a2u)
-  + [~~Download Point 3 - Mediafire~~](https://www.mediafire.com/file/sipe7u37cn3f3l8/January_14.tar/file)
-  + [Download Point 4 - CatBox](https://files.catbox.moe/xdux95.7z)
+* Instale o Visual Studio 2015 (ou mais novo) com "ASP.NET and web development" e o .NET Framework 4.6.
+* Abra `RobloxServer.sln` e compile em **Release** (gera `RobloxServer.Web\bin\RobloxServer.dll`).
+  * Sem Visual Studio: `msbuild RobloxServer.sln /p:Configuration=Release`.
 
-* Fiddler Classic:
-  + [Download Point 1 - Telerik](https://www.telerik.com/download/fiddler)
+## 2. Publicar no IIS
 
-## After you have downloaded them, setup Fiddler Classic.
+1. Ative o IIS com **ASP.NET 4.6** (Painel de Controle → Recursos do Windows → IIS → Recursos de Desenvolvimento de Aplicativos → ASP.NET 4.x).
+2. Crie um site apontando para a pasta `RobloxServer.Web`, porta **80**, sem *host name* (os clientes vão chegar como `www.roblox.com`).
+3. O Application Pool deve ser **.NET CLR v4.0, Integrated**.
+4. Dê permissão de escrita em `RobloxServer.Web\App_Data` para `IIS AppPool\<nome do pool>` (é onde ficam usuários, places, chaves e logs).
+5. Abra `http://localhost/` e crie a primeira conta: **ela vira administradora**.
+
+> Para testar sem IIS: no Visual Studio aperte F5 (IIS Express).
+
+## 3. Configurar (`Web.config` → `<appSettings>`)
+
+| Chave | Para que serve |
+| --- | --- |
+| `BaseUrl` | URL que os clientes usam (padrão `http://www.roblox.com/`) |
+| `ApiKey` | apiKey dos servidores de jogo (estilo RCC). Vazio = aberto |
+| `Administrators` | nomes de administradores, separados por vírgula |
+| `HostPolicy` | quem pode hospedar: `Anyone`, `Owner` ou `Admin` |
+| `RequireAuthTickets` | exige ticket de autenticação de cada jogador |
+| `AllowedMD5Hashes` / `AllowedSecurityVersions` | listas de verificação do cliente de 2015 |
+| `TrustedProxies` | IP do Raspberry Pi, para confiar no `X-Forwarded-For` |
+| `PublicGameAddress` | IP público ou nome DDNS mostrado a quem está fora da rede |
+| `RateLimitRequests` / `RateLimitWindowSeconds` | limite por IP (45 / 30 s) |
+
+## 4. Fazer os clientes acharem o servidor
+
+Os clientes de 2015 chamam `http://www.roblox.com/`. Escolha uma opção:
+
+* **Raspberry Pi com dnsmasq** (recomendado, vale para a rede toda): [raspberry-pi.md](raspberry-pi.md).
+* **Arquivo hosts** em cada PC: `192.168.1.2 www.roblox.com api.roblox.com assetgame.roblox.com`.
+* **Fiddler Classic**: regra `AutoResponder`/`FiddlerScript` redirecionando `www.roblox.com` para o servidor.
+
+## 5. Assinatura de scripts
+
+Na primeira execução o servidor cria uma chave RSA de 1024 bits em `App_Data\Keys`.
+Os clientes 2015 só executam `Visit.ashx`/`Join.ashx` assinados com a chave embutida neles, então
+substitua a chave pública do Roblox no executável pela sua (`App_Data\Keys\PublicKeyBlob.txt`,
+ou `http://www.roblox.com/Keys/PublicKey.ashx`). É o mesmo procedimento de qualquer revival de 2015.

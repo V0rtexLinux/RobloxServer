@@ -1,1 +1,19 @@
-node_modules/
+# Visual Studio / MSBuild
+.vs/
+*.suo
+*.user
+bin/
+obj/
+packages/
+
+# Runtime data written by the site (users, places, keys, logs)
+RobloxServer.Web/App_Data/*.xml
+RobloxServer.Web/App_Data/*.tmp
+RobloxServer.Web/App_Data/Keys/
+RobloxServer.Web/App_Data/Logs/
+RobloxServer.Web/App_Data/Places/
+RobloxServer.Web/App_Data/Assets/
+RobloxServer.Web/App_Data/Settings/
+
+# Raspberry Pi render-only output
+pi/out/

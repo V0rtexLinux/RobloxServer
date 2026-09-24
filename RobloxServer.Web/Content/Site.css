@@ -1,0 +1,41 @@
+/* 2015-ish ROBLOX look: blue banner, grey page, white cards. */
+body { margin: 0; background: #e3e3e3; font-family: "Source Sans Pro", Arial, Helvetica, sans-serif; font-size: 14px; color: #343434; }
+a { color: #0074bd; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 970px; margin: 0 auto; padding: 0 16px; box-sizing: border-box; }
+#Banner { background: #0074bd; color: #fff; height: 44px; line-height: 44px; }
+#Banner .container { display: flex; align-items: center; }
+#Banner .logo { color: #fff; font-weight: bold; font-size: 22px; letter-spacing: 1px; margin-right: 24px; }
+#Banner .nav { list-style: none; margin: 0; padding: 0; display: flex; flex: 1; }
+#Banner .nav li a, #Banner .account a { color: #fff; padding: 0 10px; font-weight: 600; }
+#Banner .account .username { font-weight: bold; margin-right: 8px; }
+#Body { background: #fff; margin-top: 16px; padding: 16px; min-height: 400px; }
+#Footer { color: #777; font-size: 12px; padding: 16px; text-align: center; }
+h1 { font-size: 26px; font-weight: normal; margin: 0 0 12px; }
+h2 { font-size: 20px; font-weight: normal; margin: 20px 0 8px; }
+.games { display: flex; flex-wrap: wrap; margin: 0 -6px; }
+.game-card { width: 170px; margin: 6px; border: 1px solid #dadada; background: #f9f9f9; padding: 8px; box-sizing: border-box; }
+.game-card a:hover .thumb { text-decoration: none; }
+.game-card .thumb { height: 96px; background: #b8b8b8; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 28px; }
+.game-card .name { display: block; font-weight: bold; margin-top: 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.game-card .meta { color: #777; font-size: 12px; }
+.form-row { margin-bottom: 10px; }
+.form-row label { display: block; font-weight: 600; margin-bottom: 3px; }
+.form-row input[type=checkbox] + label { display: inline; font-weight: normal; margin-right: 12px; }
+.form-row input[type=text], .form-row input[type=password], .form-row textarea, .form-row select { width: 100%; max-width: 360px; padding: 6px; border: 1px solid #b8b8b8; box-sizing: border-box; font: inherit; }
+.form-row textarea { height: 80px; }
+.btn { background: #02b757; color: #fff; border: 0; padding: 8px 18px; font-weight: bold; cursor: pointer; font: inherit; }
+.btn.blue { background: #0074bd; }
+.btn.red { background: #d86868; }
+.error { color: #c00; display: block; margin: 8px 0; }
+.notice { background: #fffbe0; border: 1px solid #e8d77a; padding: 8px; margin: 8px 0; }
+table.grid { border-collapse: collapse; width: 100%; }
+table.grid th, table.grid td { border-bottom: 1px solid #e3e3e3; text-align: left; padding: 6px; font-size: 13px; }
+code, .mono { font-family: Consolas, monospace; font-size: 12px; word-break: break-all; }
+@media (max-width: 600px) {
+    #Banner { height: auto; line-height: 36px; }
+    #Banner .container { flex-wrap: wrap; padding: 4px 16px; }
+    #Banner .logo { font-size: 18px; margin-right: 8px; }
+    #Banner .nav li a, #Banner .account a { padding: 0 6px; font-size: 13px; }
+    .game-card { width: calc(50% - 12px); }
+}
