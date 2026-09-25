@@ -76,7 +76,7 @@ jobs:
       run: cat "$RUNNER_TEMP/fastcgi.log" "$RUNNER_TEMP"/site/App_Data/Logs/*.log || true
 
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-24.04
     steps:
