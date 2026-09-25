@@ -24,6 +24,7 @@
                                 <div class="dropdownnavcontainer">
                                     <div class="dropdownmainnav">
                                         <a class="dropdownoption" href="<%: ResolveUrl("~/Develop.aspx") %>"><span>My Places</span></a>
+                                        <a class="dropdownoption" href="<%: ResolveUrl("~/Browse.aspx") %>"><span>People</span></a>
                                         <a class="dropdownoption" href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>"><span>Download ROBLOX</span></a>
                                         <asp:PlaceHolder ID="AdminLink" runat="server" Visible="false">
                                             <a class="dropdownoption" href="<%: ResolveUrl("~/Admin.aspx") %>"><span>Admin</span></a>
@@ -92,6 +93,8 @@
                     <a href="<%: ResolveUrl("~/Default.aspx") %>"><b>Games</b></a>
                     &nbsp;|&nbsp;
                     <a href="<%: ResolveUrl("~/Develop.aspx") %>">Build</a>
+                    &nbsp;|&nbsp;
+                    <a href="<%: ResolveUrl("~/Browse.aspx") %>">People</a>
                     &nbsp;|&nbsp;
                     <a href="<%: ResolveUrl("~/Register.aspx") %>">Sign Up</a>
                     &nbsp;|&nbsp;

@@ -43,6 +43,8 @@ namespace RobloxServer.Web
             { "/login/default.aspx", "~/Login.aspx" },
             { "/ide/publish", "~/Develop.aspx" },
             { "/develop", "~/Develop.aspx" },
+            { "/people", "~/Browse.aspx" },
+            { "/void", "~/Void.aspx" },
             { "/status", "~/Api/Status.ashx" },
             { "/install/version", "~/Install/Version.ashx" },
             { "/install/download", "~/Install/Download.ashx" }

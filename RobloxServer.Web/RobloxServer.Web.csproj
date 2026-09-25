@@ -67,6 +67,10 @@
     <Content Include="App_Data\Templates\Studio.json" />
     <Content Include="App_Data\Templates\Visit.lua" />
     <Content Include="Asset\BodyColors.ashx" />
+    <Content Include="Asset\Avatar.ashx" />
+    <Content Include="Browse.aspx" />
+    <Content Include="User.aspx" />
+    <Content Include="Void.aspx" />
     <Content Include="Asset\CharacterFetch.ashx" />
     <Content Include="Asset\Default.ashx" />
     <Content Include="Content\PlaceLauncher.js" />
@@ -190,6 +194,31 @@
     <Compile Include="Asset\BodyColors.ashx.cs">
       <DependentUpon>BodyColors.ashx</DependentUpon>
     </Compile>
+    <Compile Include="Asset\Avatar.ashx.cs">
+      <DependentUpon>Avatar.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Browse.aspx.cs">
+      <DependentUpon>Browse.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Browse.aspx.designer.cs">
+      <DependentUpon>Browse.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User.aspx.cs">
+      <DependentUpon>User.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User.aspx.designer.cs">
+      <DependentUpon>User.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Void.aspx.cs">
+      <DependentUpon>Void.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Void.aspx.designer.cs">
+      <DependentUpon>Void.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Data\Noli.cs" />
     <Compile Include="Asset\CharacterFetch.ashx.cs">
       <DependentUpon>CharacterFetch.ashx</DependentUpon>
     </Compile>

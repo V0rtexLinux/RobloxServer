@@ -10,7 +10,7 @@ namespace RobloxServer.Handlers.Asset
         {
             long userId = QueryLong("userId");
             string bodyColors = Config.BaseUrl + "Asset/BodyColors.ashx?userId=" + userId;
-            if (BodyColors.IsNoli(Db.FindUser(userId)))
+            if (Noli.Is(Db.FindUser(userId)))
             {
                 // Noli is all black: body colors only, no default clothing.
                 WriteText(bodyColors);

@@ -215,3 +215,31 @@ table.table { border-collapse: collapse; width: 100%; border-top: 1px solid #9e9
 .PlaceLauncherModal .PlaceLauncherInstall { font-size: 12px; margin: 5px 0 12px; line-height: 1.5; }
 .Button { cursor: pointer; background-color: #fff; border: solid 1px #333; color: #333; font-size: 12px; padding: 3px 10px; }
 .Button:hover { background-color: #6e99c9; border-color: #000; color: #fff; }
+
+/* ----------------- Profile (User.aspx) and People (Browse.aspx) ----------------- */
+
+#ProfileContainer { padding: 10px; }
+#ProfileContainer .ProfileLeft { float: left; width: 300px; }
+#ProfileContainer .ProfileRight { margin-left: 320px; }
+#ProfileContainer .ProfileBox { text-align: center; }
+#ProfileContainer .ProfileStatus { font-size: 12px; margin-bottom: 4px; }
+#ProfileContainer .ProfileUrl { font-size: 11px; color: #888; margin-bottom: 8px; word-break: break-all; }
+#ProfileContainer .ProfileAvatar { display: block; margin: 0 auto 10px; }
+#ProfileContainer table.ProfileDetails { margin: 0 auto; border-collapse: collapse; font-size: 12px; text-align: left; }
+#ProfileContainer table.ProfileDetails td { padding: 2px 8px 2px 0; }
+#ProfileContainer table.ProfileDetails td.Label { color: #888; }
+#ProfileContainer .ProfileBadge { margin-top: 10px; font-size: 12px; font-weight: bold; color: #0852b7; }
+#ProfileContainer .ProfileEmpty { color: #888; font-size: 12px; margin: 0; }
+#ProfileContainer .ProfilePlace { overflow: hidden; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 12px; }
+#ProfileContainer .ProfilePlace:last-child { border-bottom: none; }
+#ProfileContainer .ProfilePlace img { float: left; border: 1px solid #ccc; }
+#ProfileContainer .ProfilePlaceDetails { margin-left: 175px; color: #555; }
+#ProfileContainer .ProfilePlaceName { font-size: 14px; font-weight: bold; margin-bottom: 3px; }
+#ProfileContainer .ProfilePlaceDescription { margin-top: 5px; white-space: pre-wrap; max-height: 48px; overflow: hidden; }
+.UserOnline { color: #36a400; }
+.UserOffline { color: #888; }
+
+#BrowseContainer { padding: 0 10px 10px; }
+#BrowseContainer .BrowseSearch { margin-bottom: 12px; }
+#BrowseContainer .BrowseSearch .text-box { width: 220px; vertical-align: middle; }
+#BrowseContainer .BrowseTable td.BrowseAvatar { width: 50px; }
