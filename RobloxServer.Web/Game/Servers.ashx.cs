@@ -90,7 +90,8 @@ namespace RobloxServer.Handlers.Game
                 JobId = Guid.NewGuid().ToString(),
                 PlaceId = place.Id,
                 Name = WordFilter.Filter(string.IsNullOrWhiteSpace(Param("name")) ? place.Name : Param("name").Trim()),
-                Address = address.Trim(),
+                // "::1" when hosting on the same PC as the site: the 2012M/2013M clients need IPv4.
+                Address = ClientIp.ToGameAddress(address.Trim()),
                 SourceIp = Ip,
                 Port = port,
                 Client = PlaceService.ClientFor(place),

@@ -21,7 +21,7 @@ namespace RobloxServer.Handlers.Api
                     jobId = s.IsLegacy ? null : s.JobId,
                     placeId = s.PlaceId,
                     name = s.Name,
-                    address = GameServers.AddressFor(s, ip),
+                    address = GameServers.AddressFor(s, ip, Request.ServerVariables["LOCAL_ADDR"]),
                     port = s.Port,
                     client = PlaceService.CleanClient(s.Client),
                     version = s.Version,

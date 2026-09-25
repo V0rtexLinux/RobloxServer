@@ -42,7 +42,7 @@ namespace RobloxServer.Handlers.Game
             var values = new Dictionary<string, string>
             {
                 { "BaseUrl", Templates.LuaLongString(Config.BaseUrl) },
-                { "ServerAddress", Templates.LuaLongString(GameServers.AddressFor(server, Ip)) },
+                { "ServerAddress", Templates.LuaLongString(GameServers.AddressFor(server, Ip, Request.ServerVariables["LOCAL_ADDR"])) },
                 { "ServerPort", server.Port.ToString() },
                 { "PlaceId", server.PlaceId.ToString() },
                 { "JobId", Templates.LuaLongString(server.JobId) },

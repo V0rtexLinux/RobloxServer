@@ -267,6 +267,14 @@ def main():
     check(json.loads(body)["status"] == 6, "PlaceLauncher reports a full game")
     status, _, body = anon.get("/Api/Servers.ashx?placeId=%d" % place_id)
     check(json.loads(body)["data"][0]["players"] == 2, "Api/Servers shows the player count")
+    for sent, expected in [("::1", "127.0.0.1"), ("::ffff:192.168.1.60", "192.168.1.60")]:
+        status, _, body = admin.post_form("/Game/Servers.ashx", {"action": "register", "placeId": place_id, "port": 53641,
+                                                                "address": sent}, {"X-CSRF-TOKEN": token})
+        extra = json.loads(body)
+        servers = json.loads(anon.get("/Api/Servers.ashx?placeId=%d" % place_id)[2])["data"]
+        check(any(s["jobId"] == extra["jobId"] and s["address"] == expected for s in servers),
+              "IPv6 host address %s is stored as IPv4 %s" % (sent, expected))
+        anon.get("/Game/Servers.ashx?action=unregister&jobId=%s&serverKey=%s" % (extra["jobId"], extra["serverKey"]))
 
     print("RobloxPlayerLauncher")
     status, _, body = player.get("/Game/GetAuthTicket.ashx?placeId=%d" % place_id)
