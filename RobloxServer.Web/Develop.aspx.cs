@@ -17,6 +17,8 @@ namespace RobloxServer.Pages
 
             if (!IsPostBack)
             {
+                GenreList.DataSource = Genres.All.Select(g => g.Name);
+                GenreList.DataBind();
                 ClientList.DataSource = Config.Clients;
                 ClientList.DataBind();
                 ClientList.SelectedValue = Config.DefaultClient;
@@ -59,7 +61,7 @@ namespace RobloxServer.Pages
             int.TryParse(MaxPlayersBox.Text, out maxPlayers);
 
             Place place = PlaceService.Create(user, NameBox.Text, DescriptionBox.Text, ClientList.SelectedValue,
-                PublicBox.Checked, FilteringBox.Checked, maxPlayers, data);
+                PublicBox.Checked, FilteringBox.Checked, maxPlayers, data, GenreList.SelectedValue);
             Response.Redirect("~/PlaceItem.aspx?id=" + place.Id, false);
         }
     }

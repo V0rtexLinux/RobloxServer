@@ -10,6 +10,7 @@ namespace RobloxServer.Pages
     {
         protected global::System.Web.UI.WebControls.TextBox NameBox;
         protected global::System.Web.UI.WebControls.TextBox DescriptionBox;
+        protected global::System.Web.UI.WebControls.DropDownList GenreList;
         protected global::System.Web.UI.WebControls.DropDownList ClientList;
         protected global::System.Web.UI.WebControls.TextBox MaxPlayersBox;
         protected global::System.Web.UI.WebControls.CheckBox PublicBox;

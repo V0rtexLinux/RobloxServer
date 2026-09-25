@@ -18,12 +18,17 @@ namespace RobloxServer.Pages
         protected global::System.Web.UI.WebControls.Literal DescriptionLiteral;
         protected global::System.Web.UI.WebControls.Literal NameLiteral2;
         protected global::System.Web.UI.WebControls.Literal IdLiteral;
+        protected global::System.Web.UI.HtmlControls.HtmlImage ThumbnailImage;
+        protected global::System.Web.UI.WebControls.Literal MaxPlayersLiteral;
+        protected global::System.Web.UI.HtmlControls.HtmlImage GenreImage;
+        protected global::System.Web.UI.WebControls.Literal GenreLiteral;
         protected global::System.Web.UI.HtmlControls.HtmlAnchor DownloadLink;
         protected global::System.Web.UI.WebControls.PlaceHolder NoServers;
         protected global::System.Web.UI.WebControls.Repeater ServersRepeater;
         protected global::System.Web.UI.WebControls.PlaceHolder EditPanel;
         protected global::System.Web.UI.WebControls.TextBox NameBox;
         protected global::System.Web.UI.WebControls.TextBox DescriptionBox;
+        protected global::System.Web.UI.WebControls.DropDownList GenreList;
         protected global::System.Web.UI.WebControls.DropDownList ClientList;
         protected global::System.Web.UI.WebControls.TextBox MaxPlayersBox;
         protected global::System.Web.UI.WebControls.CheckBox PublicBox;

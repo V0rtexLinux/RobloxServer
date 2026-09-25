@@ -4,29 +4,29 @@
     <asp:Label ID="MessageLabel" runat="server" CssClass="error" />
 
     <h2>Moderate a user</h2>
-    <div class="form-row"><label>Username</label><asp:TextBox ID="BanUserBox" runat="server" MaxLength="20" /></div>
-    <div class="form-row"><label>Reason</label><asp:TextBox ID="BanReasonBox" runat="server" MaxLength="200" /></div>
-    <div class="form-row"><label>Days (empty = Account Deleted / permanent)</label><asp:TextBox ID="BanDaysBox" runat="server" MaxLength="4" /></div>
-    <asp:Button ID="BanButton" runat="server" Text="Ban" CssClass="btn red" OnClick="BanButton_Click" />
-    <asp:Button ID="UnbanButton" runat="server" Text="Unban" CssClass="btn blue" OnClick="UnbanButton_Click" />
-    <asp:Button ID="MakeAdminButton" runat="server" Text="Toggle admin" CssClass="btn blue" OnClick="MakeAdminButton_Click" />
+    <div class="form-row"><label>Username</label><asp:TextBox ID="BanUserBox" runat="server" MaxLength="20" CssClass="text-box text-box-medium" /></div>
+    <div class="form-row"><label>Reason</label><asp:TextBox ID="BanReasonBox" runat="server" MaxLength="200" CssClass="text-box text-box-medium" /></div>
+    <div class="form-row"><label>Days (empty = Account Deleted / permanent)</label><asp:TextBox ID="BanDaysBox" runat="server" MaxLength="4" CssClass="text-box text-box-medium" /></div>
+    <asp:Button ID="BanButton" runat="server" Text="Ban" CssClass="btn-medium btn-negative" OnClick="BanButton_Click" />
+    <asp:Button ID="UnbanButton" runat="server" Text="Unban" CssClass="btn-medium btn-neutral" OnClick="UnbanButton_Click" />
+    <asp:Button ID="MakeAdminButton" runat="server" Text="Toggle admin" CssClass="btn-medium btn-neutral" OnClick="MakeAdminButton_Click" />
 
     <h2>IP bans</h2>
-    <div class="form-row"><label>IP address</label><asp:TextBox ID="IpBox" runat="server" MaxLength="45" /></div>
-    <div class="form-row"><label>Reason</label><asp:TextBox ID="IpReasonBox" runat="server" MaxLength="200" /></div>
-    <asp:Button ID="IpBanButton" runat="server" Text="Ban IP" CssClass="btn red" OnClick="IpBanButton_Click" />
-    <asp:Button ID="IpUnbanButton" runat="server" Text="Unban IP" CssClass="btn blue" OnClick="IpUnbanButton_Click" />
-    <table class="grid">
+    <div class="form-row"><label>IP address</label><asp:TextBox ID="IpBox" runat="server" MaxLength="45" CssClass="text-box text-box-medium" /></div>
+    <div class="form-row"><label>Reason</label><asp:TextBox ID="IpReasonBox" runat="server" MaxLength="200" CssClass="text-box text-box-medium" /></div>
+    <asp:Button ID="IpBanButton" runat="server" Text="Ban IP" CssClass="btn-medium btn-negative" OnClick="IpBanButton_Click" />
+    <asp:Button ID="IpUnbanButton" runat="server" Text="Unban IP" CssClass="btn-medium btn-neutral" OnClick="IpUnbanButton_Click" />
+    <table class="table grid">
         <asp:Repeater ID="IpBansRepeater" runat="server">
-            <HeaderTemplate><tr><th>IP</th><th>Reason</th><th>Date</th></tr></HeaderTemplate>
+            <HeaderTemplate><tr class="table-header"><th class="first">IP</th><th>Reason</th><th>Date</th></tr></HeaderTemplate>
             <ItemTemplate><tr><td><%# Enc("Ip") %></td><td><%# Enc("Reason") %></td><td><%# Eval("Created", "{0:u}") %></td></tr></ItemTemplate>
         </asp:Repeater>
     </table>
 
     <h2>Users</h2>
-    <table class="grid">
+    <table class="table grid">
         <asp:Repeater ID="UsersRepeater" runat="server">
-            <HeaderTemplate><tr><th>Id</th><th>Name</th><th>Last IP</th><th>Created</th><th>Status</th></tr></HeaderTemplate>
+            <HeaderTemplate><tr class="table-header"><th class="first">Id</th><th>Name</th><th>Last IP</th><th>Created</th><th>Status</th></tr></HeaderTemplate>
             <ItemTemplate>
                 <tr>
                     <td><%# Eval("Id") %></td><td><%# Enc("Name") %></td><td><%# Enc("LastIp") %></td>
@@ -37,9 +37,9 @@
     </table>
 
     <h2>Running servers</h2>
-    <table class="grid">
+    <table class="table grid">
         <asp:Repeater ID="ServersRepeater" runat="server" OnItemCommand="ServersRepeater_ItemCommand">
-            <HeaderTemplate><tr><th>Name</th><th>Place</th><th>Address</th><th>Client</th><th>Host</th><th>Players</th><th></th></tr></HeaderTemplate>
+            <HeaderTemplate><tr class="table-header"><th class="first">Name</th><th>Place</th><th>Address</th><th>Client</th><th>Host</th><th>Players</th><th></th></tr></HeaderTemplate>
             <ItemTemplate>
                 <tr>
                     <td><%# Enc("Name") %></td><td><%# Eval("PlaceId") %></td><td><%# Enc("Address") %>:<%# Eval("Port") %></td>

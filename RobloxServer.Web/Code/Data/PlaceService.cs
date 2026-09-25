@@ -57,7 +57,7 @@ namespace RobloxServer.Data
             return match ?? Config.DefaultClient;
         }
 
-        public static Place Create(User creator, string name, string description, string client, bool isPublic, bool filteringEnabled, int maxPlayers, byte[] data)
+        public static Place Create(User creator, string name, string description, string client, bool isPublic, bool filteringEnabled, int maxPlayers, byte[] data, string genre = null)
         {
             DateTime now = DateTime.UtcNow;
             Place place = Db.Places.InsertWithId(p => p.Id, Config.FirstLocalAssetId, id => new Place
@@ -68,6 +68,7 @@ namespace RobloxServer.Data
                 CreatorId = creator.Id,
                 CreatorName = creator.Name,
                 Client = CleanClient(client),
+                Genre = Genres.Clean(genre),
                 Created = now,
                 Updated = now,
                 IsPublic = isPublic,

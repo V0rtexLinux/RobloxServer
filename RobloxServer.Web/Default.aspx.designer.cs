@@ -8,6 +8,9 @@ namespace RobloxServer.Pages
 {
     public partial class Default
     {
+        protected global::System.Web.UI.WebControls.Repeater SortRepeater;
+        protected global::System.Web.UI.WebControls.Repeater GenreRepeater;
+        protected global::System.Web.UI.WebControls.Literal HeaderLiteral;
         protected global::System.Web.UI.WebControls.PlaceHolder EmptyMessage;
         protected global::System.Web.UI.WebControls.Repeater GamesRepeater;
     }
