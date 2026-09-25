@@ -171,6 +171,13 @@ def main():
     status, _, _ = player.postback("/Register.aspx", {"UserNameBox": "Noob_1", "PasswordBox": "password1",
                                                       "ConfirmBox": "password1", "Under13Box": "on"}, "RegisterButton")
     check(status == 302, "register Noob_1 (under 13)")
+    status, _, _ = Client().postback("/Register.aspx", {"UserNameBox": "Noli", "PasswordBox": "void1234",
+                                                        "ConfirmBox": "void1234"}, "RegisterButton")
+    check(status == 302, "register Noli")
+    status, _, body = anon.get("/Asset/BodyColors.ashx?userId=3")
+    check(body.count(b">1003</int>") == 6, "Noli is completely black (Really black)")
+    status, _, body = anon.get("/Asset/CharacterFetch.ashx?userId=3")
+    check(b"BodyColors.ashx?userId=3" in body and b"versionid" not in body, "Noli has no default clothing")
     status, _, body = player.post_form("/Api/Logout.ashx", {})
     check(status == 403, "Api/Logout without X-CSRF-TOKEN is 403")
     fresh = Client()
