@@ -24,7 +24,7 @@
                                 <div class="dropdownnavcontainer">
                                     <div class="dropdownmainnav">
                                         <a class="dropdownoption" href="<%: ResolveUrl("~/Develop.aspx") %>"><span>My Places</span></a>
-                                        <a class="dropdownoption" href="https://github.com/V0rtexLinux/RobloxServerLauncher"><span>Download Launcher</span></a>
+                                        <a class="dropdownoption" href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>"><span>Download ROBLOX</span></a>
                                         <asp:PlaceHolder ID="AdminLink" runat="server" Visible="false">
                                             <a class="dropdownoption" href="<%: ResolveUrl("~/Admin.aspx") %>"><span>Admin</span></a>
                                         </asp:PlaceHolder>
@@ -68,7 +68,7 @@
                             <li><a href="<%: ResolveUrl("~/Default.aspx") %>">Games</a></li>
                             <li><a href="<%: ResolveUrl("~/Develop.aspx#MyPlaces") %>">My Places</a></li>
                             <li><a href="<%: ResolveUrl("~/Develop.aspx") %>">Publish</a></li>
-                            <li><a href="https://github.com/V0rtexLinux/RobloxServerLauncher">Launcher</a></li>
+                            <li><a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download</a></li>
                             <asp:PlaceHolder ID="AdminSubLink" runat="server" Visible="false">
                                 <li><a href="<%: ResolveUrl("~/Admin.aspx") %>">Admin</a></li>
                             </asp:PlaceHolder>
@@ -97,7 +97,7 @@
                     &nbsp;|&nbsp;
                     <a href="<%: ResolveUrl("~/Login.aspx") %>">Login</a>
                     &nbsp;|&nbsp;
-                    <a href="https://github.com/V0rtexLinux/RobloxServerLauncher">Launcher</a>
+                    <a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download ROBLOX</a>
                     &nbsp;|&nbsp;
                     <a href="https://github.com/V0rtexLinux/RobloxServer">Source Code</a>
                 </div>

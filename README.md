@@ -16,9 +16,17 @@
 1. Baixe o site já compilado: aba **Actions** → última execução verde → **Artifacts** → `RobloxServer-site`
    (ou clone o repositório e tenha o Visual Studio / Build Tools instalado, o script compila sozinho).
 2. Instale o [IIS Express](https://www.microsoft.com/download/details.aspx?id=48264) se ainda não tiver.
-3. Dê dois cliques em **`iniciar-servidor.bat`**. O navegador abre `http://localhost:8080/`.
-4. Crie a primeira conta em *Sign Up* (ela vira administradora) e publique um jogo em *Develop*.
-5. No launcher: *Server Browser* → *ROBLOXSERVER GAMES...* → endereço `localhost:8080`.
+3. Dê dois cliques em **`IniciarServidor.exe`** (ou no antigo `iniciar-servidor.bat`). O navegador abre `http://localhost:8080/`.
+4. Crie a primeira conta em *Sign Up* (ela vira administradora) e publique um jogo em *Build*.
+5. Coloque os clientes em `RobloxServer.Web/App_Data/Clients/2012M.zip` e `2013M.zip`, clique em **Download ROBLOX**,
+   rode o launcher uma vez e depois é só clicar em **Play** (ou **Host Server**) na página do jogo.
+
+O **`IniciarServidor.exe`** abre uma janela com o estado do site e:
+
+* inicia o site no IIS Express (compila antes, se precisar) e o reinicia sozinho se ele fechar;
+* **mantém o computador ligado**: enquanto estiver aberto, o Windows não entra em suspensão (a tela ainda pode apagar);
+* pode **iniciar junto com o Windows** (já minimizado, perto do relógio) e fica na área de notificação quando minimizado.
+  Uso: `IniciarServidor.exe [--port 8080] [--minimized]`.
 
 O IIS Express só atende este PC. Para outros PCs da rede, a Internet e o Raspberry Pi, use o IIS completo:
 [docs/setting-up.md](docs/setting-up.md).
@@ -26,8 +34,9 @@ O IIS Express só atende este PC. Para outros PCs da rede, a Internet e o Raspbe
 RobloxServer agora é um site **ASP.NET clássico (Web Forms, .NET Framework 4.6, C# 6 / Visual Studio 2015)**,
 com handlers `.ashx` e páginas `.aspx` como o roblox.com de 2015. Todo o JavaScript (Node/Express) foi removido.
 
-Os jogos publicados aqui são jogados pelo **[RobloxServerLauncher](https://github.com/V0rtexLinux/RobloxServerLauncher)**
-(Server Browser → *RobloxServer Games*), e um **Raspberry Pi Zero 2W** faz o port forwarding, o UPnP e o DNS da rede.
+Os jogos publicados aqui são jogados pelo **[RobloxPlayerLauncher](https://github.com/V0rtexLinux/RobloxServerLauncher)**,
+o launcher oficial do site no estilo de 2013 (botão **Play** → o jogo abre), só com os clientes **2012M** e **2013M**.
+Um **Raspberry Pi Zero 2W** faz o port forwarding, o UPnP e o DNS da rede. Veja [docs/playing.md](docs/playing.md).
 
 ### Estrutura
 
@@ -35,7 +44,9 @@ Os jogos publicados aqui são jogados pelo **[RobloxServerLauncher](https://gith
 | --- | --- |
 | `RobloxServer.Web/` | O site ASP.NET (abra `RobloxServer.sln` no Visual Studio 2015 ou mais novo) |
 | `RobloxServer.Web/Game`, `Asset`, `Login`, ... | Handlers `.ashx` que os clientes 2015 chamam (`/Game/Visit.ashx`, `/asset/?id=`, ...) |
-| `RobloxServer.Web/Api` | JSON usado pelo launcher (login, jogos, servidores) |
+| `RobloxServer.Web/Api` | JSON usado pelo launcher (jogos, servidores) |
+| `RobloxServer.Web/Install` | `/install/version.ashx` e `/install/download.ashx`: clientes 2012M/2013M e o launcher |
+| `RobloxServer.Starter/` | `IniciarServidor.exe`: inicia o site no IIS Express e mantém o PC ligado |
 | `RobloxServer.Web/App_Data` | Templates dos scripts; em execução guarda usuários, places, chaves e logs |
 | `pi/` | Instalação do Raspberry Pi Zero 2W (port forwarding, UPnP, DNS, nginx, Mono opcional) |
 | `tests/smoke_test.py` | Teste de ponta a ponta usado no CI |
@@ -45,7 +56,10 @@ Os jogos publicados aqui são jogados pelo **[RobloxServerLauncher](https://gith
 * Visual do roblox.com de 2013: barra azul com o logo vermelho, submenu preto, página de jogos com filtro por gênero e os ícones originais (gênero, "no gear", 13+), botões verdes/azuis do StyleGuide e rodapé azul. As imagens ficam em `RobloxServer.Web/Images`.
 * Contas com cookie `.ROBLOSECURITY` (Forms Authentication, igual ao de 2015), cadastro com "sou menor de 13" (SuperSafeChat).
 * Publicação de jogos pelo site (`Develop.aspx`) ou pelo Studio 2015 (`/Data/Upload.ashx`).
-* `Visit.ashx` e `Join.ashx` assinados com `--rbxsig` (RSA 1024 + SHA-1).
+* `Visit.ashx`, `Join.ashx` e `GameServer.ashx` assinados com `--rbxsig` (RSA 1024 + SHA-1); os scripts de jogo 2012M/2013M
+  (`App_Data/Templates/Join.lua` e `GameServer.lua`) seguem a conexão clássica do RBXPri/Novetus (licença MIT).
+* Botões **Play** e **Host Server** que abrem o RobloxPlayerLauncher (`robloxserver-player:`), com a janela "Starting ROBLOX...".
+* Clientes e launcher distribuídos pelo próprio site (`/install/`), com versão pelo SHA-256; a página Admin mostra o que está instalado.
 * `PlaceLauncher.ashx`, tickets de autenticação de uso único, `Login/Negotiate.ashx`, `ValidateTicket.ashx`.
 * `/GetAllowedMD5Hashes/` e `/GetAllowedSecurityVersions/` com `apiKey`.
 * Master server compatível com Novetus (`list.php`, `delist.php`, `serverlist.txt`).

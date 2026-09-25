@@ -1,41 +1,62 @@
-# Jogando pelo RobloxServerLauncher
+# Jogando com o RobloxPlayerLauncher
 
-Os jogos publicados no RobloxServer são jogados pelo
-[RobloxServerLauncher](https://github.com/V0rtexLinux/RobloxServerLauncher) (fork do Novetus), com o
-cliente escolhido na publicação (2006S … 2012M).
+Os jogos do RobloxServer são jogados pelo **[RobloxPlayerLauncher](https://github.com/V0rtexLinux/RobloxServerLauncher)**,
+o launcher oficial do site no estilo do roblox.com de 2013: você clica em **Play** na página do jogo e ele abre.
+Só os clientes **2012M** e **2013M** são suportados.
 
 ## Publicar um jogo
 
-* Pelo site: **Develop** → escolha nome, descrição, cliente, jogadores por servidor, público/privado e o arquivo `.rbxl`.
-* Pelo Studio 2015: *File → Publish to ROBLOX* (envia para `/Data/Upload.ashx`).
-* Para atualizar: página do jogo → *Configure this game* → *Upload a new version*.
+* Pelo site: **Build** → nome, descrição, gênero, cliente (2012M ou 2013M), jogadores por servidor, público/privado e o arquivo `.rbxl`.
+* Pelo Studio 2015: *File → Publish to ROBLOX* (envia para `/Data/Upload.ashx`; usa o cliente padrão, `DefaultClient`).
+* Para atualizar: página do jogo → *Configure this Place* → *Upload a new version*.
 
-## Jogar
+Jogos antigos publicados para outros clientes (2006S … 2011M, da época do Novetus) passam a usar o `DefaultClient`.
 
-No launcher: **Server Browser → ROBLOXSERVER GAMES...**
+## Instalar o launcher
 
-1. Endereço do RobloxServer (IP do Raspberry Pi, do PC com IIS ou o nome DDNS) → **REFRESH**.
-2. **LOG IN** com a conta do site.
-3. Escolha o jogo:
+1. No site, clique em **Download ROBLOX** (menu *More*, rodapé ou página do jogo).
+2. Rode o `RobloxPlayerLauncher.exe` uma vez: ele se instala em `%LocalAppData%\RobloxServer` e registra o
+   protocolo `robloxserver-player:`.
 
-| Botão | O que acontece |
+O botão baixa `App_Data/Launcher/RobloxPlayerLauncher.exe` do próprio site, ou, se ele não existir, a página de
+releases do GitHub (`LauncherDownloadUrl` no `Web.config`). Quando o site tem um launcher novo, os launchers
+instalados se atualizam sozinhos.
+
+## Jogar e hospedar
+
+| Botão (página do jogo) | O que acontece |
 | --- | --- |
-| **PLAY SOLO** | baixa o place para `maps/Custom/RobloxServer/` (conferindo o MD5) e abre o Play Solo |
-| **HOST SERVER** | `POST /Game/Servers.ashx` registra um job (`jobId` + `serverKey`), abre o servidor na `RobloxPort` e manda heartbeat a cada minuto; ao fechar, o job é removido |
-| **JOIN SERVER** | `PlaceLauncher.ashx` escolhe o servidor, `Join.ashx` devolve o join script assinado com endereço, porta e ticket; o launcher entra com o nome da sua conta |
+| **Play** | o site pede um ticket (`/Game/GetAuthTicket.ashx`) e abre `robloxserver-player:1+launchmode:play+...`. O launcher troca o ticket por um cookie (`Login/Negotiate.ashx`), pede um servidor ao `PlaceLauncher.ashx`, instala/atualiza o cliente e abre o jogo com o script Lua de `Join.ashx` |
+| **Host Server** | `launchmode:host`: o launcher registra um job (`POST /Game/Servers.ashx`), baixa o place (conferindo o MD5), abre o cliente como servidor com o script de `/Game/GameServer.ashx` e manda heartbeat até você fechar a janela *ROBLOX Game Server* |
 
-Clicar duas vezes num jogo entra num servidor se houver um, ou abre o Play Solo.
+Na primeira vez em cada site o launcher pergunta se você confia nele, porque é o site que decide qual cliente
+é baixado e executado.
+
+## Clientes (para o administrador)
+
+O launcher baixa os clientes do próprio site, como o setup.roblox.com de 2013:
+
+| Arquivo | Serve |
+| --- | --- |
+| `App_Data/Clients/2012M.zip` | `/install/version.ashx?client=2012M`, `/install/download.ashx?client=2012M` |
+| `App_Data/Clients/2013M.zip` | idem para 2013M |
+| `App_Data/Launcher/RobloxPlayerLauncher.exe` | botão *Download ROBLOX* e atualização automática do launcher |
+
+A versão é o começo do SHA-256 do arquivo; trocar o zip faz todos os launchers baixarem de novo. A página
+**Admin** mostra o que está instalado. O formato do zip (exes, argumentos e o `RobloxServerClient.json`) está no
+README do launcher.
 
 ## Como o servidor de jogo confere os jogadores
 
-1. O launcher de quem entra coloca o ticket de uso único num `StringValue` `RSAuthTicket` dentro do jogador.
-2. O addon `RobloxServerAuth.lua` no servidor lê o ticket e chama
-   `/Game/ValidateTicket.ashx?ticket=…&jobId=…&serverKey=…`.
+1. O `Join.ashx` gera, para cada entrada, um ticket de uso único e coloca no script do jogador, que cria um
+   `StringValue` `RSAuthTicket` dentro do jogador.
+2. O script do servidor (`GameServer.ashx`) lê o ticket e chama `/Game/ValidateTicket.ashx?ticket=…&jobId=…&serverKey=…`.
 3. Ticket inválido, reutilizado, de outro servidor, nome diferente da conta ou conta banida → o jogador é expulso.
    Com `RequireAuthTickets=false` no `Web.config`, quem entra sem ticket é aceito (só o ticket inválido expulsa).
+4. A aparência vem do site (`Asset/CharacterFetch.ashx` do usuário do ticket), não do que o cliente mandou.
 
 ## Rede
 
 * Na mesma casa: o site devolve o IP local de quem hospeda.
-* Pela Internet: o Raspberry Pi encaminha a porta (`GAME_FORWARDS`) e o site mostra o `PublicGameAddress`.
-  Veja [raspberry-pi.md](raspberry-pi.md).
+* Pela Internet: libere a porta UDP 53640 (ou a `HostPort` do `Settings.ini` do launcher). O Raspberry Pi encaminha
+  a porta (`GAME_FORWARDS`) e o site mostra o `PublicGameAddress`. Veja [raspberry-pi.md](raspberry-pi.md).

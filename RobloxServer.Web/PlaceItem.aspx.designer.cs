@@ -16,7 +16,10 @@ namespace RobloxServer.Pages
         protected global::System.Web.UI.WebControls.Literal VisitsLiteral;
         protected global::System.Web.UI.WebControls.Literal UpdatedLiteral;
         protected global::System.Web.UI.WebControls.Literal DescriptionLiteral;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl PlaceLauncher;
+        protected global::System.Web.UI.WebControls.PlaceHolder HostPanel;
         protected global::System.Web.UI.WebControls.Literal NameLiteral2;
+        protected global::System.Web.UI.WebControls.Literal ClientLiteral2;
         protected global::System.Web.UI.WebControls.Literal IdLiteral;
         protected global::System.Web.UI.HtmlControls.HtmlImage ThumbnailImage;
         protected global::System.Web.UI.WebControls.Literal MaxPlayersLiteral;

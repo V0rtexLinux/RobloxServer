@@ -22,7 +22,9 @@ jobs:
         sudo apt-get update
         sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mono-complete mono-fastcgi-server4 nginx
     - name: Build
-      run: xbuild /nologo /p:Configuration=Release RobloxServer.sln
+      run: |
+        xbuild /nologo /p:Configuration=Release RobloxServer.sln
+        cp RobloxServer.Starter/bin/Release/IniciarServidor.exe .
     - name: Upload the compiled site
       uses: actions/upload-artifact@v4
       with:
@@ -33,6 +35,7 @@ jobs:
           !RobloxServer.Web/bin/*.mdb
           RobloxServer.sln
           iniciar-servidor.bat
+          IniciarServidor.exe
           docs/
           README.md
     - name: Start site

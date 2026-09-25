@@ -13,7 +13,7 @@ inclusive no Mono), e as URLs sem extensão de 2015 também funcionam.
 | `/Game/Visit.ashx?IsPlaySolo=1&UserID=&PlaceID=` | `Game/Visit.ashx` | script de Play Solo assinado |
 | `/Game/Studio.ashx` | `Game/Studio.ashx` | configuração inicial do Studio |
 | `/Game/PlaceLauncher.ashx?request=RequestGame&placeId=` | `Game/PlaceLauncher.ashx` | escolhe um servidor e emite ticket |
-| `/Game/Join.ashx?jobId=` | `Game/Join.ashx` | join script JSON assinado |
+| `/Game/Join.ashx?jobId=` | `Game/Join.ashx` | join script Lua assinado (2012M/2013M) com ticket de uso único |
 | `/game/getauthticket` | `Game/GetAuthTicket.ashx` | ticket para o usuário logado |
 | `/Login/Negotiate.ashx?suggest=` | `Login/Negotiate.ashx` | troca ticket por `.ROBLOSECURITY` |
 | `/Game/ClientPresence.ashx`, `/Game/GetCurrentUser.ashx`, `/Game/Logout.ashx` | `Game/*` | |
@@ -33,6 +33,16 @@ inclusive no Mono), e as URLs sem extensão de 2015 também funcionam.
 | `/Game/ValidateTicket.ashx?ticket=&jobId=&serverKey=` | `OK|userId|nome|superSafeChat|idadeDaConta|admin` ou `ERROR|motivo` |
 | `/GetAllowedMD5Hashes/?apiKey=`, `/GetAllowedSecurityVersions/?apiKey=` | listas de verificação |
 | `/list.php`, `/delist.php`, `/serverlist.txt` | master server compatível com Novetus |
+
+## RobloxPlayerLauncher
+
+| URL | Descrição |
+| --- | --- |
+| `robloxserver-player:1+launchmode:play\|host+gameinfo:TICKET+placeid:ID+baseurl:URL` | link aberto pelos botões Play / Host Server (`Content/PlaceLauncher.js`) |
+| `/install/version.ashx?client=2012M\|2013M\|Launcher` | versão (`version-` + SHA-256) do pacote em `App_Data/Clients` ou `App_Data/Launcher` |
+| `/install/download.ashx?client=` | o zip do cliente ou o `RobloxPlayerLauncher.exe` (sem o exe: redireciona para `LauncherDownloadUrl`) |
+| `/Game/GameServer.ashx?jobId=&serverKey=[&loadPlace=false]` | script Lua assinado do servidor de jogo |
+| `/Game/PlaceLauncher.ashx` | agora também devolve `placeId` e `client` |
 
 ## Launcher (JSON)
 

@@ -39,6 +39,19 @@ namespace RobloxServer.Pages
 
             ServersRepeater.DataSource = GameServers.All();
             ServersRepeater.DataBind();
+
+            ClientsRepeater.DataSource = Config.Clients.Concat(new[] { ClientPackages.Launcher })
+                .Select(name => new { Name = name, Package = ClientPackages.Find(name) })
+                .Select(c => new
+                {
+                    c.Name,
+                    File = c.Package != null ? c.Package.FileName : "missing",
+                    Version = c.Package != null ? c.Package.Version : "-",
+                    Size = c.Package != null ? (c.Package.Size / 1048576.0).ToString("0.0") + " MB" : "-",
+                    Updated = c.Package != null ? c.Package.Updated.ToString("u") : "-"
+                })
+                .ToList();
+            ClientsRepeater.DataBind();
         }
 
         User TargetUser()

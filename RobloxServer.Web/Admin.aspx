@@ -50,6 +50,22 @@
         </asp:Repeater>
     </table>
 
+    <h2>Clients</h2>
+    <p>RobloxPlayerLauncher downloads the clients from this site. Put one zip per client in
+       <code>App_Data/Clients</code> (<code>2012M.zip</code>, <code>2013M.zip</code>) and, optionally, the launcher in
+       <code>App_Data/Launcher/RobloxPlayerLauncher.exe</code>. Replacing a file makes every launcher update.</p>
+    <table class="table grid">
+        <asp:Repeater ID="ClientsRepeater" runat="server">
+            <HeaderTemplate><tr class="table-header"><th class="first">Package</th><th>File</th><th>Version</th><th>Size</th><th>Updated</th></tr></HeaderTemplate>
+            <ItemTemplate>
+                <tr>
+                    <td><%# Enc("Name") %></td><td><%# Enc("File") %></td><td><%# Enc("Version") %></td>
+                    <td><%# Enc("Size") %></td><td><%# Enc("Updated") %></td>
+                </tr>
+            </ItemTemplate>
+        </asp:Repeater>
+    </table>
+
     <h2>Script signing key</h2>
     <p>Patch this PUBLICKEYBLOB into the 2015 clients so they accept scripts signed by this server
        (also available at <a href="Keys/PublicKey.ashx">Keys/PublicKey.ashx</a>).</p>

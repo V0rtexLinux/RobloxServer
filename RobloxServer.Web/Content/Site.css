@@ -203,3 +203,15 @@ table.table { border-collapse: collapse; width: 100%; border-top: 1px solid #9e9
 
 #ErrorPage { text-align: center; padding: 60px 0; }
 #ErrorPage p { font-size: 14px; }
+
+/* ----------------- Place launcher (PlaceLauncherStatusPanel) ----------------- */
+
+#ItemContainer .HostButton { margin-left: 8px; }
+#ItemContainer .PlayInstructions .PlaceId { color: #888; }
+.PlaceLauncherOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 20000; }
+.PlaceLauncherModal { width: 300px; min-height: 160px; margin: 180px auto 0; background: #fff; border: 5px solid #6e99c9; padding: 20px; text-align: center; font-size: 14px; }
+.PlaceLauncherModal .Spinner { padding: 10px 0 15px; }
+.PlaceLauncherModal .PlaceLauncherStatus { min-height: 30px; font-weight: bold; color: #343434; }
+.PlaceLauncherModal .PlaceLauncherInstall { font-size: 12px; margin: 5px 0 12px; line-height: 1.5; }
+.Button { cursor: pointer; background-color: #fff; border: solid 1px #333; color: #333; font-size: 12px; padding: 3px 10px; }
+.Button:hover { background-color: #6e99c9; border-color: #000; color: #fff; }

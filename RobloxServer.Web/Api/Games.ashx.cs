@@ -22,7 +22,7 @@ namespace RobloxServer.Handlers.Api
                     description = p.Description ?? "",
                     creatorId = p.CreatorId,
                     creatorName = p.CreatorName,
-                    client = p.Client,
+                    client = PlaceService.ClientFor(p),
                     visits = p.Visits,
                     version = p.Version,
                     created = ToIso(p.Created),

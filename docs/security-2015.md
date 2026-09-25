@@ -9,9 +9,9 @@ lista o que existe e onde está, e o que é fraco de propósito.
 | Senhas com PBKDF2-HMAC-SHA1, 1000 iterações, salt de 128 bits | `Code/Security/PasswordHasher.cs` | formato do ASP.NET Identity 2 (VS2015); fraco hoje |
 | Assinatura de scripts `--rbxsig%...%` (RSA 1024 + SHA-1 sobre `"\r\n" + script`) | `Code/Security/ScriptSigner.cs`, `Game/Visit.ashx`, `Game/Join.ashx` | chave de 1024 bits e SHA-1 são quebráveis hoje |
 | Tickets de autenticação de uso único (5 min) | `Code/Security/AuthTickets.cs`, `Game/PlaceLauncher.ashx`, `Game/GetAuthTicket.ashx`, `Login/Negotiate.ashx` | um uso pelo cliente e um uso pelo servidor de jogo |
-| Validação do jogador pelo servidor de jogo | `Game/ValidateTicket.ashx` + addon `RobloxServerAuth.lua` no launcher | o servidor chuta quem não tem ticket válido ou está banido |
+| Validação do jogador pelo servidor de jogo | `Game/ValidateTicket.ashx` + `App_Data/Templates/GameServer.lua` | o servidor chuta quem não tem ticket válido ou está banido |
 | `apiKey` de servidor (RCC) na query string | `HandlerBase.RequireApiKey`, `/GetAllowedMD5Hashes/`, `/GetAllowedSecurityVersions/` | chave em texto claro na URL, como era |
-| Lista de versões e MD5 de clientes permitidos | `AllowedSecurityVersions`, `AllowedMD5Hashes` no `Web.config` | o próprio launcher também confere MD5 do cliente e do script |
+| Lista de versões e MD5 de clientes permitidos | `AllowedSecurityVersions`, `AllowedMD5Hashes` no `Web.config` | o launcher confere o SHA-256 dos pacotes de cliente (`/install/`) |
 | `serverKey` por job | `Game/Servers.ashx` | cada servidor hospedado recebe a sua |
 | X-CSRF-TOKEN (403 "Token Validation Failed" com o token no cabeçalho) | `Auth.ValidateCsrf`, `Game/Servers.ashx`, `Api/Logout.ashx` | o launcher repete a requisição com o token |
 | ViewState + EventValidation + `ViewStateUserKey` nas páginas | `Code/Web/BasePage.cs` | anti-CSRF clássico do Web Forms |

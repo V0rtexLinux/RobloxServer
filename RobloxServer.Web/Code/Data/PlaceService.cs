@@ -57,6 +57,15 @@ namespace RobloxServer.Data
             return match ?? Config.DefaultClient;
         }
 
+        /// <summary>
+        /// Client a place is played with. Places published for clients that are no longer supported
+        /// (2006S...2011M from the Novetus days) are played with the default client.
+        /// </summary>
+        public static string ClientFor(Place place)
+        {
+            return CleanClient(place != null ? place.Client : null);
+        }
+
         public static Place Create(User creator, string name, string description, string client, bool isPublic, bool filteringEnabled, int maxPlayers, byte[] data, string genre = null)
         {
             DateTime now = DateTime.UtcNow;
@@ -80,6 +89,24 @@ namespace RobloxServer.Data
             Db.SavePlaceFile(place.Id, data, "rbxl");
             Logging.Log(LogType.Success, creator.Name + " published place " + place.Id + " (" + place.Name + ")");
             return Db.FindPlace(place.Id);
+        }
+
+        /// <summary>Who may start a game server for a place (the HostPolicy setting).</summary>
+        public static bool CanHost(User user, Place place)
+        {
+            if (user == null || place == null || user.IsCurrentlyBanned)
+            {
+                return false;
+            }
+            switch ((Config.HostPolicy ?? "").ToLowerInvariant())
+            {
+                case "admin":
+                    return Db.IsAdmin(user);
+                case "owner":
+                    return place.CreatorId == user.Id || Db.IsAdmin(user);
+                default:
+                    return place.IsPublic || place.CreatorId == user.Id || Db.IsAdmin(user);
+            }
         }
 
         public static bool CanEdit(User user, Place place)
