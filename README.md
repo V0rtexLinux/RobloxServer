@@ -28,8 +28,11 @@ O **`IniciarServidor.exe`** abre uma janela com o estado do site e:
 * pode **iniciar junto com o Windows** (já minimizado, perto do relógio) e fica na área de notificação quando minimizado.
   Uso: `IniciarServidor.exe [--port 8080] [--minimized]`.
 
-O IIS Express só atende este PC. Para outros PCs da rede, a Internet e o Raspberry Pi, use o IIS completo:
-[docs/setting-up.md](docs/setting-up.md).
+* com **Aceitar outros PCs (Radmin VPN / rede local)** marcado, amigos entram pelo seu IP do Radmin (`http://26.x.x.x:8080/`)
+  ou da rede. O Windows pede permissão de administrador uma vez para liberar a porta do site e a UDP 53640 no firewall.
+
+Sem essa opção, o IIS Express só atende este PC (quem vem de fora vê *Bad Request - Invalid Hostname*).
+Para a Internet e o Raspberry Pi, use o IIS completo: [docs/setting-up.md](docs/setting-up.md).
 
 RobloxServer agora é um site **ASP.NET clássico (Web Forms, .NET Framework 4.6, C# 6 / Visual Studio 2015)**,
 com handlers `.ashx` e páginas `.aspx` como o roblox.com de 2015. Todo o JavaScript (Node/Express) foi removido.

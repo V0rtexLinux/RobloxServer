@@ -9,7 +9,10 @@ Dê dois cliques em `iniciar-servidor.bat` na raiz do repositório (precisa do
 [IIS Express](https://www.microsoft.com/download/details.aspx?id=48264)). Ele compila o site se ainda não
 estiver compilado e abre `http://localhost:8080/`. Outra porta: `iniciar-servidor.bat 80`.
 
-Para a rede, a Internet e o Raspberry Pi, siga os passos abaixo com o IIS completo.
+O `IniciarServidor.exe` faz o mesmo numa janela. Marque **Aceitar outros PCs (Radmin VPN / rede local)** para
+amigos entrarem pelo Radmin VPN ou pela rede (veja [playing.md](playing.md#radmin-vpn)).
+
+Para a Internet e o Raspberry Pi, siga os passos abaixo com o IIS completo.
 
 ## 1. Compilar
 
