@@ -152,19 +152,7 @@ namespace RobloxServer.Web
 
         protected static bool CanHost(User user, Place place)
         {
-            if (user == null || place == null)
-            {
-                return false;
-            }
-            switch ((Config.HostPolicy ?? "").ToLowerInvariant())
-            {
-                case "admin":
-                    return Db.IsAdmin(user);
-                case "owner":
-                    return place.CreatorId == user.Id || Db.IsAdmin(user);
-                default:
-                    return place.IsPublic || place.CreatorId == user.Id || Db.IsAdmin(user);
-            }
+            return PlaceService.CanHost(user, place);
         }
 
         protected static bool CanSee(User user, Place place)

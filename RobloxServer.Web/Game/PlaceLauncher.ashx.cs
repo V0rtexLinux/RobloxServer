@@ -16,7 +16,7 @@ namespace RobloxServer.Handlers.Game
             User user = CurrentUser;
             if (user == null || user.IsCurrentlyBanned)
             {
-                Reply(null, 12, null, user == null ? "You must be logged in to play." : "Your account has been moderated.");
+                Reply(null, 12, null, user == null ? "You must be logged in to play." : "Your account has been moderated.", null);
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace RobloxServer.Handlers.Game
                 server = GameServers.Find(jobId);
                 if (server == null)
                 {
-                    Reply(null, 5, null, "This game has ended.");
+                    Reply(null, 5, null, "This game has ended.", null);
                     return;
                 }
                 placeId = server.PlaceId;
@@ -38,7 +38,7 @@ namespace RobloxServer.Handlers.Game
             Place place = Db.FindPlace(placeId);
             if (place == null || !CanSee(user, place))
             {
-                Reply(null, 4, null, "This place does not exist or is private.");
+                Reply(null, 4, null, "This place does not exist or is private.", null);
                 return;
             }
 
@@ -51,26 +51,28 @@ namespace RobloxServer.Handlers.Game
                 if (server == null)
                 {
                     Reply(null, servers.Count > 0 ? 6 : 0, null,
-                        servers.Count > 0 ? "The game is full." : "No servers are running this game. Host one from the launcher.");
+                        servers.Count > 0 ? "The game is full." : "No servers are running this game right now. Click Host Server to start one.", place);
                     return;
                 }
             }
             else if (server.MaxPlayers > 0 && server.PlayerCount >= server.MaxPlayers)
             {
-                Reply(server, 6, null, "The game is full.");
+                Reply(server, 6, null, "The game is full.", place);
                 return;
             }
 
             AuthTicket ticket = AuthTickets.Issue(user.Id, user.Name, place.Id, server.JobId);
-            Reply(server, 2, ticket, null);
+            Reply(server, 2, ticket, null, place);
         }
 
-        void Reply(GameServer server, int status, AuthTicket ticket, string message)
+        void Reply(GameServer server, int status, AuthTicket ticket, string message, Place place)
         {
             WriteJson(new
             {
                 jobId = server != null ? server.JobId : null,
                 status = status,
+                placeId = place != null ? place.Id : 0,
+                client = place != null ? PlaceService.ClientFor(place) : null,
                 joinScriptUrl = server != null ? Config.BaseUrl + "Game/Join.ashx?jobId=" + server.JobId : null,
                 authenticationUrl = Config.BaseUrl + "Login/Negotiate.ashx",
                 authenticationTicket = ticket != null ? ticket.Value : null,

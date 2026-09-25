@@ -10,7 +10,7 @@ Internet ──► roteador ──► Raspberry Pi Zero 2W (192.168.1.2)
                              └─ upnpc: abre as portas no roteador a cada 30 min (+ DDNS opcional)
 ```
 
-Os servidores de jogo (clientes 2007–2012 do launcher) são executáveis Windows x86 e **não rodam no Pi**:
+Os servidores de jogo (clientes 2012M e 2013M do launcher) são executáveis Windows x86 e **não rodam no Pi**:
 eles ficam nos PCs, e o Pi encaminha as portas até eles.
 
 ## 1. Preparar o Pi
@@ -47,8 +47,8 @@ Para ver o que seria gerado sem instalar nada: `RENDER_ONLY=1 ./install.sh` (arq
   Configure o **DNS do DHCP** do roteador para o `PI_IP` (assim todo PC da casa acha `http://robloxserver.lan/`).
 * **Web.config do site:** coloque o `PI_IP` em `TrustedProxies` (modo `remote`) e o seu IP público / nome
   DDNS em `PublicGameAddress`. Jogadores de fora recebem esse endereço; os da rede recebem o IP local do PC.
-* **Launcher de quem hospeda:** use a porta configurada em `GAME_FORWARDS` e, em *Alternate Server IP*,
-  o IP público/DDNS (ou deixe o RobloxServer resolver sozinho pelo `PublicGameAddress`).
+* **Launcher de quem hospeda:** em `%LocalAppData%\RobloxServer\Settings.ini`, use em `HostPort` a porta configurada
+  em `GAME_FORWARDS` e, em `HostAddress`, o IP público/DDNS (ou deixe vazio para o RobloxServer resolver pelo `PublicGameAddress`).
 
 ## 4. Modo `local` (site no próprio Pi)
 

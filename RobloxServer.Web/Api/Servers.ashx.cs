@@ -23,7 +23,7 @@ namespace RobloxServer.Handlers.Api
                     name = s.Name,
                     address = GameServers.AddressFor(s, ip),
                     port = s.Port,
-                    client = s.Client,
+                    client = PlaceService.CleanClient(s.Client),
                     version = s.Version,
                     host = s.HostUserName,
                     players = s.PlayerCount,

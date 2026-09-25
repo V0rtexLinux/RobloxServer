@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using RobloxServer.Data;
 using RobloxServer.Security;
 using RobloxServer.Web;
@@ -6,8 +6,8 @@ using RobloxServer.Web;
 namespace RobloxServer.Handlers.Game
 {
     /// <summary>
-    /// Signed JSON join script (2015 format) for a running job. The Novetus launcher reads
-    /// MachineAddress / ServerPort / NovetusClient / ClientTicket from it.
+    /// /Game/Join.ashx?jobId=: signed Lua join script for the 2012M/2013M clients, like the 2012
+    /// join.ashx. RobloxPlayerLauncher downloads it with the player's cookie and starts the client with it.
     /// </summary>
     public class Join : HandlerBase
     {
@@ -39,52 +39,25 @@ namespace RobloxServer.Handlers.Game
             }
 
             AuthTicket ticket = AuthTickets.Issue(user.Id, user.Name, server.PlaceId, server.JobId);
-            string address = GameServers.AddressFor(server, Ip);
-
-            var join = new
+            var values = new Dictionary<string, string>
             {
-                ClientPort = 0,
-                MachineAddress = address,
-                ServerPort = server.Port,
-                PingUrl = Config.BaseUrl + "Game/ClientPresence.ashx?version=old&PlaceID=" + server.PlaceId,
-                PingInterval = 120,
-                UserName = user.Name,
-                SeleniumTestMode = false,
-                UserId = user.Id,
-                SuperSafeChat = user.SuperSafeChat,
-                CharacterAppearance = Config.BaseUrl + "Asset/CharacterFetch.ashx?userId=" + user.Id + "&placeId=" + server.PlaceId,
-                ClientTicket = ticket.Value,
-                GameId = server.JobId,
-                PlaceId = server.PlaceId,
-                MeasurementUrl = "",
-                WaitingForCharacterGuid = Guid.NewGuid().ToString(),
-                BaseUrl = Config.BaseUrl,
-                ChatStyle = "ClassicAndBubble",
-                VendorId = 0,
-                ScreenShotInfo = "",
-                VideoInfo = "",
-                CreatorId = place != null ? place.CreatorId : 0,
-                CreatorTypeEnum = "User",
-                MembershipType = "None",
-                AccountAge = user.AccountAgeDays,
-                CookieStoreFirstTimePlayKey = "rbx_evt_ftp",
-                CookieStoreFiveMinutePlayKey = "rbx_evt_fmp",
-                CookieStoreEnabled = true,
-                IsRobloxPlace = false,
-                GenerateTeleportJoin = false,
-                IsUnknownOrUnder13 = user.SuperSafeChat,
-                SessionId = Guid.NewGuid().ToString(),
-                DataCenterId = 0,
-                UniverseId = 0,
-                BrowserTrackerId = 0,
-                UsePortraitMode = false,
-                FollowUserId = 0,
-                characterAppearanceId = user.Id,
-                NovetusClient = server.Client,
-                FilteringEnabled = place != null && place.FilteringEnabled
+                { "BaseUrl", Templates.LuaLongString(Config.BaseUrl) },
+                { "ServerAddress", Templates.LuaLongString(GameServers.AddressFor(server, Ip)) },
+                { "ServerPort", server.Port.ToString() },
+                { "PlaceId", server.PlaceId.ToString() },
+                { "JobId", Templates.LuaLongString(server.JobId) },
+                { "UserId", user.Id.ToString() },
+                { "UserName", Templates.LuaLongString(user.Name) },
+                { "AuthTicket", ticket.Value },
+                { "SuperSafeChat", user.SuperSafeChat ? "true" : "false" },
+                { "AccountAge", user.AccountAgeDays.ToString() },
+                { "CharacterAppearance", Templates.LuaLongString(Config.BaseUrl + "Asset/CharacterFetch.ashx?userId=" + user.Id + "&placeId=" + server.PlaceId) },
+                { "PingUrl", Templates.LuaLongString(Config.BaseUrl + "Game/ClientPresence.ashx?version=old&PlaceID=" + server.PlaceId) },
+                { "PingInterval", "120" }
             };
 
-            WriteSignedScript(Serialize(join));
+            Response.AppendHeader("X-Client", PlaceService.CleanClient(server.Client));
+            WriteSignedScript(Templates.Render("Join.lua", values));
         }
     }
 }

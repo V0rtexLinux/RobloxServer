@@ -14,6 +14,6 @@
 
 1. [Instalando o servidor (Windows / IIS)](setting-up.md)
 2. [Raspberry Pi Zero 2W: port forwarding, UPnP e DNS](raspberry-pi.md)
-3. [Jogando pelo RobloxServerLauncher](playing.md)
+3. [Jogando com o RobloxPlayerLauncher](playing.md)
 4. [Segurança no estilo 2015](security-2015.md)
 5. [Referência dos endpoints](endpoints.md)

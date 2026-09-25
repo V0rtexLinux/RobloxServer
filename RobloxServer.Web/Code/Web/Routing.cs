@@ -43,7 +43,9 @@ namespace RobloxServer.Web
             { "/login/default.aspx", "~/Login.aspx" },
             { "/ide/publish", "~/Develop.aspx" },
             { "/develop", "~/Develop.aspx" },
-            { "/status", "~/Api/Status.ashx" }
+            { "/status", "~/Api/Status.ashx" },
+            { "/install/version", "~/Install/Version.ashx" },
+            { "/install/download", "~/Install/Download.ashx" }
         };
 
         static Dictionary<string, string> Routes
@@ -133,7 +135,7 @@ namespace RobloxServer.Web
         public static bool IsRateLimitExempt(string appRelativePath)
         {
             string path = (appRelativePath ?? "").ToLowerInvariant();
-            string[] exempt = { "/asset", "/content/", "/error/", "/v1.1/counters", "/v1.0/multiincrement", "/game/clientpresence", "/game/validateticket", "/game/servers", "/favicon.ico" };
+            string[] exempt = { "/asset", "/content/", "/error/", "/v1.1/counters", "/v1.0/multiincrement", "/game/clientpresence", "/game/validateticket", "/game/servers", "/install/download", "/favicon.ico" };
             return exempt.Any(e => path.StartsWith(e));
         }
     }

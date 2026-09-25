@@ -29,11 +29,20 @@ namespace RobloxServer.Pages
             NameLiteral.Text = Server.HtmlEncode(place.Name);
             NameLiteral2.Text = NameLiteral.Text;
             CreatorLiteral.Text = Server.HtmlEncode(place.CreatorName);
-            ClientLiteral.Text = Server.HtmlEncode(place.Client);
+            ClientLiteral.Text = Server.HtmlEncode(PlaceService.ClientFor(place));
             VisitsLiteral.Text = place.Visits.ToString("N0");
             UpdatedLiteral.Text = Ago(place.Updated);
             DescriptionLiteral.Text = Server.HtmlEncode(place.Description ?? "");
             IdLiteral.Text = place.Id.ToString();
+            ClientLiteral2.Text = ClientLiteral.Text;
+
+            // Read by Content/PlaceLauncher.js to build the robloxserver-player: link.
+            PlaceLauncher.Attributes["data-place-id"] = place.Id.ToString();
+            PlaceLauncher.Attributes["data-base-url"] = Config.BaseUrl;
+            PlaceLauncher.Attributes["data-ticket-url"] = ResolveUrl("~/Game/GetAuthTicket.ashx");
+            PlaceLauncher.Attributes["data-login-url"] = ResolveUrl("~/Login.aspx?ReturnUrl=" + Server.UrlEncode(Request.RawUrl));
+            PlaceLauncher.Attributes["data-logged-in"] = user != null ? "true" : "false";
+            HostPanel.Visible = PlaceService.CanHost(user, place);
             DownloadLink.HRef = ResolveUrl("~/asset/?id=" + place.Id);
             ThumbnailImage.Src = PlaceThumb(place.Id, "420x230");
             ThumbnailImage.Alt = place.Name;

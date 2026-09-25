@@ -17,3 +17,13 @@ RobloxServer.Web/App_Data/Settings/
 
 # Raspberry Pi render-only output
 pi/out/
+
+# RobloxPlayerLauncher packages (big binaries, uploaded by the admin)
+RobloxServer.Web/App_Data/Clients/
+RobloxServer.Web/App_Data/Launcher/
+
+# IniciarServidor.exe (built by RobloxServer.Starter, copied to the root in CI)
+RobloxServer.Starter/bin/
+RobloxServer.Starter/obj/
+/IniciarServidor.exe
+__pycache__/

@@ -22,6 +22,7 @@ namespace RobloxServer.Pages
         protected global::System.Web.UI.WebControls.Repeater IpBansRepeater;
         protected global::System.Web.UI.WebControls.Repeater UsersRepeater;
         protected global::System.Web.UI.WebControls.Repeater ServersRepeater;
+        protected global::System.Web.UI.WebControls.Repeater ClientsRepeater;
         protected global::System.Web.UI.WebControls.Literal PublicKeyLiteral;
     }
 }

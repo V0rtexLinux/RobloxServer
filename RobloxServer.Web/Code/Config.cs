@@ -164,18 +164,37 @@ namespace RobloxServer
         /// <summary>None or Roblox. Roblox resolves unknown asset ids through assetdelivery.roblox.com like the old Node server.</summary>
         public static string AssetFallback { get { return Get("AssetFallback", "Roblox"); } }
 
+        /// <summary>The only clients RobloxPlayerLauncher knows how to install and start.</summary>
+        public static readonly string[] SupportedClients = { "2012M", "2013M" };
+
+        /// <summary>Clients games can be published for: the "Clients" setting, limited to SupportedClients.</summary>
         public static string[] Clients
         {
             get
             {
-                string[] clients = GetList("Clients");
-                return clients.Length > 0
-                    ? clients
-                    : new[] { "2006S", "2007E", "2007M", "2008M", "2009E", "2009E-HD", "2009L", "2010L", "2011E", "2011M", "2012M" };
+                string[] clients = GetList("Clients")
+                    .Select(c => SupportedClients.FirstOrDefault(s => string.Equals(s, c, StringComparison.OrdinalIgnoreCase)))
+                    .Where(c => c != null)
+                    .Distinct()
+                    .ToArray();
+                return clients.Length > 0 ? clients : SupportedClients.ToArray();
             }
         }
 
-        public static string DefaultClient { get { return Get("DefaultClient", "2012M"); } }
+        public static string DefaultClient
+        {
+            get
+            {
+                string client = Get("DefaultClient", "2012M");
+                return Clients.FirstOrDefault(c => string.Equals(c, client, StringComparison.OrdinalIgnoreCase)) ?? Clients[0];
+            }
+        }
+
+        /// <summary>Where "Download ROBLOX" goes when App_Data/Launcher/RobloxPlayerLauncher.exe does not exist.</summary>
+        public static string LauncherDownloadUrl
+        {
+            get { return Get("LauncherDownloadUrl", "https://github.com/V0rtexLinux/RobloxServerLauncher/releases/latest"); }
+        }
 
         public static string DataPath
         {

@@ -93,7 +93,7 @@ namespace RobloxServer.Handlers.Game
                 Address = address.Trim(),
                 SourceIp = Ip,
                 Port = port,
-                Client = string.IsNullOrWhiteSpace(Param("client")) ? place.Client : Param("client").Trim(),
+                Client = PlaceService.ClientFor(place),
                 Version = Param("version") ?? "",
                 HostUserId = user.Id,
                 HostUserName = user.Name,

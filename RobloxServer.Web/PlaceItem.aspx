@@ -20,10 +20,16 @@
             </div>
 
             <div class="ItemRight">
-                <a class="btn-large btn-play" href="#PlayInstructions">Play</a>
-                <div id="PlayInstructions" class="PlayInstructions">
-                    To play: open <b>RobloxServerLauncher</b> &rarr; <i>Server Browser</i> &rarr; <i>RobloxServer Games</i>, log in and pick
-                    <b><asp:Literal ID="NameLiteral2" runat="server" /></b> (place id <asp:Literal ID="IdLiteral" runat="server" />).
+                <div id="PlaceLauncher" runat="server">
+                    <a class="btn-large btn-play" href="#" data-launch-mode="play">Play</a>
+                    <asp:PlaceHolder ID="HostPanel" runat="server" Visible="false">
+                        <a class="btn-medium btn-neutral HostButton" href="#" data-launch-mode="host">Host Server</a>
+                    </asp:PlaceHolder>
+                </div>
+                <div class="PlayInstructions">
+                    <b><asp:Literal ID="NameLiteral2" runat="server" /></b> is played with the <b><asp:Literal ID="ClientLiteral2" runat="server" /></b> client.
+                    First time? <a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download ROBLOX</a>, run it once, then click Play.
+                    <span class="PlaceId">(place id <asp:Literal ID="IdLiteral" runat="server" />)</span>
                 </div>
                 <table class="ItemDetails">
                     <tr><td class="Label">Visited:</td><td><asp:Literal ID="VisitsLiteral" runat="server" /></td></tr>
@@ -42,7 +48,7 @@
             </div>
             <div class="ItemTabContent">
                 <h2 class="light">Running Games</h2>
-                <asp:PlaceHolder ID="NoServers" runat="server"><p>No servers are running this game right now. Host one from the launcher.</p></asp:PlaceHolder>
+                <asp:PlaceHolder ID="NoServers" runat="server"><p>No servers are running this game right now. Click <b>Host Server</b> to start one.</p></asp:PlaceHolder>
                 <table class="table grid">
                     <asp:Repeater ID="ServersRepeater" runat="server">
                         <HeaderTemplate><tr class="table-header"><th class="first">Server</th><th>Host</th><th>Players</th><th>Started</th></tr></HeaderTemplate>
@@ -57,6 +63,19 @@
                     </asp:Repeater>
                 </table>
             </div>
+
+            <div id="PlaceLauncherStatusPanel" class="PlaceLauncherOverlay" style="display: none">
+                <div class="PlaceLauncherModal">
+                    <div class="Spinner"><img src="<%: ResolveUrl("~/Images/Icons/ProgressIndicator3.gif") %>" width="32" height="32" alt="Progress" /></div>
+                    <div class="PlaceLauncherStatus" id="PlaceLauncherStatus">Starting ROBLOX...</div>
+                    <div class="PlaceLauncherInstall" id="PlaceLauncherInstall" style="display: none">
+                        Nothing happened? <a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download ROBLOX</a>,
+                        run <b>RobloxPlayerLauncher.exe</b> once to install it, then click Play again.
+                    </div>
+                    <input type="button" class="Button CancelPlaceLauncherButton" id="CancelPlaceLauncher" value="Cancel" />
+                </div>
+            </div>
+            <script type="text/javascript" src="<%: ResolveUrl("~/Content/PlaceLauncher.js") %>"></script>
 
             <asp:PlaceHolder ID="EditPanel" runat="server" Visible="false">
                 <div class="PageBox">

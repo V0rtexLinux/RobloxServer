@@ -188,7 +188,7 @@ def main():
     place_id = int(body)
     check(place_id >= 1900000000, "local asset ids start at 1900000000")
     status, _, _ = admin.postback("/Develop.aspx", {"NameBox": "Private Place", "DescriptionBox": "secret",
-                                                    "ClientList": "2009E", "MaxPlayersBox": "8", "PublicBox": ""},
+                                                    "ClientList": "2013M", "MaxPlayersBox": "8", "PublicBox": ""},
                                   "PublishButton", files={"PlaceUpload": ("private.rbxl", PLACE)})
     check(status == 302, "publish from Develop.aspx (private)")
     status, _, body = player.get("/Api/Games.ashx")
@@ -197,13 +197,19 @@ def main():
     check(not any(g["name"] == "Private Place" for g in games), "private game hidden from others")
     status, _, body = admin.get("/Api/Games.ashx")
     private = [g for g in json.loads(body)["data"] if g["name"] == "Private Place"]
-    check(len(private) == 1 and private[0]["client"] == "2009E", "owner sees private game with its client")
+    check(len(private) == 1 and private[0]["client"] == "2013M", "owner sees private game with its client")
+    check(any(g["id"] == place_id and g["client"] == "2012M" for g in games), "Studio publish uses the default client (2012M)")
+    status, _, body = admin.request("/Data/Upload.ashx?assetid=0&type=Place&name=Old&client=2009E&ispublic=false", PLACE,
+                                    {"Content-Type": "application/octet-stream"}, "POST")
+    status, _, body = admin.get("/Api/Games.ashx?id=%d" % int(body))
+    check(json.loads(body)["data"][0]["client"] == "2012M", "unsupported clients (2009E) become 2012M")
     status, _, body = player.get("/asset/?id=%d" % private[0]["id"])
     check(status == 403, "private place file is protected")
     status, _, body = player.get("/Asset/?ID=%d" % place_id)
     check(status == 200 and body == PLACE, "place file downloads through /Asset/?ID=")
     status, _, body = anon.get("/PlaceItem.aspx?id=%d" % place_id)
     check(status == 200 and b"Crossroads" in body, "PlaceItem.aspx renders")
+    check(b'data-launch-mode="play"' in body and b"PlaceLauncher.js" in body, "PlaceItem.aspx has the Play button")
 
     print("Signed scripts")
     status, _, body = player.get("/Game/Visit.ashx?IsPlaySolo=1&UserID=2&PlaceID=%d" % place_id)
@@ -232,18 +238,27 @@ def main():
     launch = json.loads(body)
     check(launch["status"] == 2 and launch["jobId"] == job["jobId"], "PlaceLauncher finds the job")
     check(launch["joinScriptUrl"].startswith(BASE + "/Game/Join.ashx"), "joinScriptUrl uses the request address")
+    check(launch["client"] == "2012M" and launch["placeId"] == place_id, "PlaceLauncher names the client to install")
     status, _, body = player.get(launch["joinScriptUrl"])
     text = body.decode()
     check(verify_rbxsig(text, key_xml), "Join.ashx signature verifies")
-    join = json.loads(text.split("%", 2)[2])
-    check(join["MachineAddress"] == "192.168.1.50" and join["ServerPort"] == 53640, "join script has LAN address")
-    check(join["NovetusClient"] == "2012M" and join["UserName"] == "Noob_1", "join script has client and user")
+    check("local ServerAddress = [====[192.168.1.50]====]" in text and "local ServerPort = 53640" in text,
+          "join script has LAN address")
+    check("local UserName = [====[Noob_1]====]" in text and "local SuperSafeChat = true" in text
+          and "NetworkClient:PlayerConnect" in text, "join script has the user")
+    client_ticket = re.search(r"local AuthTicket = \[====\[([0-9A-F]+)\]====\]", text).group(1)
+    status, _, body = anon.get("/Game/GameServer.ashx?jobId=%s&serverKey=wrong" % job["jobId"])
+    check(status == 404, "GameServer.ashx needs the serverKey")
+    status, _, body = anon.get("/Game/GameServer.ashx?jobId=%s&serverKey=%s&loadPlace=false" % (job["jobId"], job["serverKey"]))
+    text = body.decode()
+    check(verify_rbxsig(text, key_xml) and "local Port = 53640" in text and "local LoadPlace = false" in text
+          and "NetworkServer:Start(Port)" in text, "GameServer.ashx script for the job")
     validate = "/Game/ValidateTicket.ashx?ticket=%s&jobId=%s&serverKey=%s"
-    status, _, body = anon.get(validate % (join["ClientTicket"], job["jobId"], "wrong"))
+    status, _, body = anon.get(validate % (client_ticket, job["jobId"], "wrong"))
     check(body.startswith(b"ERROR"), "ValidateTicket rejects a bad serverKey")
-    status, _, body = anon.get(validate % (join["ClientTicket"], job["jobId"], job["serverKey"]))
+    status, _, body = anon.get(validate % (client_ticket, job["jobId"], job["serverKey"]))
     check(body.startswith(b"OK|2|Noob_1|true"), "ValidateTicket accepts the ticket once")
-    status, _, body = anon.get(validate % (join["ClientTicket"], job["jobId"], job["serverKey"]))
+    status, _, body = anon.get(validate % (client_ticket, job["jobId"], job["serverKey"]))
     check(body.startswith(b"ERROR"), "ticket cannot be replayed")
     status, _, body = anon.get("/Game/Servers.ashx?action=heartbeat&players=2&jobId=%s&serverKey=%s"
                                % (job["jobId"], job["serverKey"]))
@@ -252,6 +267,35 @@ def main():
     check(json.loads(body)["status"] == 6, "PlaceLauncher reports a full game")
     status, _, body = anon.get("/Api/Servers.ashx?placeId=%d" % place_id)
     check(json.loads(body)["data"][0]["players"] == 2, "Api/Servers shows the player count")
+
+    print("RobloxPlayerLauncher")
+    status, _, body = player.get("/Game/GetAuthTicket.ashx?placeId=%d" % place_id)
+    check(status == 200 and re.match(rb"^[0-9A-F]{96}$", body), "Play button gets a one-time ticket")
+    launcher = Client()
+    status, _, _ = launcher.get("/Login/Negotiate.ashx?suggest=" + body.decode())
+    status2, _, me = launcher.get("/Api/Me.ashx")
+    check(status == 200 and json.loads(me).get("userName") == "Noob_1", "launcher trades the ticket for a cookie")
+    status, _, _ = Client().get("/Login/Negotiate.ashx?suggest=" + body.decode())
+    check(status == 403, "the ticket works once")
+    status, _, body = anon.get("/install/version.ashx?client=2009E")
+    check(status == 404 and not json.loads(body)["available"], "install: unsupported client")
+    status, _, body = anon.get("/install/version.ashx?client=2013m")
+    check(status == 404 and json.loads(body)["client"] == "2013M", "install: 2013M not uploaded yet")
+    status, headers, _ = anon.get("/Install/Download.ashx?client=Launcher")
+    check(status == 302 and "github.com" in headers.get("Location", ""), "launcher download falls back to GitHub")
+    if SITE_DIR:
+        import os
+        package = b"PK fake 2012M client package"
+        os.makedirs(SITE_DIR.rstrip("/") + "/App_Data/Clients", exist_ok=True)
+        with open(SITE_DIR.rstrip("/") + "/App_Data/Clients/2012M.zip", "wb") as f:
+            f.write(package)
+        status, _, body = anon.get("/install/version.ashx?client=2012M")
+        info = json.loads(body)
+        check(status == 200 and info["available"] and info["sha256"] == hashlib.sha256(package).hexdigest()
+              and info["version"] == "version-" + info["sha256"][:16], "install: 2012M version")
+        status, _, body = anon.get("/install/download.ashx?client=2012M")
+        check(status == 200 and body == package, "install: 2012M download")
+        os.remove(SITE_DIR.rstrip("/") + "/App_Data/Clients/2012M.zip")
 
     print("Novetus master server")
     status, _, body = anon.get("/list.php?name=Legacy&ip=1.2.3.4&port=53640&client=2009E&version=1.3&id=abc123")

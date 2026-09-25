@@ -27,7 +27,7 @@
         <div id="Games">
             <div class="GamesHeader">
                 <span class="GamesDisplaySet"><asp:Literal ID="HeaderLiteral" runat="server" /></span>
-                <span class="GamesHint">Play with the <b>RobloxServerLauncher</b>: <i>Server Browser &rarr; RobloxServer Games</i></span>
+                <span class="GamesHint">Pick a game and click <b>Play</b>. First time? <a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download ROBLOX</a></span>
             </div>
             <asp:PlaceHolder ID="EmptyMessage" runat="server" Visible="false">
                 <div class="SystemAlert">No games have been published yet. <a href="Develop.aspx">Publish the first one!</a></div>

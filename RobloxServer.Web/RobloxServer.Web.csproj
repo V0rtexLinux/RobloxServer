@@ -61,11 +61,14 @@
     <Content Include="Api\Status.ashx" />
     <Content Include="App_Data\FilteredWords.txt" />
     <Content Include="App_Data\Templates\BodyColors.xml" />
+    <Content Include="App_Data\Templates\GameServer.lua" />
+    <Content Include="App_Data\Templates\Join.lua" />
     <Content Include="App_Data\Templates\Studio.json" />
     <Content Include="App_Data\Templates\Visit.lua" />
     <Content Include="Asset\BodyColors.ashx" />
     <Content Include="Asset\CharacterFetch.ashx" />
     <Content Include="Asset\Default.ashx" />
+    <Content Include="Content\PlaceLauncher.js" />
     <Content Include="Content\Site.css" />
     <Content Include="Data\Upload.ashx" />
     <Content Include="Default.aspx" />
@@ -86,6 +89,9 @@
     <Content Include="Game\Studio.ashx" />
     <Content Include="Game\ValidateTicket.ashx" />
     <Content Include="Game\Visit.ashx" />
+    <Content Include="Game\GameServer.ashx" />
+    <Content Include="Install\Download.ashx" />
+    <Content Include="Install\Version.ashx" />
     <Content Include="Game\Wipeouts.ashx" />
     <Content Include="Global.asax" />
     <Content Include="favicon.ico" />
@@ -112,6 +118,7 @@
     <Content Include="Images\GenreIcons\Sports.png" />
     <Content Include="Images\GenreIcons\WildWest.png" />
     <Content Include="Images\Icons\NoSuitcase16x16.png" />
+    <Content Include="Images\Icons\ProgressIndicator3.gif" />
     <Content Include="Images\Icons\Robux.png" />
     <Content Include="Images\Icons\Tickets.png" />
     <Content Include="Images\Icons\gamesPage_filterArrow.png" />
@@ -190,6 +197,16 @@
     </Compile>
     <Compile Include="Code\Config.cs" />
     <Compile Include="Code\Data\Db.cs" />
+    <Compile Include="Code\Data\ClientPackages.cs" />
+    <Compile Include="Game\GameServer.ashx.cs">
+      <DependentUpon>GameServer.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Install\Download.ashx.cs">
+      <DependentUpon>Download.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Install\Version.ashx.cs">
+      <DependentUpon>Version.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Code\Data\Genres.cs" />
     <Compile Include="Code\Data\Models.cs" />
     <Compile Include="Code\Data\PlaceService.cs" />

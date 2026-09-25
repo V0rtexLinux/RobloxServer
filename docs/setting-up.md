@@ -50,7 +50,7 @@ O servidor **não** usa o domínio `www.roblox.com` (ele é do Roblox). Use um e
 * **Arquivo hosts** em cada PC: `192.168.1.2 robloxserver.lan www.robloxserver.lan api.robloxserver.lan`.
 
 Com `BaseUrl` vazio, os scripts gerados (`Visit.ashx`, `Join.ashx`, `Studio.ashx`...) usam o mesmo endereço
-que o cliente usou. O launcher só precisa do endereço no campo *RobloxServer*.
+que o cliente usou. O RobloxPlayerLauncher recebe o endereço do próprio botão Play.
 
 Os executáveis oficiais de 2015 (Studio/Player) têm `www.roblox.com` gravado dentro. Para usá-los, troque
 esse texto no executável pelo seu domínio (um nome com o mesmo número de letras de `roblox.com` é o mais fácil
