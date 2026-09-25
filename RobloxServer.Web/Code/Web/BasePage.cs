@@ -64,6 +64,26 @@ namespace RobloxServer.Web
             return HttpUtility.HtmlEncode(Convert.ToString(Eval(field)));
         }
 
+        /// <summary>
+        /// Place thumbnail. There is no thumbnail renderer, so every place gets one of the 2013
+        /// front page screenshots, picked by id so a place always shows the same picture.
+        /// </summary>
+        protected string PlaceThumb(object placeId, string size)
+        {
+            long id = Convert.ToInt64(placeId);
+            return ResolveUrl("~/Images/Thumbs/Place" + (Math.Abs(id % 5) + 1) + "_" + size + ".jpg");
+        }
+
+        protected string GenreIcon(object genre)
+        {
+            return ResolveUrl("~/Images/GenreIcons/" + Genres.Find(Convert.ToString(genre)).Icon);
+        }
+
+        protected static string GenreName(object genre)
+        {
+            return Genres.Clean(Convert.ToString(genre));
+        }
+
         protected static string Ago(DateTime utc)
         {
             TimeSpan span = DateTime.UtcNow - utc;

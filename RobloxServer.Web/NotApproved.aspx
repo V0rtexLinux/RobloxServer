@@ -6,6 +6,6 @@
     <asp:PlaceHolder ID="ReactivatePanel" runat="server" Visible="false">
         <p>Please abide by the Community Guidelines so that ROBLOX can be fun for users of all ages.</p>
         <asp:CheckBox ID="AgreeBox" runat="server" Text=" I agree" />
-        <asp:Button ID="ReactivateButton" runat="server" Text="Reactivate My Account" CssClass="btn" OnClick="ReactivateButton_Click" />
+        <asp:Button ID="ReactivateButton" runat="server" Text="Reactivate My Account" CssClass="btn-medium btn-primary" OnClick="ReactivateButton_Click" />
     </asp:PlaceHolder>
 </asp:Content>

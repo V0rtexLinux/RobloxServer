@@ -48,6 +48,9 @@ namespace RobloxServer.Data
         /// <summary>Novetus client the place is played with (2012M, 2009E...).</summary>
         public string Client { get; set; }
 
+        /// <summary>2013 Games page genre (see Genres). Null for places published before genres existed.</summary>
+        public string Genre { get; set; }
+
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
         public int Version { get; set; }

@@ -42,6 +42,7 @@ Os jogos publicados aqui são jogados pelo **[RobloxServerLauncher](https://gith
 
 ### Recursos
 
+* Visual do roblox.com de 2013: barra azul com o logo vermelho, submenu preto, página de jogos com filtro por gênero e os ícones originais (gênero, "no gear", 13+), botões verdes/azuis do StyleGuide e rodapé azul. As imagens ficam em `RobloxServer.Web/Images`.
 * Contas com cookie `.ROBLOSECURITY` (Forms Authentication, igual ao de 2015), cadastro com "sou menor de 13" (SuperSafeChat).
 * Publicação de jogos pelo site (`Develop.aspx`) ou pelo Studio 2015 (`/Data/Upload.ashx`).
 * `Visit.ashx` e `Join.ashx` assinados com `--rbxsig` (RSA 1024 + SHA-1).

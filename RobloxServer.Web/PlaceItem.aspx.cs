@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using RobloxServer.Data;
 using RobloxServer.Web;
 
@@ -34,6 +35,11 @@ namespace RobloxServer.Pages
             DescriptionLiteral.Text = Server.HtmlEncode(place.Description ?? "");
             IdLiteral.Text = place.Id.ToString();
             DownloadLink.HRef = ResolveUrl("~/asset/?id=" + place.Id);
+            ThumbnailImage.Src = PlaceThumb(place.Id, "420x230");
+            ThumbnailImage.Alt = place.Name;
+            MaxPlayersLiteral.Text = place.MaxPlayers.ToString();
+            GenreImage.Src = GenreIcon(place.Genre);
+            GenreLiteral.Text = Server.HtmlEncode(GenreName(place.Genre));
 
             var servers = GameServers.ForPlace(place.Id);
             ServersRepeater.DataSource = servers;
@@ -45,6 +51,9 @@ namespace RobloxServer.Pages
             {
                 NameBox.Text = place.Name;
                 DescriptionBox.Text = place.Description;
+                GenreList.DataSource = Genres.All.Select(g => g.Name);
+                GenreList.DataBind();
+                GenreList.SelectedValue = GenreName(place.Genre);
                 ClientList.DataSource = Config.Clients;
                 ClientList.DataBind();
                 ClientList.SelectedValue = PlaceService.CleanClient(place.Client);
@@ -80,6 +89,7 @@ namespace RobloxServer.Pages
                 p.Name = PlaceService.CleanName(NameBox.Text);
                 p.Description = PlaceService.CleanDescription(DescriptionBox.Text);
                 p.Client = PlaceService.CleanClient(ClientList.SelectedValue);
+                p.Genre = Genres.Clean(GenreList.SelectedValue);
                 p.MaxPlayers = Math.Max(1, Math.Min(maxPlayers <= 0 ? 12 : maxPlayers, 100));
                 p.IsPublic = PublicBox.Checked;
                 p.FilteringEnabled = FilteringBox.Checked;

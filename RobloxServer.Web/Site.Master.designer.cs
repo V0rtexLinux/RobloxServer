@@ -11,9 +11,13 @@ namespace RobloxServer
         protected global::System.Web.UI.HtmlControls.HtmlForm MainForm;
         protected global::System.Web.UI.WebControls.PlaceHolder AdminLink;
         protected global::System.Web.UI.WebControls.PlaceHolder LoggedIn;
-        protected global::System.Web.UI.WebControls.Literal UserNameLiteral;
         protected global::System.Web.UI.WebControls.LinkButton LogoutButton;
+        protected global::System.Web.UI.WebControls.PlaceHolder Over13Icon;
+        protected global::System.Web.UI.WebControls.Literal UserNameLiteral;
         protected global::System.Web.UI.WebControls.PlaceHolder LoggedOut;
+        protected global::System.Web.UI.WebControls.PlaceHolder SubMenu;
+        protected global::System.Web.UI.WebControls.PlaceHolder AdminSubLink;
         protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.Repeater GenreLinks;
     }
 }
