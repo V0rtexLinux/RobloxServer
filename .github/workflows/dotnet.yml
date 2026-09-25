@@ -1,7 +1,8 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: .NET
+# behind nginx + fastcgi-mono-server4 (the same stack the Raspberry Pi "local" mode uses).
+# On push to main, deploys the compiled site to SmarterASP.NET via FTP.
+
+name: ASP.NET
 
 on:
   push:
@@ -12,17 +13,85 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
+    - name: Install Mono, fastcgi-mono-server4 and nginx
+      run: |
+        sudo apt-get update
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mono-complete mono-fastcgi-server4 nginx
     - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: xbuild /nologo /p:Configuration=Release RobloxServer.sln
+    - name: Upload the compiled site
+      uses: actions/upload-artifact@v4
+      with:
+        name: RobloxServer-site
+        path: |
+          RobloxServer.Web/
+          !RobloxServer.Web/obj/
+          !RobloxServer.Web/bin/*.mdb
+          RobloxServer.sln
+          iniciar-servidor.bat
+          docs/
+          README.md
+    - name: Start site
+      run: |
+        SITE="$RUNNER_TEMP/site"
+        cp -r RobloxServer.Web "$SITE"
+        sed -i 's/key="RateLimitRequests" value="45"/key="RateLimitRequests" value="100000"/' "$SITE/Web.config"
+        cat > "$RUNNER_TEMP/nginx.conf" <<CONF
+        pid $RUNNER_TEMP/nginx.pid;
+        error_log $RUNNER_TEMP/nginx-error.log;
+        events { }
+        http {
+          access_log off;
+          client_max_body_size 100m;
+          server {
+            listen 127.0.0.1:8081;
+            location / {
+              root $SITE;
+              fastcgi_pass 127.0.0.1:9000;
+              include /etc/nginx/fastcgi_params;
+              fastcgi_param PATH_INFO "";
+              fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+              fastcgi_index Default.aspx;
+            }
+          }
+        }
+        CONF
+        cd "$SITE"
+        nohup fastcgi-mono-server4 /applications=/:"$SITE" /socket=tcp:127.0.0.1:9000 < /dev/null > "$RUNNER_TEMP/fastcgi.log" 2>&1 &
+        cd "$GITHUB_WORKSPACE"
+        nginx -c "$RUNNER_TEMP/nginx.conf" < /dev/null > /dev/null 2>&1
+        for i in $(seq 1 30); do curl -fs http://127.0.0.1:8081/Api/Status.ashx && break; sleep 2; done
+    - name: Smoke test
+      run: python3 tests/smoke_test.py http://127.0.0.1:8081 "$RUNNER_TEMP/site"
+    - name: Pi scripts
+      run: |
+        bash -n pi/install.sh pi/bin/rs-firewall.sh pi/bin/rs-upnp.sh
+        RENDER_ONLY=1 pi/install.sh
+    - name: Logs
+      if: always()
+      run: cat "$RUNNER_TEMP/fastcgi.log" "$RUNNER_TEMP"/site/App_Data/Logs/*.log || true
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: RobloxServer-site
+        path: ${{ runner.temp }}/site
+    - name: Deploy via FTP to SmarterASP.NET
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.SMARTERASP_FTP_SERVER }}
+        username: ${{ secrets.SMARTERASP_FTP_USERNAME }}
+        password: ${{ secrets.SMARTERASP_FTP_PASSWORD }}
+        local-dir: ${{ runner.temp }}/site/RobloxServer.Web/
+        server-dir: ./
+        exclude: |
+          **/obj/**
+          **/*.mdb
