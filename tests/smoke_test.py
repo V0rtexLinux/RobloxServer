@@ -281,10 +281,42 @@ def main():
     check(status == 404 and not json.loads(body)["available"], "install: unsupported client")
     status, _, body = anon.get("/install/version.ashx?client=2013m")
     check(status == 404 and json.loads(body)["client"] == "2013M", "install: 2013M not uploaded yet")
-    status, headers, _ = anon.get("/Install/Download.ashx?client=Launcher")
-    check(status == 302 and "github.com" in headers.get("Location", ""), "launcher download falls back to GitHub")
+    import io, os, zipfile
+    bundled = SITE_DIR and os.path.exists(SITE_DIR.rstrip("/") + "/App_Data/Launcher/RobloxPlayerLauncher.exe")
+    status, headers, body = anon.get("/Install/Download.ashx?client=Launcher")
+    if bundled:
+        check(status == 200 and body[:2] == b"MZ", "launcher download serves the bundled RobloxPlayerLauncher.exe")
+        status, _, body = anon.get("/install/version.ashx?client=Launcher")
+        check(json.loads(body)["available"], "install: launcher version (self update)")
+    else:
+        check(status == 302 and "github.com" in headers.get("Location", ""), "launcher download falls back to GitHub")
+
+    def make_zip(files):
+        data = io.BytesIO()
+        with zipfile.ZipFile(data, "w") as z:
+            for name, content in files.items():
+                z.writestr(name, content)
+        return data.getvalue()
+
+    def upload(package, filename, content):
+        _, _, page = admin.postback("/Admin.aspx", {"PackageList": package}, "PackageUploadButton",
+                                    files={"PackageUpload": (filename, content)})
+        return html.unescape(page.decode("utf-8", "replace"))
+
+    page = upload("2013M", "2013M.zip", b"not a zip")
+    check("That is not a .zip file." in page, "Admin upload rejects a file that is not a zip")
+    page = upload("2013M", "2013M.zip", make_zip({"2013M/RobloxApp_client.exe": b"MZ", "2013M/content/x.txt": b"x"}))
+    check('inside the folder "2013M"' in page, "Admin upload explains a zipped folder")
+    page = upload("Launcher", "RobloxPlayerLauncher.exe", b"#!/bin/sh")
+    check("That is not a Windows program." in page, "Admin upload rejects a launcher that is not an exe")
+    client_zip = make_zip({"RobloxApp_client.exe": b"MZ fake", "content/scripts/cores/StarterScript.lua": b"--"})
+    page = upload("2013M", "2013M.zip", client_zip)
+    status, _, body = anon.get("/install/version.ashx?client=2013M")
+    check("2013M uploaded: version-" in page and status == 200
+          and json.loads(body)["sha256"] == hashlib.sha256(client_zip).hexdigest(), "Admin uploads the 2013M client")
+    status, _, body = player.get("/Admin.aspx")
+    check(b"PackageUpload" not in body, "only admins see the package upload")
     if SITE_DIR:
-        import os
         package = b"PK fake 2012M client package"
         os.makedirs(SITE_DIR.rstrip("/") + "/App_Data/Clients", exist_ok=True)
         with open(SITE_DIR.rstrip("/") + "/App_Data/Clients/2012M.zip", "wb") as f:

@@ -42,8 +42,10 @@ O launcher baixa os clientes do próprio site, como o setup.roblox.com de 2013:
 | `App_Data/Clients/2013M.zip` | idem para 2013M |
 | `App_Data/Launcher/RobloxPlayerLauncher.exe` | botão *Download ROBLOX* e atualização automática do launcher |
 
-A versão é o começo do SHA-256 do arquivo; trocar o zip faz todos os launchers baixarem de novo. A página
-**Admin** mostra o que está instalado. O formato do zip (exes, argumentos e o `RobloxServerClient.json`) está no
+O jeito mais fácil é a página **Admin** → *Clients*: escolha o pacote, o arquivo e clique em **Upload** (até 1 GB).
+O zip deve ter o **conteúdo** da pasta do cliente (o `RobloxApp_client.exe` no topo do zip, não dentro de uma pasta).
+O CI já coloca o `RobloxPlayerLauncher.exe` compilado do repositório do launcher em `App_Data/Launcher`.
+A versão é o começo do SHA-256 do arquivo; trocar o zip faz todos os launchers baixarem de novo. O formato do zip (exes, argumentos e o `RobloxServerClient.json`) está no
 README do launcher.
 
 ## Como o servidor de jogo confere os jogadores

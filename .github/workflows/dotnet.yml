@@ -25,6 +25,13 @@ jobs:
       run: |
         xbuild /nologo /p:Configuration=Release RobloxServer.sln
         cp RobloxServer.Starter/bin/Release/IniciarServidor.exe .
+    - name: Bundle RobloxPlayerLauncher.exe
+      # The site serves the launcher (Download ROBLOX and the launchers' self update) from App_Data/Launcher.
+      run: |
+        git clone --depth 1 https://github.com/V0rtexLinux/RobloxServerLauncher.git "$RUNNER_TEMP/launcher"
+        xbuild /nologo /p:Configuration=Release "$RUNNER_TEMP/launcher/RobloxServerLauncher.sln"
+        mkdir -p RobloxServer.Web/App_Data/Launcher
+        cp "$RUNNER_TEMP/launcher/RobloxPlayerLauncher/bin/Release/RobloxPlayerLauncher.exe" RobloxServer.Web/App_Data/Launcher/
     - name: Upload the compiled site
       uses: actions/upload-artifact@v4
       with:

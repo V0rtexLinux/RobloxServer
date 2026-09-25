@@ -13,6 +13,11 @@ namespace RobloxServer.Pages
         {
             RequireAdmin();
             PublicKeyLiteral.Text = ScriptSigner.PublicKeyBlobBase64;
+            if (!IsPostBack)
+            {
+                PackageList.DataSource = Config.Clients.Concat(new[] { ClientPackages.Launcher });
+                PackageList.DataBind();
+            }
         }
 
         protected override void OnPreRender(EventArgs e)
@@ -45,7 +50,7 @@ namespace RobloxServer.Pages
                 .Select(c => new
                 {
                     c.Name,
-                    File = c.Package != null ? c.Package.FileName : "missing",
+                    File = c.Package != null ? c.Package.FileName : "not uploaded yet",
                     Version = c.Package != null ? c.Package.Version : "-",
                     Size = c.Package != null ? (c.Package.Size / 1048576.0).ToString("0.0") + " MB" : "-",
                     Updated = c.Package != null ? c.Package.Updated.ToString("u") : "-"
@@ -128,6 +133,29 @@ namespace RobloxServer.Pages
         protected void IpUnbanButton_Click(object sender, EventArgs e)
         {
             Bans.UnbanIp((IpBox.Text ?? "").Trim());
+        }
+
+        protected void PackageUploadButton_Click(object sender, EventArgs e)
+        {
+            if (!PackageUpload.HasFile)
+            {
+                PackageMessage.Text = "Choose a file to upload.";
+                return;
+            }
+
+            string name = ClientPackages.CleanName(PackageList.SelectedValue);
+            string temp = System.IO.Path.Combine(Config.DataPath, "upload-" + Guid.NewGuid().ToString("N") + ".tmp");
+            PackageUpload.PostedFile.SaveAs(temp);
+            string error = ClientPackages.Install(name, temp);
+            if (error != null)
+            {
+                PackageMessage.Text = Server.HtmlEncode(error);
+                return;
+            }
+
+            ClientPackages.Package package = ClientPackages.Find(name);
+            Logging.Log(LogType.Backend, CurrentUser.Name + " uploaded " + name + " (" + package.Version + ", " + package.Size + " bytes)");
+            PackageMessage.Text = Server.HtmlEncode(name + " uploaded: " + package.Version + ".");
         }
 
         protected void ServersRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
