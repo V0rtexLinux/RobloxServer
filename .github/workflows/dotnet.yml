@@ -90,6 +90,7 @@ jobs:
         server: ${{ secrets.SMARTERASP_FTP_SERVER }}
         username: ${{ secrets.SMARTERASP_FTP_USERNAME }}
         password: ${{ secrets.SMARTERASP_FTP_PASSWORD }}
+        protocol: ftps
         local-dir: ${{ runner.temp }}/site/RobloxServer.Web/
         server-dir: ./
         exclude: |
