@@ -1,4 +1,4 @@
-# Builds the ASP.NET 4.6 site with Mono and runs the end-to-end smoke test
+
 # behind nginx + fastcgi-mono-server4 (the same stack the Raspberry Pi "local" mode uses).
 # On push to main, deploys the compiled site to SmarterASP.NET via FTP.
 
