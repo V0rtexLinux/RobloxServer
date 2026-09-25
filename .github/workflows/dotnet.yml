@@ -1,5 +1,6 @@
 # Builds the ASP.NET 4.6 site with Mono and runs the end-to-end smoke test
 # behind nginx + fastcgi-mono-server4 (the same stack the Raspberry Pi "local" mode uses).
+# On push to main, deploys the compiled site to SmarterASP.NET via FTP.
 
 name: ASP.NET
 
@@ -73,3 +74,24 @@ jobs:
     - name: Logs
       if: always()
       run: cat "$RUNNER_TEMP/fastcgi.log" "$RUNNER_TEMP"/site/App_Data/Logs/*.log || true
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: RobloxServer-site
+        path: ${{ runner.temp }}/site
+    - name: Deploy via FTP to SmarterASP.NET
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.SMARTERASP_FTP_SERVER }}
+        username: ${{ secrets.SMARTERASP_FTP_USERNAME }}
+        password: ${{ secrets.SMARTERASP_FTP_PASSWORD }}
+        local-dir: ${{ runner.temp }}/site/RobloxServer.Web/
+        server-dir: ./
+        exclude: |
+          **/obj/**
+          **/*.mdb
