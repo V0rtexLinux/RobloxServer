@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 
 namespace RobloxServer.Data
@@ -152,6 +153,28 @@ namespace RobloxServer.Data
         /// </summary>
         public static string AddressFor(GameServer server, string requesterIp)
         {
+            return AddressFor(server, requesterIp, null);
+        }
+
+        /// <param name="siteAddress">
+        /// The site's own address on the connection the player used (LOCAL_ADDR). A server hosted on the
+        /// same PC as the site is registered as 127.0.0.1; players on other PCs get this address instead.
+        /// </param>
+        public static string AddressFor(GameServer server, string requesterIp, string siteAddress)
+        {
+            if (Security.ClientIp.IsLoopback(server.Address) && !Security.ClientIp.IsLoopback(requesterIp))
+            {
+                string local = Security.ClientIp.ToGameAddress(siteAddress);
+                IPAddress parsed;
+                if (!string.IsNullOrEmpty(local) && IPAddress.TryParse(local, out parsed)
+                    && parsed.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork && !IPAddress.IsLoopback(parsed))
+                {
+                    return Security.ClientIp.IsPrivate(requesterIp) || string.IsNullOrEmpty(Config.PublicGameAddress)
+                        ? local
+                        : Config.PublicGameAddress;
+                }
+            }
+
             if (Security.ClientIp.IsPrivate(server.Address)
                 && !Security.ClientIp.IsPrivate(requesterIp)
                 && !string.IsNullOrEmpty(Config.PublicGameAddress))
