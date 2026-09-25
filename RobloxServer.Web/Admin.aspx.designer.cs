@@ -23,6 +23,10 @@ namespace RobloxServer.Pages
         protected global::System.Web.UI.WebControls.Repeater UsersRepeater;
         protected global::System.Web.UI.WebControls.Repeater ServersRepeater;
         protected global::System.Web.UI.WebControls.Repeater ClientsRepeater;
+        protected global::System.Web.UI.WebControls.DropDownList PackageList;
+        protected global::System.Web.UI.WebControls.FileUpload PackageUpload;
+        protected global::System.Web.UI.WebControls.Button PackageUploadButton;
+        protected global::System.Web.UI.WebControls.Label PackageMessage;
         protected global::System.Web.UI.WebControls.Literal PublicKeyLiteral;
     }
 }

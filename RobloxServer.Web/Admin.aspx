@@ -51,10 +51,21 @@
     </table>
 
     <h2>Clients</h2>
-    <p>RobloxPlayerLauncher downloads the clients from this site. Put one zip per client in
-       <code>App_Data/Clients</code> (<code>2012M.zip</code>, <code>2013M.zip</code>) and, optionally, the launcher in
-       <code>App_Data/Launcher/RobloxPlayerLauncher.exe</code>. Replacing a file makes every launcher update.</p>
-    <table class="table grid">
+    <p>RobloxPlayerLauncher downloads the clients from this site. Upload one zip per client (the contents of the client
+       folder, with <code>RobloxApp_client.exe</code> at the top of the zip). The files go to <code>App_Data/Clients</code>
+       and <code>App_Data/Launcher</code>; you can also copy them there by hand or by FTP. Uploading a new file makes every
+       launcher update.</p>
+    <div class="form-row">
+        <label>Package</label>
+        <asp:DropDownList ID="PackageList" runat="server" />
+    </div>
+    <div class="form-row">
+        <label>File (.zip for a client, RobloxPlayerLauncher.exe for the launcher)</label>
+        <asp:FileUpload ID="PackageUpload" runat="server" />
+    </div>
+    <asp:Button ID="PackageUploadButton" runat="server" Text="Upload" CssClass="btn-medium btn-primary" OnClick="PackageUploadButton_Click" />
+    <asp:Label ID="PackageMessage" runat="server" CssClass="error" />
+    <table class="table grid" style="margin-top: 12px">
         <asp:Repeater ID="ClientsRepeater" runat="server">
             <HeaderTemplate><tr class="table-header"><th class="first">Package</th><th>File</th><th>Version</th><th>Size</th><th>Updated</th></tr></HeaderTemplate>
             <ItemTemplate>
