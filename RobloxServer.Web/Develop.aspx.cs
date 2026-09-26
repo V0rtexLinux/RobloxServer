@@ -5,8 +5,12 @@ using RobloxServer.Web;
 
 namespace RobloxServer.Pages
 {
+    /// <summary>2013 build page: the Places tab with your places and "Create New Place".</summary>
     public partial class Develop : BasePage
     {
+        /// <summary>Shows the Create New Place form (after a failed publish, or with ?View=publish).</summary>
+        protected bool NewPlaceOpen { get; private set; }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             User user = RequireLogin();
@@ -15,6 +19,7 @@ namespace RobloxServer.Pages
                 return;
             }
 
+            NewPlaceOpen = string.Equals(Request.QueryString["View"], "publish", StringComparison.OrdinalIgnoreCase);
             if (!IsPostBack)
             {
                 GenreList.DataSource = Genres.All.Select(g => g.Name);
@@ -37,6 +42,7 @@ namespace RobloxServer.Pages
 
         protected void PublishButton_Click(object sender, EventArgs e)
         {
+            NewPlaceOpen = true;
             User user = CurrentUser;
             if (user == null)
             {

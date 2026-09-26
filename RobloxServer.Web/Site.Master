@@ -7,17 +7,18 @@
     <title><%: Page.Title %> - <%: RobloxServer.Config.SiteName %></title>
     <link rel="icon" type="image/vnd.microsoft.icon" href="<%: ResolveUrl("~/favicon.ico") %>" />
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" runat="server" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
 </head>
 <body>
     <form id="MainForm" runat="server">
         <div id="MasterContainer">
             <div class="site-header">
                 <div id="navigation-container">
-                    <a href="<%: ResolveUrl("~/Default.aspx") %>" class="btn-logo" title="<%: RobloxServer.Config.SiteName %>"></a>
+                    <a href="<%: ResolveUrl("~/") %>" class="btn-logo" title="<%: RobloxServer.Config.SiteName %>"></a>
                     <div id="navigation-menu">
                         <ul>
-                            <li><a href="<%: ResolveUrl("~/Default.aspx") %>">Home</a></li>
-                            <li><a href="<%: ResolveUrl("~/Default.aspx") %>" title="Games">Games</a></li>
+                            <li><a href="<%: ResolveUrl("~/") %>">Home</a></li>
+                            <li><a href="<%: ResolveUrl("~/Games") %>" title="Games">Games</a></li>
                             <li><a href="<%: ResolveUrl("~/Develop.aspx") %>" title="Build">Build</a></li>
                             <li class="more-list-item">
                                 <div class="more-link-container"><a id="nav-more" title="More">More<span id="more-menu-toggle"></span></a></div>
@@ -40,7 +41,7 @@
                                 <asp:LinkButton ID="LogoutButton" runat="server" CssClass="logoutButton" OnClick="LogoutButton_Click" CausesValidation="false">Logout</asp:LinkButton>
                             </div>
                             <div class="HeaderDivider"></div>
-                            <a href="<%: ResolveUrl("~/Develop.aspx") %>">
+                            <a href="<%: ResolveUrl("~/My/Home.aspx") %>">
                                 <div id="AuthenticatedUserNameWrapper">
                                     <div id="AuthenticatedUserName">
                                         <span class="login-span">
@@ -66,9 +67,11 @@
                 <div class="mySubmenuFixed">
                     <div id="subMenu" class="subMenu">
                         <ul>
-                            <li><a href="<%: ResolveUrl("~/Default.aspx") %>">Games</a></li>
-                            <li><a href="<%: ResolveUrl("~/Develop.aspx#MyPlaces") %>">My Places</a></li>
-                            <li><a href="<%: ResolveUrl("~/Develop.aspx") %>">Publish</a></li>
+                            <li><a href="<%: ResolveUrl("~/My/Home.aspx") %>">Home</a></li>
+                            <li><a href="<%: ResolveUrl("~/User.aspx") %>">Profile</a></li>
+                            <li><a href="<%: ResolveUrl("~/My/Character.aspx") %>">Character</a></li>
+                            <li><a href="<%: ResolveUrl("~/Develop.aspx") %>">Places</a></li>
+                            <li><a href="<%: ResolveUrl("~/Browse.aspx") %>">People</a></li>
                             <li><a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download</a></li>
                             <asp:PlaceHolder ID="AdminSubLink" runat="server" Visible="false">
                                 <li><a href="<%: ResolveUrl("~/Admin.aspx") %>">Admin</a></li>
@@ -90,7 +93,7 @@
 
             <div id="Footer" class="footer-container">
                 <div class="FooterNav">
-                    <a href="<%: ResolveUrl("~/Default.aspx") %>"><b>Games</b></a>
+                    <a href="<%: ResolveUrl("~/Games") %>"><b>Games</b></a>
                     &nbsp;|&nbsp;
                     <a href="<%: ResolveUrl("~/Develop.aspx") %>">Build</a>
                     &nbsp;|&nbsp;
@@ -108,7 +111,7 @@
                     <div class="SEOGenreLinks">
                         <asp:Repeater ID="GenreLinks" runat="server">
                             <SeparatorTemplate><span>|</span></SeparatorTemplate>
-                            <ItemTemplate><a href="<%# ResolveUrl("~/Default.aspx?genre=" + Eval("Key")) %>"><%# Eval("Name") %></a></ItemTemplate>
+                            <ItemTemplate><a href="<%# ResolveUrl("~/Games?genre=" + Eval("Key")) %>"><%# Eval("Name") %></a></ItemTemplate>
                         </asp:Repeater>
                     </div>
                 </div>

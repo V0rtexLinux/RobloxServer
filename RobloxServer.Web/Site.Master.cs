@@ -29,7 +29,7 @@ namespace RobloxServer
         protected void LogoutButton_Click(object sender, EventArgs e)
         {
             Auth.SignOut(Context);
-            Response.Redirect("~/Default.aspx", false);
+            Response.Redirect("~/", false);
         }
     }
 }

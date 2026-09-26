@@ -233,7 +233,7 @@ namespace RobloxServer.Starter
                 }
                 else
                 {
-                    Log("Não encontrei o applicationhost.config do IIS Express; o site vai atender só este PC.");
+                    Log("Sem o applicationhost.config do IIS Express o site só atende este PC.");
                 }
             }
 
@@ -276,13 +276,17 @@ namespace RobloxServer.Starter
         string WriteRemoteConfig(string iisExpress)
         {
             string folder = Path.GetDirectoryName(iisExpress);
-            string template = new[]
+            string[] candidates =
             {
                 Path.Combine(folder, "AppServer", "applicationhost.config"),
-                Path.Combine(folder, "config", "templates", "PersonalWebServer", "applicationhost.config")
-            }.FirstOrDefault(File.Exists);
+                Path.Combine(folder, "config", "templates", "PersonalWebServer", "applicationhost.config"),
+                // Created the first time IIS Express or Visual Studio runs a site for this Windows user.
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "IISExpress", "config", "applicationhost.config")
+            };
+            string template = candidates.FirstOrDefault(File.Exists) ?? LastPathModeConfig();
             if (template == null)
             {
+                Log("applicationhost.config não encontrado em: " + string.Join(" ; ", candidates));
                 return null;
             }
 
@@ -309,6 +313,7 @@ namespace RobloxServer.Starter
             var pattern = new Regex(@"<sites>[\s\S]*?</sites>|<sites\s*/>");
             if (!pattern.IsMatch(text))
             {
+                Log(template + " não tem a seção <sites>.");
                 return null;
             }
             text = pattern.Replace(text, sites.Replace("$", "$$"), 1);
@@ -317,6 +322,22 @@ namespace RobloxServer.Starter
             string path = Path.Combine(home, "applicationhost.config");
             File.WriteAllText(path, text);
             return path;
+        }
+
+        /// <summary>The configuration IIS Express wrote to %TEMP%\iisexpress the last time it ran with /path:, or null.</summary>
+        static string LastPathModeConfig()
+        {
+            try
+            {
+                var folder = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "iisexpress"));
+                return folder.Exists
+                    ? folder.GetFiles("applicationhost*.config").OrderByDescending(f => f.LastWriteTimeUtc).Select(f => f.FullName).FirstOrDefault()
+                    : null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         static string Xml(string value)

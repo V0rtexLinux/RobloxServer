@@ -36,6 +36,7 @@ namespace RobloxServer.Handlers.Game
             if (place != null)
             {
                 Db.Places.Update(p => p.Id == place.Id, p => p.Visits++);
+                Db.AddRecentPlace(user.Id, place.Id);
             }
 
             AuthTicket ticket = AuthTickets.Issue(user.Id, user.Name, server.PlaceId, server.JobId);

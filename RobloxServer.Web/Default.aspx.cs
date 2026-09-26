@@ -21,6 +21,21 @@ namespace RobloxServer.Pages
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // "/" is the 2013 landing page for visitors and My ROBLOX for members; the games list is /Games.
+            string path = (Request.RawUrl ?? "/").Split('?')[0];
+            if (path == "/" || path == Request.ApplicationPath.TrimEnd('/') + "/")
+            {
+                if (CurrentUser == null)
+                {
+                    Server.Transfer("~/Landing.aspx");
+                }
+                else
+                {
+                    Response.Redirect("~/My/Home.aspx", true);
+                }
+                return;
+            }
+
             sort = Sorts.Select(s => s[0]).FirstOrDefault(s => string.Equals(s, Request.QueryString["sort"], StringComparison.OrdinalIgnoreCase)) ?? Sorts[0][0];
             genre = Genres.Find(Request.QueryString["genre"]);
 
@@ -72,7 +87,7 @@ namespace RobloxServer.Pages
 
         string Link(string sortKey, string genreKey)
         {
-            return HttpUtility.HtmlAttributeEncode(ResolveUrl("~/Default.aspx?sort=" + sortKey + "&genre=" + genreKey));
+            return HttpUtility.HtmlAttributeEncode(ResolveUrl("~/Games?sort=" + sortKey + "&genre=" + genreKey));
         }
     }
 }

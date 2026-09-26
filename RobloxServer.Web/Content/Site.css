@@ -225,6 +225,7 @@ table.table { border-collapse: collapse; width: 100%; border-top: 1px solid #9e9
 #ProfileContainer .ProfileStatus { font-size: 12px; margin-bottom: 4px; }
 #ProfileContainer .ProfileUrl { font-size: 11px; color: #888; margin-bottom: 8px; word-break: break-all; }
 #ProfileContainer .ProfileAvatar { display: block; margin: 0 auto 10px; }
+#ProfileContainer .ProfileBlurb { font-size: 12px; color: #343434; margin: 0 10px 10px; word-wrap: break-word; font-style: italic; }
 #ProfileContainer table.ProfileDetails { margin: 0 auto; border-collapse: collapse; font-size: 12px; text-align: left; }
 #ProfileContainer table.ProfileDetails td { padding: 2px 8px 2px 0; }
 #ProfileContainer table.ProfileDetails td.Label { color: #888; }

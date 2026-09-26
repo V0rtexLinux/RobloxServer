@@ -72,9 +72,17 @@ namespace RobloxServer.Starter
         /// <summary>True when the URL reservation and both firewall rules exist.</summary>
         public static bool IsConfigured(int port)
         {
+            return IsReserved(port) && RuleExists(SiteRuleName(port)) && RuleExists(GameRuleName());
+        }
+
+        /// <summary>
+        /// True when http://*:port/ is reserved. While it is, IIS Express can no longer register
+        /// http://localhost:port/ ("Access denied", 0x80070005), so the site must bind *:port: too.
+        /// </summary>
+        public static bool IsReserved(int port)
+        {
             string urlacl = Run("netsh", "http show urlacl url=" + UrlFor(port));
-            return urlacl != null && urlacl.IndexOf(UrlFor(port), StringComparison.OrdinalIgnoreCase) >= 0
-                && RuleExists(SiteRuleName(port)) && RuleExists(GameRuleName());
+            return urlacl != null && urlacl.IndexOf(UrlFor(port), StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         static bool RuleExists(string name)
@@ -89,19 +97,35 @@ namespace RobloxServer.Starter
         public static string Configure(int port)
         {
             // D:(A;;GX;;;WD) = everyone may listen; unlike user=Everyone it works in every Windows language.
-            string script = Path.Combine(Path.GetTempPath(), "robloxserver-rede.cmd");
-            File.WriteAllText(script, string.Join("\r\n", new[]
+            string error = RunElevated(new[]
             {
-                "@echo off",
                 "netsh http delete urlacl url=" + UrlFor(port) + " >nul 2>&1",
                 "netsh http add urlacl url=" + UrlFor(port) + " sddl=D:(A;;GX;;;WD)",
                 "netsh advfirewall firewall delete rule name=\"" + SiteRuleName(port) + "\" >nul 2>&1",
                 "netsh advfirewall firewall add rule name=\"" + SiteRuleName(port) + "\" dir=in action=allow protocol=TCP localport=" + port,
                 "netsh advfirewall firewall delete rule name=\"" + GameRuleName() + "\" >nul 2>&1",
-                "netsh advfirewall firewall add rule name=\"" + GameRuleName() + "\" dir=in action=allow protocol=UDP localport=" + GamePort,
-                ""
-            }));
+                "netsh advfirewall firewall add rule name=\"" + GameRuleName() + "\" dir=in action=allow protocol=UDP localport=" + GamePort
+            });
+            return error ?? (IsConfigured(port) ? null : "O netsh não conseguiu liberar a porta " + port + ".");
+        }
 
+        /// <summary>Undoes Configure (UAC again): only this PC can open the site afterwards.</summary>
+        public static string Remove(int port)
+        {
+            string error = RunElevated(new[]
+            {
+                "netsh http delete urlacl url=" + UrlFor(port) + " >nul 2>&1",
+                "netsh advfirewall firewall delete rule name=\"" + SiteRuleName(port) + "\" >nul 2>&1",
+                "netsh advfirewall firewall delete rule name=\"" + GameRuleName() + "\" >nul 2>&1"
+            });
+            return error ?? (IsReserved(port) ? "O netsh não conseguiu remover a reserva da porta " + port + "." : null);
+        }
+
+        /// <summary>Runs the commands in a hidden elevated script. Returns null, or why it did not run.</summary>
+        static string RunElevated(string[] commands)
+        {
+            string script = Path.Combine(Path.GetTempPath(), "robloxserver-rede.cmd");
+            File.WriteAllText(script, "@echo off\r\n" + string.Join("\r\n", commands) + "\r\n");
             try
             {
                 var info = new ProcessStartInfo(script)
@@ -114,6 +138,7 @@ namespace RobloxServer.Starter
                 {
                     p.WaitForExit();
                 }
+                return null;
             }
             catch (Win32Exception ex)
             {
@@ -130,8 +155,6 @@ namespace RobloxServer.Starter
                 {
                 }
             }
-
-            return IsConfigured(port) ? null : "O netsh não conseguiu liberar a porta " + port + ".";
         }
 
         /// <summary>This PC's IPv4 addresses other PCs can use, Radmin VPN (26.x.x.x) first.</summary>

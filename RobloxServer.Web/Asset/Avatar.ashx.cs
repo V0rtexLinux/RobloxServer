@@ -13,8 +13,8 @@ namespace RobloxServer.Handlers.Asset
     /// </summary>
     public class Avatar : HandlerBase
     {
-        /// <summary>RGB of the BrickColors a 2012/2013 body can have.</summary>
-        static readonly Dictionary<int, string> BrickColors = new Dictionary<int, string>
+        /// <summary>RGB of the BrickColors a 2012/2013 body can have (also the palette of My/Character.aspx).</summary>
+        public static readonly Dictionary<int, string> BrickColors = new Dictionary<int, string>
         {
             { 1, "F2F3F3" }, { 2, "A1A5A2" }, { 3, "F9E999" }, { 5, "D7C59A" }, { 6, "C2DAB8" }, { 9, "E8BAC8" },
             { 11, "80BBDB" }, { 12, "CB8442" }, { 18, "CC8E69" }, { 21, "C4281C" }, { 22, "C470A0" }, { 23, "0D69AC" },
