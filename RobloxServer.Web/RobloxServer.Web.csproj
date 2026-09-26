@@ -52,6 +52,23 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Pages\LICENSE-RobloxLabs.txt" />
+    <Content Include="Content\Pages\Build.css" />
+    <Content Include="Images\BuildPage\btn-gear_sprite_27px.png" />
+    <Content Include="Images\BuildPage\ico-game_status3.png" />
+    <Content Include="My\Home.aspx" />
+    <Content Include="My\Character.aspx" />
+    <Content Include="Content\Pages\Home.css" />
+    <Content Include="Content\Pages\Character.css" />
+    <Content Include="Images\Icons\BulletPointArrow.png" />
+    <Content Include="Content\Pages\Login.css" />
+    <Content Include="Landing.aspx" />
+    <Content Include="Content\Landing.js" />
+    <Content Include="Content\Pages\Landing.css" />
+    <Content Include="Images\Landing\background_city.jpg" />
+    <Content Include="Images\Landing\forground_city.png" />
+    <Content Include="Images\Landing\logo.png" />
+    <Content Include="Images\Landing\bluepixel.png" />
     <Content Include="Admin.aspx" />
     <Content Include="Analytics\Counters.ashx" />
     <Content Include="Api\Games.ashx" />
@@ -163,6 +180,28 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="My\Home.aspx.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="My\Home.aspx.designer.cs">
+      <DependentUpon>Home.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="My\Character.aspx.cs">
+      <DependentUpon>Character.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="My\Character.aspx.designer.cs">
+      <DependentUpon>Character.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Security\Accounts.cs" />
+    <Compile Include="Landing.aspx.cs">
+      <DependentUpon>Landing.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Landing.aspx.designer.cs">
+      <DependentUpon>Landing.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin.aspx.cs">
       <DependentUpon>Admin.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -18,3 +18,4 @@
 4. [Segurança no estilo 2015](security-2015.md)
 5. [Referência dos endpoints](endpoints.md)
 6. [A conta Noli (mito e ARG)](noli.md)
+7. [Páginas no estilo 2013](paginas-2013.md)

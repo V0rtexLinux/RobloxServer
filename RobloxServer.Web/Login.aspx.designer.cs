@@ -9,9 +9,15 @@ namespace RobloxServer.Pages
     public partial class Login
     {
         protected global::System.Web.UI.WebControls.Panel LoginPanel;
+        protected global::System.Web.UI.WebControls.PlaceHolder ErrorPanel;
+        protected global::System.Web.UI.WebControls.Literal ErrorLiteral;
         protected global::System.Web.UI.WebControls.TextBox UserNameBox;
         protected global::System.Web.UI.WebControls.TextBox PasswordBox;
-        protected global::System.Web.UI.WebControls.Label ErrorLabel;
         protected global::System.Web.UI.WebControls.Button LoginButton;
+        protected global::System.Web.UI.WebControls.Panel SignupPanel;
+        protected global::System.Web.UI.WebControls.DropDownList MonthSelect;
+        protected global::System.Web.UI.WebControls.DropDownList DaySelect;
+        protected global::System.Web.UI.WebControls.DropDownList YearSelect;
+        protected global::System.Web.UI.WebControls.Button SignUpButton;
     }
 }

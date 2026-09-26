@@ -3,6 +3,6 @@
     <div id="ErrorPage">
         <h1>Page not found</h1>
         <p>The page you requested does not exist.</p>
-        <a class="btn-medium btn-neutral" href="Default.aspx">Go to Games</a>
+        <a class="btn-medium btn-neutral" href="<%: ResolveUrl("~/Games") %>">Go to Games</a>
     </div>
 </asp:Content>

@@ -57,6 +57,8 @@ namespace RobloxServer.Security
         {
             FormsAuthentication.SetAuthCookie(user.Id.ToString(), true);
             context.Items[ItemKey] = user;
+            // The landing page opens on the Login tab for people who already have an account here.
+            context.Response.Cookies.Add(new HttpCookie("RBXReturning", "1") { Expires = DateTime.UtcNow.AddYears(1), HttpOnly = true });
 
             string ip = ClientIp.Get(context);
             Db.Users.Update(u => u.Id == user.Id, u =>
