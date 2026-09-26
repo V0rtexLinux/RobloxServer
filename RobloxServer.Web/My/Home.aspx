@@ -18,7 +18,7 @@
             <div class="left-column-boxes">
                 <h2>People</h2>
                 <div class="best-friends">
-                    <asp:Repeater ID="PeopleRepeater" runat="server">
+                    <asp:Repeater ID="PeopleRepeater" runat="server" EnableViewState="false">
                         <ItemTemplate>
                             <div class="user">
                                 <a class="avatar-image-link" href="<%# Eval("ProfileUrl") %>"><img src="<%# Eval("AvatarUrl") %>" alt="<%# Enc("Name") %>" /></a>
@@ -47,7 +47,7 @@
                         <div class="default-feed-content">Nobody has posted yet. Tell everyone what you are up to, then check back here to see what the other builders are doing.</div>
                     </div>
                 </asp:PlaceHolder>
-                <asp:Repeater ID="FeedRepeater" runat="server">
+                <asp:Repeater ID="FeedRepeater" runat="server" EnableViewState="false">
                     <ItemTemplate>
                         <div class="feed-container">
                             <div class="feed-image-container"><a href="<%# Eval("ProfileUrl") %>"><img src="<%# Eval("AvatarUrl") %>" alt="<%# Enc("UserName") %>" /></a></div>
@@ -66,7 +66,7 @@
             <div class="right-column-box">
                 <h2>Recently Played Games</h2>
                 <asp:PlaceHolder ID="NoRecent" runat="server"><p class="home-empty">You have not played any games yet. <a href="<%: ResolveUrl("~/Games") %>">Find a game</a></p></asp:PlaceHolder>
-                <asp:Repeater ID="RecentRepeater" runat="server">
+                <asp:Repeater ID="RecentRepeater" runat="server" EnableViewState="false">
                     <ItemTemplate>
                         <div class="recent-place-container">
                             <a class="recent-place-thumb" href="<%# ResolveUrl("~/PlaceItem.aspx?id=" + Eval("Id")) %>"><img class="recent-place-thumb-img" src="<%# PlaceThumb(Eval("Id"), "160x100") %>" alt="" /></a>
@@ -79,7 +79,7 @@
             <div class="right-column-box">
                 <h2><%: RobloxServer.Config.SiteName %> News</h2>
                 <div class="roblox-news-feed">
-                    <asp:Repeater ID="NewsRepeater" runat="server">
+                    <asp:Repeater ID="NewsRepeater" runat="server" EnableViewState="false">
                         <ItemTemplate><div class="roblox-news-feed-item"><a href="<%# Eval("Url") %>"><%# Enc("Text") %></a></div></ItemTemplate>
                     </asp:Repeater>
                 </div>

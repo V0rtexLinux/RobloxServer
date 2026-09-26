@@ -59,7 +59,7 @@
                 <asp:PlaceHolder ID="NoPlaces" runat="server" Visible="false">
                     <p class="aside-text">You have not created any places yet. Click <b>Create New Place</b> to publish your first one.</p>
                 </asp:PlaceHolder>
-                <asp:Repeater ID="MyPlacesRepeater" runat="server">
+                <asp:Repeater ID="MyPlacesRepeater" runat="server" EnableViewState="false">
                     <SeparatorTemplate><div class="separator"></div></SeparatorTemplate>
                     <ItemTemplate>
                         <table class="item-table">

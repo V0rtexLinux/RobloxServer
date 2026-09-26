@@ -21,7 +21,7 @@
                     <p class="CharacterHint">Click a body part to change its color.</p>
                     <div class="Mannequin" style="margin: 0 auto;">
                         <div class="ColorChooserFrame">
-                            <asp:Repeater ID="PartsRepeater" runat="server">
+                            <asp:Repeater ID="PartsRepeater" runat="server" EnableViewState="false">
                                 <ItemTemplate>
                                     <div class="ColorChooserRegion <%# Eval("Css") %>" data-part="<%# Eval("Part") %>" data-color="<%# Eval("Color") %>"
                                         title="<%# Eval("Label") %>" style="background-color: #<%# Eval("Rgb") %>;"></div>
@@ -31,7 +31,7 @@
                     </div>
                     <div id="ColorPickerModal" class="ColorPickerModal">
                         <h3>Choose a <span id="ColorPickerPart">body part</span> color</h3>
-                        <asp:Repeater ID="PaletteRepeater" runat="server">
+                        <asp:Repeater ID="PaletteRepeater" runat="server" EnableViewState="false">
                             <ItemTemplate><div class="ColorPickerItem" data-color="<%# Eval("Key") %>" title="BrickColor <%# Eval("Key") %>" style="background-color: #<%# Eval("Value") %>;"></div></ItemTemplate>
                         </asp:Repeater>
                     </div>

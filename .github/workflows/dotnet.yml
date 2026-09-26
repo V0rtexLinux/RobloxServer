@@ -57,6 +57,8 @@ jobs:
         http {
           access_log off;
           client_max_body_size 100m;
+          # Bodies over the buffer go to a temp file; the default /var/lib/nginx/body is root only.
+          client_body_temp_path $RUNNER_TEMP/nginx-body;
           server {
             listen 127.0.0.1:8081;
             location / {
