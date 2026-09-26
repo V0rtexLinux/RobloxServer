@@ -333,7 +333,9 @@ def main():
     status, _, body = anon.get("/User.aspx?id=2")
     check(b"Building a castle" in body, "the status shows on the profile")
     status, _, body = player.postback("/My/Character.aspx", {"PartField": "HeadColor", "ColorField": "21"}, "SaveColorButton")
-    check(status == 200, "character page saves a body color")
+    page_title = re.search(rb"<title>\s*(.*?)\s*</title>", body, re.S)
+    check(status == 200, "character page saves a body color (HTTP %d, %s)"
+          % (status, page_title.group(1).decode("utf-8", "replace") if page_title else body[:200]))
     status, _, body = anon.get("/Asset/BodyColors.ashx?userId=2")
     check(b'<int name="HeadColor">21</int>' in body, "the new head color reaches BodyColors.ashx")
     status, _, body = player.postback("/My/Character.aspx", {"PartField": "HeadColor", "ColorField": "99999"}, "SaveColorButton")
