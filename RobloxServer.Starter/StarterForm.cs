@@ -25,6 +25,9 @@ namespace RobloxServer.Starter
         readonly Button open;
         readonly CheckBox keepAwake;
         readonly CheckBox startWithWindows;
+        readonly CheckBox allowRemote;
+        readonly TextBox share;
+        bool changingRemote;
         readonly TextBox log;
         readonly NotifyIcon tray;
         bool exiting;
@@ -32,13 +35,13 @@ namespace RobloxServer.Starter
         public StarterForm(string sitePath, int port, bool startMinimized)
         {
             this.startMinimized = startMinimized;
-            runner = new SiteRunner(sitePath, port);
+            runner = new SiteRunner(sitePath, port) { AllowRemote = NetworkAccess.AllowRemote };
 
             Text = "RobloxServer";
             Icon = LoadIcon();
             StartPosition = FormStartPosition.CenterScreen;
-            ClientSize = new Size(560, 380);
-            MinimumSize = new Size(480, 320);
+            ClientSize = new Size(560, 430);
+            MinimumSize = new Size(480, 370);
             Font = new Font("Segoe UI", 9f);
             BackColor = Color.White;
 
@@ -86,6 +89,28 @@ namespace RobloxServer.Starter
             };
             startWithWindows.CheckedChanged += (s, e) => SetStartWithWindows(startWithWindows.Checked);
 
+            allowRemote = new CheckBox
+            {
+                Text = "Aceitar outros PCs (Radmin VPN / rede local)",
+                Checked = runner.AllowRemote,
+                AutoSize = true,
+                Location = new Point(12, 168)
+            };
+            allowRemote.CheckedChanged += (s, e) => ChangeAllowRemote();
+
+            // A read-only text box, so the address can be copied and sent to a friend.
+            share = new TextBox
+            {
+                ReadOnly = true,
+                BorderStyle = BorderStyle.None,
+                BackColor = Color.White,
+                ForeColor = Color.FromArgb(0x08, 0x52, 0xb7),
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                Location = new Point(30, 194),
+                Size = new Size(518, 20),
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+            };
+
             log = new TextBox
             {
                 Multiline = true,
@@ -93,12 +118,14 @@ namespace RobloxServer.Starter
                 ScrollBars = ScrollBars.Vertical,
                 BackColor = Color.FromArgb(0xf1, 0xf1, 0xf1),
                 Font = new Font("Consolas", 8.5f),
-                Location = new Point(12, 174),
-                Size = new Size(536, 194),
+                Location = new Point(12, 222),
+                Size = new Size(536, 196),
                 Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right
             };
 
             Controls.Add(log);
+            Controls.Add(share);
+            Controls.Add(allowRemote);
             Controls.Add(startWithWindows);
             Controls.Add(keepAwake);
             Controls.Add(startStop);
@@ -156,7 +183,14 @@ namespace RobloxServer.Starter
             base.OnShown(e);
             ApplyKeepAwake();
             AppendLog("Site: " + runner.SitePath);
-            AppendLog("O IIS Express só atende este PC. Para outros PCs da rede use o IIS completo (docs\\setting-up.md).");
+            if (!runner.AllowRemote)
+            {
+                AppendLog("O site só atende este PC. Para um amigo pelo Radmin VPN, marque \"Aceitar outros PCs\".");
+            }
+            else if (!NetworkAccess.IsConfigured(runner.Port))
+            {
+                AppendLog("A porta " + runner.Port + " não está liberada para outros PCs. Desmarque e marque \"Aceitar outros PCs\" de novo.");
+            }
             if (startMinimized)
             {
                 Hide();
@@ -203,7 +237,92 @@ namespace RobloxServer.Starter
             startStop.Text = running ? "Parar" : "Iniciar";
             startStop.Enabled = true;
             open.Enabled = running;
+            allowRemote.Enabled = !changingRemote;
+
+            var addresses = NetworkAccess.Addresses();
+            if (running && runner.AllowRemote && addresses.Count > 0)
+            {
+                var best = addresses[0];
+                share.Text = "Outros PCs abrem: http://" + best.Key + ":" + runner.Port + "/" + (NetworkAccess.IsRadmin(best) ? "  (Radmin VPN)" : "  (" + best.Value + ")");
+            }
+            else
+            {
+                share.Text = runner.AllowRemote ? "" : "Só este PC acessa o site.";
+            }
             tray.Text = running ? "RobloxServer - rodando na porta " + runner.Port : "RobloxServer - parado";
+        }
+
+        void ChangeAllowRemote()
+        {
+            if (changingRemote)
+            {
+                return;
+            }
+            bool enable = allowRemote.Checked;
+            if (enable && !NetworkAccess.IsConfigured(runner.Port))
+            {
+                DialogResult answer = MessageBox.Show(this,
+                    "Para outros PCs (Radmin VPN, rede local) entrarem no site, o Windows precisa liberar a porta " + runner.Port
+                    + " (site) e a porta UDP " + NetworkAccess.GamePort + " (servidores de jogo) no firewall.\r\n\r\n"
+                    + "O Windows vai pedir permissão de administrador uma vez. Continuar?",
+                    "RobloxServer", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                if (answer != DialogResult.OK)
+                {
+                    SetAllowRemoteBox(false);
+                    return;
+                }
+            }
+
+            changingRemote = true;
+            allowRemote.Enabled = false;
+            startStop.Enabled = false;
+            Task.Run(() =>
+            {
+                string error = enable && !NetworkAccess.IsConfigured(runner.Port) ? NetworkAccess.Configure(runner.Port) : null;
+                if (error != null)
+                {
+                    OnUi(() =>
+                    {
+                        AppendLog("Não foi possível liberar o acesso de outros PCs: " + error);
+                        changingRemote = false;
+                        SetAllowRemoteBox(false);
+                        UpdateStatus();
+                    });
+                    return;
+                }
+
+                NetworkAccess.AllowRemote = enable;
+                runner.AllowRemote = enable;
+                bool wasRunning = runner.IsRunning;
+                if (wasRunning)
+                {
+                    runner.Stop();
+                    runner.Start();
+                }
+                OnUi(() =>
+                {
+                    changingRemote = false;
+                    if (enable)
+                    {
+                        foreach (var address in NetworkAccess.Addresses())
+                        {
+                            AppendLog("Outros PCs: http://" + address.Key + ":" + runner.Port + "/  (" + address.Value + ")");
+                        }
+                    }
+                    else
+                    {
+                        AppendLog("Agora só este PC acessa o site.");
+                    }
+                    UpdateStatus();
+                });
+            });
+        }
+
+        void SetAllowRemoteBox(bool value)
+        {
+            changingRemote = true;
+            allowRemote.Checked = value;
+            changingRemote = false;
         }
 
         void ApplyKeepAwake()

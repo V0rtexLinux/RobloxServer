@@ -62,3 +62,15 @@ README do launcher.
 * Na mesma casa: o site devolve o IP local de quem hospeda.
 * Pela Internet: libere a porta UDP 53640 (ou a `HostPort` do `Settings.ini` do launcher). O Raspberry Pi encaminha
   a porta (`GAME_FORWARDS`) e o site mostra o `PublicGameAddress`. Veja [raspberry-pi.md](raspberry-pi.md).
+
+## Radmin VPN
+
+1. Crie uma rede no Radmin VPN e peça para o seu amigo entrar nela. Seu IP no Radmin começa com `26.`.
+2. No `IniciarServidor.exe`, marque **Aceitar outros PCs (Radmin VPN / rede local)** e aceite o pedido de administrador.
+   A janela mostra o endereço para mandar ao amigo, ex.: `http://26.6.234.106:8080/`.
+3. O amigo abre esse endereço, clica em **Download ROBLOX**, roda o launcher e confirma que confia no site.
+4. Deixe `BaseUrl` e `PublicGameAddress` vazios no `Web.config`: o site responde com o endereço por onde cada um chegou,
+   então o servidor de jogo hospedado no seu PC aparece para o amigo como o seu IP do Radmin.
+5. Se aparecer *Failed to connect to the Game (ID=17)*, coloque `HostAddress=` com o IP do Radmin de quem hospeda no
+   `%LocalAppData%\RobloxServer\Settings.ini` dessa pessoa. Quem hospeda também precisa liberar a porta UDP 53640
+   (o `IniciarServidor.exe` já libera no PC do site).

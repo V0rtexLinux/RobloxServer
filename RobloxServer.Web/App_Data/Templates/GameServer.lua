@@ -90,6 +90,90 @@ local function Kick(Player, reason)
 	end
 end
 
+-- The Noli myth (Code/Data/Noli.cs): the account named Noli leaves a black aura and turns everything
+-- it stands on black, and anyone who says its name in the chat angers it.
+local NoliPlayers = {}
+local NoliAwake = false
+
+local function IsNoli(name)
+	return string.lower(name or "") == "noli"
+end
+
+local function Corrupt(Character)
+	local torso = nil
+	for i = 1, 50 do
+		torso = FindChild(Character, "Torso")
+		if (torso ~= nil) then
+			break
+		end
+		wait(0.1)
+	end
+	if (torso == nil) then
+		return
+	end
+
+	pcall(function()
+		local aura = Instance.new("Smoke")
+		aura.Name = "Void"
+		aura.Color = Color3.new(0, 0, 0)
+		aura.Opacity = 0.4
+		aura.RiseVelocity = 1
+		aura.Size = 3
+		aura.Parent = torso
+	end)
+
+	local black = BrickColor.new(1003)
+	for _, name in pairs({"Left Leg", "Right Leg"}) do
+		local leg = FindChild(Character, name)
+		if (leg ~= nil) then
+			leg.Touched:connect(function(hit)
+				pcall(function()
+					local owner = hit.Parent
+					if (owner == nil or owner == Character or FindChild(owner, "Humanoid") ~= nil) then
+						return
+					end
+					if (hit:IsA("BasePart") and hit.BrickColor ~= black) then
+						hit.BrickColor = black
+					end
+				end)
+			end)
+		end
+	end
+end
+
+local function AngerNoli()
+	if (NoliAwake) then
+		return
+	end
+	NoliAwake = true
+
+	local Lighting = game:GetService("Lighting")
+	local saved = {}
+	for _, property in pairs({"TimeOfDay", "Ambient", "FogColor", "FogEnd", "FogStart"}) do
+		pcall(function() saved[property] = Lighting[property] end)
+	end
+	pcall(function() Lighting.TimeOfDay = "00:00:00" end)
+	pcall(function() Lighting.Ambient = Color3.new(0, 0, 0) end)
+	pcall(function() Lighting.FogColor = Color3.new(0, 0, 0) end)
+	pcall(function() Lighting.FogStart = 0 end)
+	pcall(function() Lighting.FogEnd = 40 end)
+
+	local message = nil
+	pcall(function()
+		message = Instance.new("Message")
+		message.Text = "You have angered Noli!"
+		message.Parent = workspace
+	end)
+	wait(6)
+	pcall(function() message:Remove() end)
+	for property, value in pairs(saved) do
+		pcall(function() Lighting[property] = value end)
+	end
+
+	wait(60)
+	NoliAwake = false
+end
+
 local function Authenticate(Player)
 	local value = nil
 	for i = 1, 100 do
@@ -146,11 +230,20 @@ local function Authenticate(Player)
 	userId.Name = "RSUserId"
 	userId.Value = fields[2]
 	userId.Parent = Player
+	if (IsNoli(fields[3])) then
+		NoliPlayers[Player] = true
+	end
 	print("RobloxServer: '" .. Player.Name .. "' authenticated as user " .. fields[2] .. ".")
 	return true
 end
 
 Players.PlayerAdded:connect(function(Player)
+	Player.CharacterAdded:connect(function(Character)
+		if (NoliPlayers[Player]) then
+			Corrupt(Character)
+		end
+	end)
+
 	-- wait() cannot be used inside pcall in these clients, so run in a plain coroutine
 	coroutine.resume(coroutine.create(function()
 		if (Players.NumPlayers > MaxPlayers) then
@@ -168,10 +261,15 @@ Players.PlayerAdded:connect(function(Player)
 
 	Player.Chatted:connect(function(message)
 		print(Player.Name .. "; " .. message)
+		local text = string.gsub(string.lower(message), "^%s*(.-)%s*$", "%1")
+		if (IsNoli(text)) then
+			coroutine.resume(coroutine.create(AngerNoli))
+		end
 	end)
 end)
 
 Players.PlayerRemoving:connect(function(Player)
+	NoliPlayers[Player] = nil
 	print("Player '" .. Player.Name .. "' with ID '" .. Player.userId .. "' leaving")
 end)
 

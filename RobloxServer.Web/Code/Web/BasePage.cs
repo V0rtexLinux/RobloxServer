@@ -36,6 +36,11 @@ namespace RobloxServer.Web
             {
                 Response.Redirect("~/NotApproved.aspx", true);
             }
+            if (user != null && DateTime.UtcNow - user.LastOnline > TimeSpan.FromMinutes(1))
+            {
+                // "Last Online" on profiles and in the People search.
+                Db.Users.Update(u => u.Id == user.Id, u => u.LastOnline = DateTime.UtcNow);
+            }
 
             base.OnInit(e);
         }
@@ -82,6 +87,12 @@ namespace RobloxServer.Web
         protected static string GenreName(object genre)
         {
             return Genres.Clean(Convert.ToString(genre));
+        }
+
+        /// <summary>Opened a page in the last 5 minutes (shown as "Online: Website").</summary>
+        protected static bool IsOnline(User user)
+        {
+            return DateTime.UtcNow - user.LastOnline < TimeSpan.FromMinutes(5);
         }
 
         protected static string Ago(DateTime utc)

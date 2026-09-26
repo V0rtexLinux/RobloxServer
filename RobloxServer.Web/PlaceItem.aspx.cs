@@ -28,7 +28,7 @@ namespace RobloxServer.Pages
             Title = place.Name;
             NameLiteral.Text = Server.HtmlEncode(place.Name);
             NameLiteral2.Text = NameLiteral.Text;
-            CreatorLiteral.Text = Server.HtmlEncode(place.CreatorName);
+            CreatorLiteral.Text = "<a href=\"" + ResolveUrl("~/User.aspx?id=" + place.CreatorId) + "\">" + Server.HtmlEncode(place.CreatorName) + "</a>";
             ClientLiteral.Text = Server.HtmlEncode(PlaceService.ClientFor(place));
             VisitsLiteral.Text = place.Visits.ToString("N0");
             UpdatedLiteral.Text = Ago(place.Updated);

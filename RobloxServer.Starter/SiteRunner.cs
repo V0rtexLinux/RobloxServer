@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace RobloxServer.Starter
@@ -20,6 +21,12 @@ namespace RobloxServer.Starter
 
         public string SitePath { get; private set; }
         public int Port { get; private set; }
+
+        /// <summary>
+        /// Answer other PCs too (Radmin VPN, the LAN), not only "localhost". Needs the URL reservation and
+        /// firewall rules from NetworkAccess. Takes effect the next time IIS Express starts.
+        /// </summary>
+        public bool AllowRemote { get; set; }
 
         /// <summary>Log lines (IIS Express output and our own messages), from any thread.</summary>
         public event Action<string> Output;
@@ -214,7 +221,23 @@ namespace RobloxServer.Starter
                 return false;
             }
 
-            var info = new ProcessStartInfo(iisExpress, "/path:\"" + SitePath.TrimEnd('\\') + "\" /port:" + Port + " /clr:v4.0")
+            string arguments = "/path:\"" + SitePath.TrimEnd('\\') + "\" /port:" + Port + " /clr:v4.0";
+            bool remote = false;
+            if (AllowRemote)
+            {
+                string config = WriteRemoteConfig(iisExpress);
+                if (config != null)
+                {
+                    arguments = "/config:\"" + config + "\" /site:RobloxServer /systray:false";
+                    remote = true;
+                }
+                else
+                {
+                    Log("Não encontrei o applicationhost.config do IIS Express; o site vai atender só este PC.");
+                }
+            }
+
+            var info = new ProcessStartInfo(iisExpress, arguments)
             {
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -241,9 +264,64 @@ namespace RobloxServer.Starter
                 lastStart = DateTime.UtcNow;
             }
 
-            Log("RobloxServer rodando em " + Url);
+            Log("RobloxServer rodando em " + Url + (remote ? " (e aceitando outros PCs)" : ""));
             SetRunning(true);
             return true;
+        }
+
+        /// <summary>
+        /// The IIS Express configuration /path: would use, with one site bound to every host name
+        /// ("*:port:") so http://26.x.x.x:port/ from Radmin VPN works. Returns its path, or null.
+        /// </summary>
+        string WriteRemoteConfig(string iisExpress)
+        {
+            string folder = Path.GetDirectoryName(iisExpress);
+            string template = new[]
+            {
+                Path.Combine(folder, "AppServer", "applicationhost.config"),
+                Path.Combine(folder, "config", "templates", "PersonalWebServer", "applicationhost.config")
+            }.FirstOrDefault(File.Exists);
+            if (template == null)
+            {
+                return null;
+            }
+
+            string home = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RobloxServer", "IISExpress");
+            string sites =
+                "<sites>\n" +
+                "            <site name=\"RobloxServer\" id=\"1\" serverAutoStart=\"true\">\n" +
+                "                <application path=\"/\" applicationPool=\"Clr4IntegratedAppPool\">\n" +
+                "                    <virtualDirectory path=\"/\" physicalPath=\"" + Xml(SitePath.TrimEnd('\\')) + "\" />\n" +
+                "                </application>\n" +
+                "                <bindings>\n" +
+                "                    <binding protocol=\"http\" bindingInformation=\"*:" + Port + ":\" />\n" +
+                "                </bindings>\n" +
+                "            </site>\n" +
+                "            <siteDefaults>\n" +
+                "                <logFile logFormat=\"W3C\" directory=\"" + Xml(Path.Combine(home, "Logs")) + "\" />\n" +
+                "                <traceFailedRequestsLogging directory=\"" + Xml(Path.Combine(home, "TraceLogFiles")) + "\" enabled=\"false\" />\n" +
+                "            </siteDefaults>\n" +
+                "            <applicationDefaults applicationPool=\"Clr4IntegratedAppPool\" />\n" +
+                "            <virtualDirectoryDefaults allowSubDirConfig=\"true\" />\n" +
+                "        </sites>";
+
+            string text = File.ReadAllText(template);
+            var pattern = new Regex(@"<sites>[\s\S]*?</sites>|<sites\s*/>");
+            if (!pattern.IsMatch(text))
+            {
+                return null;
+            }
+            text = pattern.Replace(text, sites.Replace("$", "$$"), 1);
+
+            Directory.CreateDirectory(home);
+            string path = Path.Combine(home, "applicationhost.config");
+            File.WriteAllText(path, text);
+            return path;
+        }
+
+        static string Xml(string value)
+        {
+            return value.Replace("&", "&amp;").Replace("\"", "&quot;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
         void OnExited(object sender, EventArgs e)
@@ -322,6 +400,22 @@ namespace RobloxServer.Starter
             catch (Exception ex)
             {
                 Log("Não foi possível parar o IIS Express: " + ex.Message);
+            }
+
+            // Forget the process here, so its Exited event cannot restart it after a new Start().
+            bool stopped;
+            lock (sync)
+            {
+                stopped = process == p && p.HasExited;
+                if (stopped)
+                {
+                    process = null;
+                }
+            }
+            if (stopped)
+            {
+                Log("O site foi parado.");
+                SetRunning(false);
             }
         }
 
