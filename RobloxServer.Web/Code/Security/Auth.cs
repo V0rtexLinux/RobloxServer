@@ -116,6 +116,8 @@ namespace RobloxServer.Security
                     {
                         string dir = Path.Combine(Config.DataPath, "Keys");
                         string path = Path.Combine(dir, "CsrfSecret.txt");
+                        Directory.CreateDirectory(dir);
+                        RobloxServer.Data.RemoteBlobStore.Pull("Keys/CsrfSecret.txt", path);
                         if (!File.Exists(path))
                         {
                             byte[] secret = new byte[32];
@@ -123,8 +125,8 @@ namespace RobloxServer.Security
                             {
                                 rng.GetBytes(secret);
                             }
-                            Directory.CreateDirectory(dir);
                             File.WriteAllText(path, Convert.ToBase64String(secret));
+                            RobloxServer.Data.RemoteBlobStore.Push("Keys/CsrfSecret.txt", path);
                         }
                         csrfSecret = Convert.FromBase64String(File.ReadAllText(path).Trim());
                     }
