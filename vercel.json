@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "services": {
+    "roblox-legacy-backend": {
+      "src": ".",
+      "dockerfile": "Dockerfile.vercel"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "roblox-legacy-backend"
+    }
+  ]
+}
