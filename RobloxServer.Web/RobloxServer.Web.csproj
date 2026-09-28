@@ -281,6 +281,7 @@
     <Compile Include="Code\Data\PlaceService.cs" />
     <Compile Include="Code\Data\XmlTable.cs" />
     <Compile Include="Code\Logging.cs" />
+    <Compile Include="Code\Data\RemoteBlobStore.cs" />
     <Compile Include="Code\Security\Auth.cs" />
     <Compile Include="Code\Security\AuthTickets.cs" />
     <Compile Include="Code\Security\Bans.cs" />
