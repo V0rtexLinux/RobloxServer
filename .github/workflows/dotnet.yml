@@ -112,5 +112,5 @@ jobs:
         cd ${{ runner.temp }}/site/RobloxServer.Web/
         vercel deploy --prod --yes \
           --token=${{ secrets.VERCEL_TOKEN }} \
-          --scope=${{ secrets.VERCEL_ORG_ID }} \
           --project=${{ secrets.VERCEL_PROJECT_ID }}
+
