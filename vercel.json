@@ -5,7 +5,9 @@
   },
   "services": {
     "roblox-legacy-backend": {
-      "dockerfile": "Dockerfile.vercel"
+      "build": {
+        "dockerfile": "Dockerfile.vercel"
+      }
     }
   },
   "routes": [
