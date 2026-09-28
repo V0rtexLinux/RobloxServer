@@ -1,0 +1,52 @@
+FROM ubuntu:24.04
+
+# Instala o Mono, FastCGI e Nginx
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    mono-complete \
+    mono-fastcgi-server4 \
+    nginx \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copia o site pré-compilado pelo GitHub Actions
+COPY . .
+
+# Remove a configuração padrão do Nginx e cria a nossa apontando para o FastCGI do Mono
+RUN rm /etc/nginx/sites-enabled/default
+RUN cat > /etc/nginx/sites-enabled/robloxserver <<'EOF'
+server {
+    listen 80;
+    server_name localhost;
+
+    location / {
+        root /app;
+        fastcgi_pass 127.0.0.1:9000;
+        include /etc/nginx/fastcgi_params;
+        fastcgi_param PATH_INFO "";
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_index Default.aspx;
+    }
+}
+EOF
+
+# Configura o script de inicialização dupla (FastCGI Server + Nginx em foreground)
+RUN cat > /app/start.sh <<'EOF'
+#!/bin/bash
+# Altera a porta do Nginx dinamicamente se a Vercel injetar a variável PORT
+if [ ! -z "$PORT" ]; then
+    sed -i "listen 80;/listen ${PORT};/" /etc/nginx/sites-enabled/robloxserver
+fi
+
+# Inicializa o backend do Mono na porta local 9000
+fastcgi-mono-server4 /applications=/:/app /socket=tcp:127.0.0.1:9000 &
+
+# Inicializa o Nginx para receber o tráfego externo
+nginx -g "daemon off;"
+EOF
+
+RUN chmod +x /app/start.sh
+
+EXPOSE 80
+ENTRYPOINT ["/app/start.sh"]
