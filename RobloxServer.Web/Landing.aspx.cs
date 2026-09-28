@@ -26,6 +26,10 @@ namespace RobloxServer.Pages
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+            Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
+
             if (CurrentUser != null)
             {
                 Response.Redirect("~/My/Home.aspx", true);

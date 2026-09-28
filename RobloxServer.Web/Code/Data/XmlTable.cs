@@ -16,8 +16,11 @@ namespace RobloxServer.Data
         readonly string path;
         List<T> rows;
 
+        readonly string fileName;
+
         public XmlTable(string fileName)
         {
+            this.fileName = fileName;
             path = Path.Combine(Config.DataPath, fileName);
         }
 
@@ -35,6 +38,9 @@ namespace RobloxServer.Data
 
         List<T> Load()
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            RemoteBlobStore.Pull(fileName, path);
+
             if (!File.Exists(path))
             {
                 return new List<T>();
@@ -66,6 +72,7 @@ namespace RobloxServer.Data
             }
             File.Copy(temp, path, true);
             File.Delete(temp);
+            RemoteBlobStore.Push(fileName, path);
         }
 
         public List<T> All()
