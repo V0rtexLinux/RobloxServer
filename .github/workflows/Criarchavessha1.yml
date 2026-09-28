@@ -12,6 +12,10 @@ jobs:
   generate:
     runs-on: ubuntu-24.04
     steps:
+    - name: Debug token
+      env:
+        GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
+      run: echo "tamanho do token: ${#GH_TOKEN}"
     - name: Generate and store keys
       env:
         GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
