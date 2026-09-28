@@ -5,15 +5,17 @@
   },
   "services": {
     "roblox-legacy-backend": {
-      "build": {
-        "dockerfile": "Dockerfile.vercel"
-      }
+      "root": ".",
+      "entrypoint": "Dockerfile.vercel",
+      "runtime": "container"
     }
   },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "roblox-legacy-backend"
+      "source": "/(.*)",
+      "destination": {
+        "service": "roblox-legacy-backend"
+      }
     }
   ]
 }
