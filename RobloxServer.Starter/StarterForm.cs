@@ -28,6 +28,9 @@ namespace RobloxServer.Starter
         readonly CheckBox allowRemote;
         readonly TextBox share;
         bool changingRemote;
+
+        /// <summary>The port was still reserved for other PCs, so "Aceitar outros PCs" was switched back on.</summary>
+        readonly bool remoteRestored;
         readonly TextBox log;
         readonly NotifyIcon tray;
         bool exiting;
@@ -35,6 +38,13 @@ namespace RobloxServer.Starter
         public StarterForm(string sitePath, int port, bool startMinimized)
         {
             this.startMinimized = startMinimized;
+            // While http://*:port/ is reserved IIS Express cannot register http://localhost:port/
+            // ("Acesso negado", 0x80070005), so a leftover reservation means the site has to accept other PCs.
+            if (!NetworkAccess.AllowRemote && NetworkAccess.IsReserved(port))
+            {
+                NetworkAccess.AllowRemote = true;
+                remoteRestored = true;
+            }
             runner = new SiteRunner(sitePath, port) { AllowRemote = NetworkAccess.AllowRemote };
 
             Text = "RobloxServer";
@@ -183,6 +193,11 @@ namespace RobloxServer.Starter
             base.OnShown(e);
             ApplyKeepAwake();
             AppendLog("Site: " + runner.SitePath);
+            if (remoteRestored)
+            {
+                AppendLog("A porta " + runner.Port + " continua liberada para outros PCs no Windows, então \"Aceitar outros PCs\" foi marcado de novo."
+                    + " Para só este PC acessar, desmarque (o Windows pede permissão de administrador para fechar a porta).");
+            }
             if (!runner.AllowRemote)
             {
                 AppendLog("O site só atende este PC. Para um amigo pelo Radmin VPN, marque \"Aceitar outros PCs\".");
@@ -272,20 +287,35 @@ namespace RobloxServer.Starter
                     return;
                 }
             }
+            if (!enable && NetworkAccess.IsReserved(runner.Port))
+            {
+                DialogResult answer = MessageBox.Show(this,
+                    "Para só este PC acessar o site, o Windows precisa fechar a porta " + runner.Port + " para os outros PCs.\r\n\r\n"
+                    + "O Windows vai pedir permissão de administrador. Continuar?",
+                    "RobloxServer", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                if (answer != DialogResult.OK)
+                {
+                    SetAllowRemoteBox(true);
+                    return;
+                }
+            }
 
             changingRemote = true;
             allowRemote.Enabled = false;
             startStop.Enabled = false;
             Task.Run(() =>
             {
-                string error = enable && !NetworkAccess.IsConfigured(runner.Port) ? NetworkAccess.Configure(runner.Port) : null;
+                string error = enable
+                    ? (NetworkAccess.IsConfigured(runner.Port) ? null : NetworkAccess.Configure(runner.Port))
+                    : (NetworkAccess.IsReserved(runner.Port) ? NetworkAccess.Remove(runner.Port) : null);
                 if (error != null)
                 {
                     OnUi(() =>
                     {
-                        AppendLog("Não foi possível liberar o acesso de outros PCs: " + error);
+                        AppendLog(enable ? "Não foi possível liberar o acesso de outros PCs: " + error
+                                         : "Não foi possível fechar a porta para outros PCs: " + error);
                         changingRemote = false;
-                        SetAllowRemoteBox(false);
+                        SetAllowRemoteBox(!enable);
                         UpdateStatus();
                     });
                     return;

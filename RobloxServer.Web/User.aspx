@@ -14,6 +14,7 @@
                     <div class="ProfileStatus"><asp:Literal ID="StatusLiteral" runat="server" /></div>
                     <div class="ProfileUrl"><asp:Literal ID="UrlLiteral" runat="server" /></div>
                     <img id="AvatarImage" runat="server" class="ProfileAvatar" width="200" height="200" alt="" />
+                    <asp:PlaceHolder ID="StatusPanel" runat="server" Visible="false"><div class="ProfileBlurb">"<asp:Literal ID="BlurbLiteral" runat="server" />"</div></asp:PlaceHolder>
                     <table class="ProfileDetails">
                         <tr><td class="Label">Joined:</td><td><asp:Literal ID="JoinedLiteral" runat="server" /></td></tr>
                         <tr><td class="Label">Last Online:</td><td><asp:Literal ID="LastOnlineLiteral" runat="server" /></td></tr>

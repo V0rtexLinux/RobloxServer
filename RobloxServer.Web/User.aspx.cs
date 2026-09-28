@@ -12,7 +12,9 @@ namespace RobloxServer.Pages
         {
             long id;
             long.TryParse(Request.QueryString["id"], out id);
-            User user = id != 0 ? Db.FindUser(id) : Db.FindUser(Request.QueryString["username"]);
+            string lookup = Request.QueryString["username"];
+            // /User.aspx without an id is your own profile (the "Profile" link of the 2013 sub menu).
+            User user = id != 0 ? Db.FindUser(id) : !string.IsNullOrEmpty(lookup) ? Db.FindUser(lookup) : CurrentUser;
 
             if (Noli.Is(user))
             {
@@ -21,7 +23,7 @@ namespace RobloxServer.Pages
                 // (Response.Redirect would drop the X-Void header on Mono.)
                 Response.Clear();
                 Response.StatusCode = 302;
-                Response.RedirectLocation = ResolveUrl("~/Default.aspx");
+                Response.RedirectLocation = ResolveUrl("~/");
                 Response.AppendHeader("X-Void", Noli.Clue);
                 Response.End();
                 return;
@@ -47,6 +49,8 @@ namespace RobloxServer.Pages
             JoinedLiteral.Text = user.Created.ToString("M/d/yyyy");
             LastOnlineLiteral.Text = online ? "Now" : Server.HtmlEncode(Ago(user.LastOnline));
             AdminBadge.Visible = user.IsAdmin;
+            StatusPanel.Visible = !string.IsNullOrEmpty(user.Status);
+            BlurbLiteral.Text = Server.HtmlEncode(user.Status ?? "");
 
             User viewer = CurrentUser;
             var places = Db.Places.Where(p => p.CreatorId == user.Id)

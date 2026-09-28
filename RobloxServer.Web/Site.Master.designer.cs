@@ -17,6 +17,7 @@ namespace RobloxServer
         protected global::System.Web.UI.WebControls.PlaceHolder LoggedOut;
         protected global::System.Web.UI.WebControls.PlaceHolder SubMenu;
         protected global::System.Web.UI.WebControls.PlaceHolder AdminSubLink;
+        protected global::System.Web.UI.WebControls.ContentPlaceHolder HeadContent;
         protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
         protected global::System.Web.UI.WebControls.Repeater GenreLinks;
     }

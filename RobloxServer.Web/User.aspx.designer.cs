@@ -14,6 +14,8 @@ namespace RobloxServer.Pages
         protected global::System.Web.UI.WebControls.Literal StatusLiteral;
         protected global::System.Web.UI.WebControls.Literal UrlLiteral;
         protected global::System.Web.UI.HtmlControls.HtmlImage AvatarImage;
+        protected global::System.Web.UI.WebControls.PlaceHolder StatusPanel;
+        protected global::System.Web.UI.WebControls.Literal BlurbLiteral;
         protected global::System.Web.UI.WebControls.Literal JoinedLiteral;
         protected global::System.Web.UI.WebControls.Literal LastOnlineLiteral;
         protected global::System.Web.UI.WebControls.Literal VisitsLiteral;

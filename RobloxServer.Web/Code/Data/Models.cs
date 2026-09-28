@@ -24,6 +24,15 @@ namespace RobloxServer.Data
 
         public string BodyColors { get; set; }
 
+        /// <summary>"Male", "Female" or null (2013 landing page signup).</summary>
+        public string Gender { get; set; }
+
+        /// <summary>Latest status update ("What are you up to?" on the home page), shown on the profile.</summary>
+        public string Status { get; set; }
+
+        /// <summary>Comma separated ids of the places this user joined last, newest first (Recently Played).</summary>
+        public string RecentPlaces { get; set; }
+
         [XmlIgnore]
         public bool IsCurrentlyBanned
         {
@@ -63,6 +72,16 @@ namespace RobloxServer.Data
 
         /// <summary>rbxl (binary or XML) or rbxlx.</summary>
         public string FileExtension { get; set; }
+    }
+
+    /// <summary>A status update ("What are you up to?") shown in My Feed on the 2013 home page.</summary>
+    public class FeedPost
+    {
+        public long Id { get; set; }
+        public long UserId { get; set; }
+        public string UserName { get; set; }
+        public string Text { get; set; }
+        public DateTime Created { get; set; }
     }
 
     public class IpBan

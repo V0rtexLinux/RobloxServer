@@ -12,6 +12,13 @@ namespace RobloxServer.Data
         public static readonly XmlTable<User> Users = new XmlTable<User>("Users.xml");
         public static readonly XmlTable<Place> Places = new XmlTable<Place>("Places.xml");
         public static readonly XmlTable<IpBan> IpBans = new XmlTable<IpBan>("IpBans.xml");
+        public static readonly XmlTable<FeedPost> Feed = new XmlTable<FeedPost>("Feed.xml");
+
+        /// <summary>Status updates kept in Feed.xml; older ones are dropped.</summary>
+        const int MaxFeedPosts = 500;
+
+        /// <summary>Places kept in User.RecentPlaces.</summary>
+        const int MaxRecentPlaces = 6;
 
         public static string PlacesPath
         {
@@ -36,6 +43,46 @@ namespace RobloxServer.Data
                 return null;
             }
             return Users.Find(u => string.Equals(u.Name, name.Trim(), StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>Saves a status update: User.Status and a new post in My Feed.</summary>
+        public static FeedPost PostStatus(User user, string text)
+        {
+            DateTime now = DateTime.UtcNow;
+            Users.Update(u => u.Id == user.Id, u => u.Status = text);
+            FeedPost post = Feed.InsertWithId(p => p.Id, 1, id => new FeedPost { Id = id, UserId = user.Id, UserName = user.Name, Text = text, Created = now });
+            List<FeedPost> all = Feed.All();
+            if (all.Count > MaxFeedPosts)
+            {
+                long oldest = all.OrderByDescending(p => p.Id).Skip(MaxFeedPosts - 1).First().Id;
+                Feed.Delete(p => p.Id < oldest);
+            }
+            return post;
+        }
+
+        /// <summary>Puts the place first in the user's Recently Played list.</summary>
+        public static void AddRecentPlace(long userId, long placeId)
+        {
+            Users.Update(u => u.Id == userId, u =>
+            {
+                var ids = RecentPlaceIds(u).Where(id => id != placeId).Take(MaxRecentPlaces - 1).ToList();
+                ids.Insert(0, placeId);
+                u.RecentPlaces = string.Join(",", ids);
+            });
+        }
+
+        public static List<long> RecentPlaceIds(User user)
+        {
+            var ids = new List<long>();
+            foreach (string part in (user.RecentPlaces ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                long id;
+                if (long.TryParse(part, out id))
+                {
+                    ids.Add(id);
+                }
+            }
+            return ids;
         }
 
         public static Place FindPlace(long id)

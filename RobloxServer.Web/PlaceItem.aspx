@@ -3,7 +3,7 @@
     <asp:PlaceHolder ID="NotFoundPanel" runat="server" Visible="false">
         <div class="PageBox">
             <h1>Game not found</h1>
-            <p>This game does not exist or is private. <a href="Default.aspx">Back to Games</a></p>
+            <p>This game does not exist or is private. <a href="<%: ResolveUrl("~/Games") %>">Back to Games</a></p>
         </div>
     </asp:PlaceHolder>
     <asp:PlaceHolder ID="PlacePanel" runat="server">
@@ -78,7 +78,7 @@
             <script type="text/javascript" src="<%: ResolveUrl("~/Content/PlaceLauncher.js") %>"></script>
 
             <asp:PlaceHolder ID="EditPanel" runat="server" Visible="false">
-                <div class="PageBox">
+                <div class="PageBox" id="Configure">
                     <div class="StandardBoxHeader">Configure this Place</div>
                     <div class="StandardBox">
                         <div class="form-row"><label>Name:</label><asp:TextBox ID="NameBox" runat="server" MaxLength="50" CssClass="text-box text-box-medium" /></div>

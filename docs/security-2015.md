@@ -17,7 +17,7 @@ lista o que existe e onde está, e o que é fraco de propósito.
 | ViewState + EventValidation + `ViewStateUserKey` nas páginas | `Code/Web/BasePage.cs` | anti-CSRF clássico do Web Forms |
 | Request validation do ASP.NET | `Web.config` `validateRequest="true"` | bloqueia `<script>` em formulários |
 | Flood checker de login (5 tentativas/5 min por conta, 15 por IP) | `Auth.Login`, `FloodChecker.cs` | sem captcha |
-| Limite de cadastros (3 por IP por hora) | `Register.aspx.cs` | |
+| Limite de cadastros (3 por IP por hora) | `Code/Security/Accounts.cs` (Register.aspx e a landing) | |
 | Limite de requisições por IP (45/30 s) | `Global.asax.cs` | assets e presença ficam de fora |
 | Regras de nome de usuário (3–20, letras/números, um `_`) + filtro de palavras por lista negra | `WordFilter.cs`, `App_Data/FilteredWords.txt` | fácil de burlar, como o filtro da época |
 | SuperSafeChat para menores de 13 | `Register.aspx` → `Visit.ashx`/`Join.ashx`/`ValidateTicket` | |

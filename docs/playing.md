@@ -71,6 +71,10 @@ README do launcher.
 3. O amigo abre esse endereço, clica em **Download ROBLOX**, roda o launcher e confirma que confia no site.
 4. Deixe `BaseUrl` e `PublicGameAddress` vazios no `Web.config`: o site responde com o endereço por onde cada um chegou,
    então o servidor de jogo hospedado no seu PC aparece para o amigo como o seu IP do Radmin.
-5. Se aparecer *Failed to connect to the Game (ID=17)*, coloque `HostAddress=` com o IP do Radmin de quem hospeda no
+5. *Failed to register URL "http://localhost:8080/" ... Acesso negado (0x80070005)*: a porta ficou reservada para outros
+   PCs e o site estava rodando só para este PC. O `IniciarServidor.exe` novo marca **Aceitar outros PCs** sozinho nesse
+   caso; para voltar a só este PC, desmarque (o Windows pede permissão para fechar a porta). À mão, num prompt de
+   administrador: `netsh http delete urlacl url=http://*:8080/`.
+6. Se aparecer *Failed to connect to the Game (ID=17)*, coloque `HostAddress=` com o IP do Radmin de quem hospeda no
    `%LocalAppData%\RobloxServer\Settings.ini` dessa pessoa. Quem hospeda também precisa liberar a porta UDP 53640
    (o `IniciarServidor.exe` já libera no PC do site).
