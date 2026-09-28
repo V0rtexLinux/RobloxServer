@@ -1,8 +1,4 @@
-
-# behind nginx + fastcgi-mono-server4 (the same stack the Raspberry Pi "local" mode uses).
-# On push to main, deploys the compiled site to SmarterASP.NET via FTP.
-
-name: ASP.NET
+name: ASP.NET deploy to Vercel
 
 on:
   push:
@@ -12,26 +8,34 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Install Mono, fastcgi-mono-server4 and nginx
       run: |
         sudo apt-get update
         sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mono-complete mono-fastcgi-server4 nginx
+
     - name: Build
       run: |
         xbuild /nologo /p:Configuration=Release RobloxServer.sln
         cp RobloxServer.Starter/bin/Release/IniciarServidor.exe .
+
     - name: Bundle RobloxPlayerLauncher.exe
-      # The site serves the launcher (Download ROBLOX and the launchers' self update) from App_Data/Launcher.
       run: |
         git clone --depth 1 https://github.com/V0rtexLinux/RobloxServerLauncher.git "$RUNNER_TEMP/launcher"
         xbuild /nologo /p:Configuration=Release "$RUNNER_TEMP/launcher/RobloxServerLauncher.sln"
         mkdir -p RobloxServer.Web/App_Data/Launcher
         cp "$RUNNER_TEMP/launcher/RobloxPlayerLauncher/bin/Release/RobloxPlayerLauncher.exe" RobloxServer.Web/App_Data/Launcher/
+
+    - name: Prepare Deployment Files for Vercel
+      # Move os arquivos de configuração necessários para dentro da pasta raiz do deploy
+      run: |
+        cp Dockerfile.vercel RobloxServer.Web/
+        cp vercel.json RobloxServer.Web/
+
     - name: Upload the compiled site
       uses: actions/upload-artifact@v4
       with:
@@ -45,6 +49,7 @@ jobs:
           IniciarServidor.exe
           docs/
           README.md
+
     - name: Start site
       run: |
         SITE="$RUNNER_TEMP/site"
@@ -75,12 +80,15 @@ jobs:
         cd "$GITHUB_WORKSPACE"
         nginx -c "$RUNNER_TEMP/nginx.conf" < /dev/null > /dev/null 2>&1
         for i in $(seq 1 30); do curl -fs http://127.0.0.1:8081/Api/Status.ashx && break; sleep 2; done
+
     - name: Smoke test
       run: python3 tests/smoke_test.py http://127.0.0.1:8081 "$RUNNER_TEMP/site"
+
     - name: Pi scripts
       run: |
         bash -n pi/install.sh pi/bin/rs-firewall.sh pi/bin/rs-upnp.sh
         RENDER_ONLY=1 pi/install.sh
+
     - name: Logs
       if: always()
       run: cat "$RUNNER_TEMP/fastcgi.log" "$RUNNER_TEMP"/site/App_Data/Logs/*.log || true
@@ -94,15 +102,15 @@ jobs:
       with:
         name: RobloxServer-site
         path: ${{ runner.temp }}/site
-    - name: Deploy via FTP to SmarterASP.NET
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-        server: ${{ secrets.SMARTERASP_FTP_SERVER }}
-        username: ${{ secrets.SMARTERASP_FTP_USERNAME }}
-        password: ${{ secrets.SMARTERASP_FTP_PASSWORD }}
-        protocol: ftps
-        local-dir: ${{ runner.temp }}/site/RobloxServer.Web/
-        server-dir: ./
-        exclude: |
-          **/obj/**
-          **/*.mdb
+
+    - name: Install Vercel CLI
+      run: npm install -g vercel
+
+    - name: Deploy to Vercel
+      # Entra na pasta web compilada e dispara o build do container direto para a Vercel
+      run: |
+        cd ${{ runner.temp }}/site/RobloxServer.Web/
+        vercel deploy --prod --yes \
+          --token=${{ secrets.VERCEL_TOKEN }} \
+          --scope=${{ secrets.VERCEL_ORG_ID }} \
+          --project=${{ secrets.VERCEL_PROJECT_ID }}
