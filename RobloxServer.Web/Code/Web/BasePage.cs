@@ -70,21 +70,20 @@ namespace RobloxServer.Web
             {
                 return authCookie.Value;
             }
-
+        
             // 2) Anonymous visitor with an existing stable id.
             HttpCookie anonCookie = Request.Cookies[AnonSessionCookieName];
             if (anonCookie != null && !string.IsNullOrEmpty(anonCookie.Value))
             {
                 return anonCookie.Value;
             }
-
+        
             // 3) New anonymous visitor: mint a stable id and store it in a cookie.
             string newId = Guid.NewGuid().ToString("N");
             HttpCookie newCookie = new HttpCookie(AnonSessionCookieName, newId)
             {
                 HttpOnly = true,
                 Secure = Request.IsSecureConnection,
-                SameSite = SameSiteMode.Lax,
                 Expires = DateTime.UtcNow.AddDays(30),
                 Path = Context.Request.ApplicationPath ?? "/"
             };
