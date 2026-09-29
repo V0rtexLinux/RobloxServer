@@ -25,11 +25,20 @@ namespace RobloxServer.Web
             get { return Db.IsAdmin(CurrentUser); }
         }
 
+        /// <summary>
+        /// Cookie used to keep an anonymous visitor's ViewState key stable across
+        /// requests, without relying on the (unstable, shared, spoofable) client IP.
+        /// </summary>
+        private const string AnonSessionCookieName = "AnonSessionId";
+
         protected override void OnInit(EventArgs e)
         {
-            // Anti-CSRF for postbacks: ViewState is bound to the .ROBLOSECURITY cookie (or the IP when logged out).
-            HttpCookie cookie = Request.Cookies[Auth.CookieName];
-            ViewStateUserKey = cookie != null && !string.IsNullOrEmpty(cookie.Value) ? cookie.Value : ClientIp.Get(Context);
+            // Anti-CSRF for postbacks: ViewState is bound to the .ROBLOSECURITY cookie
+            // when logged in, or to a stable anonymous session id when logged out.
+            // NOTE: never use the client IP here — it changes on mobile/CGNAT/VPN/IPv6
+            // privacy addresses and would break postbacks with "Validation of viewstate
+            // MAC failed" / "Invalid postback or callback argument".
+            ViewStateUserKey = GetViewStateUserKey();
 
             User user = CurrentUser;
             if (user != null && user.IsCurrentlyBanned && !AllowBanned)
@@ -43,6 +52,44 @@ namespace RobloxServer.Web
             }
 
             base.OnInit(e);
+        }
+
+        /// <summary>
+        /// Returns a stable per-visitor key for ViewStateUserKey.
+        /// Preference order:
+        ///   1. The .ROBLOSECURITY auth cookie (logged-in user).
+        ///   2. An existing anonymous session cookie.
+        ///   3. A newly generated anonymous session cookie.
+        /// The client IP is intentionally never used.
+        /// </summary>
+        private string GetViewStateUserKey()
+        {
+            // 1) Logged-in user: bind to the auth cookie value.
+            HttpCookie authCookie = Request.Cookies[Auth.CookieName];
+            if (authCookie != null && !string.IsNullOrEmpty(authCookie.Value))
+            {
+                return authCookie.Value;
+            }
+
+            // 2) Anonymous visitor with an existing stable id.
+            HttpCookie anonCookie = Request.Cookies[AnonSessionCookieName];
+            if (anonCookie != null && !string.IsNullOrEmpty(anonCookie.Value))
+            {
+                return anonCookie.Value;
+            }
+
+            // 3) New anonymous visitor: mint a stable id and store it in a cookie.
+            string newId = Guid.NewGuid().ToString("N");
+            HttpCookie newCookie = new HttpCookie(AnonSessionCookieName, newId)
+            {
+                HttpOnly = true,
+                Secure = Request.IsSecureConnection,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddDays(30),
+                Path = Context.Request.ApplicationPath ?? "/"
+            };
+            Response.Cookies.Add(newCookie);
+            return newId;
         }
 
         protected User RequireLogin()
