@@ -86,8 +86,8 @@
                                                 <span id="genderText">Gender</span>
                                             </div>
                                             <div>
-                                                <asp:RadioButton ID="MaleBtn" runat="server" GroupName="gender" Text="Male" TabIndex="4" />
-                                                <asp:RadioButton ID="FemaleBtn" runat="server" GroupName="gender" Text="Female" TabIndex="5" />
+                                                <input type="radio" id="MaleBtn" name="gender" value="Male" tabindex="4" <%= SelectedGender == "Male" ? "checked=\"checked\"" : "" %> /><label for="MaleBtn">Male</label>
+                                                <input type="radio" id="FemaleBtn" name="gender" value="Female" tabindex="5" <%= SelectedGender == "Female" ? "checked=\"checked\"" : "" %> /><label for="FemaleBtn">Female</label>
                                             </div>
                                         </div>
                                         <div class="sign-up-row">

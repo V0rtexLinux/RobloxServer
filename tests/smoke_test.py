@@ -177,12 +177,12 @@ def main():
     check(status == 302, "register Noob_1 (under 13)")
     status, _, body = Client().postback("/Landing.aspx", {"username": "Noli", "password": "void1234", "passwordConfirm": "void1234",
                                                           "lstMonths": "2", "lstDays": "30", "lstYears": "2010",
-                                                          "gender": "FemaleBtn"}, "SignUpButton")
+                                                          "gender": "Female"}, "SignUpButton")
     check(status == 200 and b"valid birthday" in body, "landing signup rejects 30 February")
     noli = Client()
     status, headers, _ = noli.postback("/Landing.aspx", {"username": "Noli", "password": "void1234", "passwordConfirm": "void1234",
                                                          "lstMonths": "11", "lstDays": "1", "lstYears": "2009",
-                                                         "gender": "FemaleBtn"}, "SignUpButton")
+                                                         "gender": "Female"}, "SignUpButton")
     check(status == 302 and headers.get("Location", "").endswith("/My/Home.aspx"), "register Noli from the landing page")
     status, _, body = noli.get("/Api/Me.ashx")
     check(json.loads(body).get("userName") == "Noli", "the landing page signs the new account in")

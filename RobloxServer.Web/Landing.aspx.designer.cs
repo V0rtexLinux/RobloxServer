@@ -17,8 +17,7 @@ namespace RobloxServer.Pages
         protected global::System.Web.UI.WebControls.DropDownList lstMonths;
         protected global::System.Web.UI.WebControls.DropDownList lstDays;
         protected global::System.Web.UI.WebControls.DropDownList lstYears;
-        protected global::System.Web.UI.WebControls.RadioButton MaleBtn;
-        protected global::System.Web.UI.WebControls.RadioButton FemaleBtn;
+
         protected global::System.Web.UI.WebControls.TextBox username;
         protected global::System.Web.UI.WebControls.TextBox password;
         protected global::System.Web.UI.WebControls.TextBox passwordConfirm;

@@ -73,6 +73,17 @@ namespace RobloxServer.Pages
             Response.Redirect(Accounts.AfterLogin(user, null), false);
         }
 
+        // Plain HTML radios (not asp:RadioButton): Mono's event validation rejects the posted radio value
+        // ("Invalid postback or callback argument"), so the gender is read straight from the form.
+        protected string SelectedGender
+        {
+            get
+            {
+                string value = Request != null ? Request.Form["gender"] : null;
+                return value == "Male" || value == "Female" ? value : "";
+            }
+        }
+
         protected void SignUpButton_Click(object sender, EventArgs e)
         {
             SelectedTab = "signup";
@@ -82,7 +93,8 @@ namespace RobloxServer.Pages
                 SignupError = "Please enter a valid birthday.";
                 return;
             }
-            if (!MaleBtn.Checked && !FemaleBtn.Checked)
+            string gender = SelectedGender;
+            if (gender.Length == 0)
             {
                 SignupError = "Please choose Male or Female.";
                 return;
@@ -90,7 +102,7 @@ namespace RobloxServer.Pages
 
             string error;
             User user = Accounts.Register(username.Text, password.Text, passwordConfirm.Text, Accounts.IsUnder13(birthday),
-                MaleBtn.Checked ? "Male" : "Female", Context, out error);
+                gender, Context, out error);
             if (user == null)
             {
                 SignupError = error;
