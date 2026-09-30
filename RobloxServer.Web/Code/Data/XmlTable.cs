@@ -9,31 +9,24 @@ namespace RobloxServer.Data
     /// <summary>
     /// A tiny "table" persisted as XML in App_Data. Good enough for a private server and it runs
     /// the same on IIS (Windows) and Mono/XSP (Raspberry Pi) without a database engine.
+    ///
+    /// IMPORTANT: every read re-loads from disk (and, on Vercel, re-pulls from the remote blob
+    /// first -- see RemoteBlobStore). We used to cache the deserialized rows in memory for the
+    /// lifetime of the process, but on Vercel more than one container instance can be alive at
+    /// once (or an old one can linger after a redeploy); a cached copy in one instance would never
+    /// see rows written by another, which looked like random logouts / "missing" accounts. Reading
+    /// fresh every time costs a small XML parse, which is fine for a private server's traffic.
     /// </summary>
     public class XmlTable<T> where T : class
     {
         readonly object sync = new object();
         readonly string path;
-        List<T> rows;
-
         readonly string fileName;
 
         public XmlTable(string fileName)
         {
             this.fileName = fileName;
             path = Path.Combine(Config.DataPath, fileName);
-        }
-
-        List<T> Rows
-        {
-            get
-            {
-                if (rows == null)
-                {
-                    rows = Load();
-                }
-                return rows;
-            }
         }
 
         List<T> Load()
@@ -61,7 +54,7 @@ namespace RobloxServer.Data
             }
         }
 
-        void Save()
+        void Save(List<T> rows)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             string temp = path + ".tmp";
@@ -79,7 +72,7 @@ namespace RobloxServer.Data
         {
             lock (sync)
             {
-                return Rows.ToList();
+                return Load();
             }
         }
 
@@ -87,7 +80,7 @@ namespace RobloxServer.Data
         {
             lock (sync)
             {
-                return Rows.FirstOrDefault(predicate);
+                return Load().FirstOrDefault(predicate);
             }
         }
 
@@ -95,7 +88,7 @@ namespace RobloxServer.Data
         {
             lock (sync)
             {
-                return Rows.Where(predicate).ToList();
+                return Load().Where(predicate).ToList();
             }
         }
 
@@ -103,8 +96,9 @@ namespace RobloxServer.Data
         {
             lock (sync)
             {
-                Rows.Add(row);
-                Save();
+                List<T> rows = Load();
+                rows.Add(row);
+                Save(rows);
             }
         }
 
@@ -113,13 +107,14 @@ namespace RobloxServer.Data
         {
             lock (sync)
             {
-                T row = Rows.FirstOrDefault(predicate);
+                List<T> rows = Load();
+                T row = rows.FirstOrDefault(predicate);
                 if (row == null)
                 {
                     return false;
                 }
                 change(row);
-                Save();
+                Save(rows);
                 return true;
             }
         }
@@ -128,10 +123,11 @@ namespace RobloxServer.Data
         {
             lock (sync)
             {
-                int removed = Rows.RemoveAll(r => predicate(r));
+                List<T> rows = Load();
+                int removed = rows.RemoveAll(r => predicate(r));
                 if (removed > 0)
                 {
-                    Save();
+                    Save(rows);
                 }
                 return removed;
             }
@@ -142,10 +138,11 @@ namespace RobloxServer.Data
         {
             lock (sync)
             {
-                long next = Rows.Count == 0 ? firstId : Math.Max(firstId, Rows.Max(getId) + 1);
+                List<T> rows = Load();
+                long next = rows.Count == 0 ? firstId : Math.Max(firstId, rows.Max(getId) + 1);
                 T row = build(next);
-                Rows.Add(row);
-                Save();
+                rows.Add(row);
+                Save(rows);
                 return row;
             }
         }
