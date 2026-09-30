@@ -84,6 +84,16 @@ namespace RobloxServer.Pages
             }
         }
 
+        // Plain HTML radios, same reasoning as SelectedGender above.
+        protected string RobloxConsent
+        {
+            get
+            {
+                string value = Request != null ? Request.Form["robloxConsent"] : null;
+                return value == "yes" || value == "no" ? value : "";
+            }
+        }
+
         protected void SignUpButton_Click(object sender, EventArgs e)
         {
             SelectedTab = "signup";
@@ -108,6 +118,23 @@ namespace RobloxServer.Pages
                 SignupError = error;
                 return;
             }
+
+            // Só consultamos a API pública do Roblox se a própria pessoa, agora, confirmou que esse
+            // é o username real dela. Nunca é feito em lote, nunca para outras contas.
+            if (RobloxConsent == "yes")
+            {
+                string avatarUrl = RobloxLookup.TryGetAvatarUrl(user.Name);
+                if (avatarUrl != null)
+                {
+                    long id = user.Id;
+                    Db.Users.Update(u => u.Id == id, u =>
+                    {
+                        u.RobloxVerified = true;
+                        u.RobloxAvatarUrl = avatarUrl;
+                    });
+                }
+            }
+
             Response.Redirect("~/My/Home.aspx", false);
         }
 

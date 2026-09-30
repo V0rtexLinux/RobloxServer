@@ -92,6 +92,15 @@
                                         </div>
                                         <div class="sign-up-row">
                                             <div class="sign-up-inner-row">
+                                                <span id="robloxConsentText">This is my real Roblox username</span>
+                                            </div>
+                                            <div>
+                                                <input type="radio" id="RobloxConsentYes" name="robloxConsent" value="yes" tabindex="6" <%= RobloxConsent == "yes" ? "checked=\"checked\"" : "" %> /><label for="RobloxConsentYes">Yes, link my public avatar</label>
+                                                <input type="radio" id="RobloxConsentNo" name="robloxConsent" value="no" tabindex="7" <%= RobloxConsent != "yes" ? "checked=\"checked\"" : "" %> /><label for="RobloxConsentNo">No</label>
+                                            </div>
+                                        </div>
+                                        <div class="sign-up-row">
+                                            <div class="sign-up-inner-row">
                                                 <span id="usernameGood" class="good-text" style="display: none;">OK</span>
                                                 <span id="usernameError" class="required-text error" style="display: none;"></span>
                                                 <span id="usernameText">Username</span>

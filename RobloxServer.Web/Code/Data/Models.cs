@@ -27,6 +27,12 @@ namespace RobloxServer.Data
         /// <summary>"Male", "Female" or null (2013 landing page signup).</summary>
         public string Gender { get; set; }
 
+        /// <summary>Set only if the user consented, at signup, to link their real Roblox username.</summary>
+        public bool RobloxVerified { get; set; }
+
+        /// <summary>Public avatar thumbnail URL fetched from Roblox at signup (consent-gated).</summary>
+        public string RobloxAvatarUrl { get; set; }
+
         /// <summary>Latest status update ("What are you up to?" on the home page), shown on the profile.</summary>
         public string Status { get; set; }
 
