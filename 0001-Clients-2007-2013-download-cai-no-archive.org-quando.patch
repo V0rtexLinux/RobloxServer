@@ -1,0 +1,186 @@
+From d33b3e796ee92553b36e570a27abb0329e6dbe3c Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Wed, 30 Sep 2026 20:28:54 +0000
+Subject: [PATCH] Clients 2007-2013: download cai no archive.org quando o zip
+ nao esta no site; suporta 2007E...2013L; link na pagina inicial
+
+---
+ RobloxServer.Web/Code/Config.cs              | 22 ++++++++++++++++++--
+ RobloxServer.Web/Code/Data/ClientPackages.cs |  2 +-
+ RobloxServer.Web/Code/Data/PlaceService.cs   |  2 +-
+ RobloxServer.Web/Install/Download.ashx.cs    |  9 +++++++-
+ RobloxServer.Web/Landing.aspx                |  3 ++-
+ RobloxServer.Web/Web.config                  |  6 ++++--
+ docs/playing.md                              |  2 +-
+ tests/smoke_test.py                          |  6 +++---
+ 8 files changed, 40 insertions(+), 12 deletions(-)
+
+diff --git a/RobloxServer.Web/Code/Config.cs b/RobloxServer.Web/Code/Config.cs
+index c535e85..c06b512 100644
+--- a/RobloxServer.Web/Code/Config.cs
++++ b/RobloxServer.Web/Code/Config.cs
+@@ -164,8 +164,16 @@ namespace RobloxServer
+         /// <summary>None or Roblox. Roblox resolves unknown asset ids through assetdelivery.roblox.com like the old Node server.</summary>
+         public static string AssetFallback { get { return Get("AssetFallback", "Roblox"); } }
+ 
+-        /// <summary>The only clients RobloxPlayerLauncher knows how to install and start.</summary>
+-        public static readonly string[] SupportedClients = { "2012M", "2013M" };
++        /// <summary>
++        /// Clients this site can host and list games for: 2007-2013, in the Novetus naming (year + E early, M mid, L late).
++        /// Only 2012M and 2013M have join/host scripts (App_Data/Templates); the others are hosted and labelled only.
++        /// </summary>
++        public static readonly string[] SupportedClients =
++        {
++            "2007E", "2007M", "2007L", "2008E", "2008M", "2008L", "2009E", "2009M", "2009L",
++            "2010E", "2010M", "2010L", "2011E", "2011M", "2011L", "2012E", "2012M", "2012L",
++            "2013E", "2013M", "2013L"
++        };
+ 
+         /// <summary>Clients games can be published for: the "Clients" setting, limited to SupportedClients.</summary>
+         public static string[] Clients
+@@ -196,6 +204,16 @@ namespace RobloxServer
+             get { return Get("LauncherDownloadUrl", "https://github.com/V0rtexLinux/RobloxServerLauncher/releases/latest"); }
+         }
+ 
++        /// <summary>Where a client download goes when its zip is not in App_Data/Clients (ROBLOX 2007-2013 collection on archive.org).</summary>
++        public static string ClientsArchiveUrl
++        {
++            get
++            {
++                string url = Get("ClientsArchiveUrl", "");
++                return string.IsNullOrWhiteSpace(url) ? "https://archive.org/download/ROBLOX20072013/ROBLOX%202007-2013.zip" : url.Trim();
++            }
++        }
++
+         public static string DataPath
+         {
+             get { return HostingEnvironment.MapPath("~/App_Data") ?? AppDomain.CurrentDomain.BaseDirectory; }
+diff --git a/RobloxServer.Web/Code/Data/ClientPackages.cs b/RobloxServer.Web/Code/Data/ClientPackages.cs
+index 49471aa..97ad9c3 100644
+--- a/RobloxServer.Web/Code/Data/ClientPackages.cs
++++ b/RobloxServer.Web/Code/Data/ClientPackages.cs
+@@ -9,7 +9,7 @@ namespace RobloxServer.Data
+ {
+     /// <summary>
+     /// Files RobloxPlayerLauncher installs from this site, like setup.roblox.com in 2013:
+-    ///   App_Data/Clients/2012M.zip, App_Data/Clients/2013M.zip  (one zip per client)
++    ///   App_Data/Clients/2012M.zip, App_Data/Clients/2013M.zip, 2009E.zip...  (one zip per client, 2007-2013)
+     ///   App_Data/Launcher/RobloxPlayerLauncher.exe            (optional, for self updates)
+     /// The version of a package is the start of its SHA-256, so replacing a zip makes every
+     /// launcher download the new one.
+diff --git a/RobloxServer.Web/Code/Data/PlaceService.cs b/RobloxServer.Web/Code/Data/PlaceService.cs
+index 1e0b830..51be975 100644
+--- a/RobloxServer.Web/Code/Data/PlaceService.cs
++++ b/RobloxServer.Web/Code/Data/PlaceService.cs
+@@ -59,7 +59,7 @@ namespace RobloxServer.Data
+ 
+         /// <summary>
+         /// Client a place is played with. Places published for clients that are no longer supported
+-        /// (2006S...2011M from the Novetus days) are played with the default client.
++        /// (2006S and other names outside 2007-2013) are played with the default client.
+         /// </summary>
+         public static string ClientFor(Place place)
+         {
+diff --git a/RobloxServer.Web/Install/Download.ashx.cs b/RobloxServer.Web/Install/Download.ashx.cs
+index b7cb80f..f05dc08 100644
+--- a/RobloxServer.Web/Install/Download.ashx.cs
++++ b/RobloxServer.Web/Install/Download.ashx.cs
+@@ -5,7 +5,8 @@ namespace RobloxServer.Handlers.Install
+ {
+     /// <summary>
+     /// /install/download.ashx?client=2012M|2013M|Launcher: the client zip or the launcher. Without a
+-    /// launcher in App_Data/Launcher the launcher download goes to Config.LauncherDownloadUrl.
++    /// launcher in App_Data/Launcher the launcher download goes to Config.LauncherDownloadUrl; a client
++    /// without a zip in App_Data/Clients goes to Config.ClientsArchiveUrl.
+     /// </summary>
+     public class Download : HandlerBase
+     {
+@@ -20,6 +21,12 @@ namespace RobloxServer.Handlers.Install
+                     Response.Redirect(Config.LauncherDownloadUrl, false);
+                     return;
+                 }
++                if (name != null)
++                {
++                    // A client this site does not host itself: send the person to the archive.org collection.
++                    Response.Redirect(Config.ClientsArchiveUrl, false);
++                    return;
++                }
+                 WriteStatus(404, "Not found");
+                 return;
+             }
+diff --git a/RobloxServer.Web/Landing.aspx b/RobloxServer.Web/Landing.aspx
+index 6f467b2..365ebb1 100644
+--- a/RobloxServer.Web/Landing.aspx
++++ b/RobloxServer.Web/Landing.aspx
+@@ -149,7 +149,8 @@
+                 <div class="FooterContent">
+                     <p class="FooterParagraph">
+                         <a href="<%: ResolveUrl("~/Games") %>">Games</a> &nbsp;|&nbsp; <a href="<%: ResolveUrl("~/Browse.aspx") %>">People</a> &nbsp;|&nbsp;
+-                        <a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download</a> &nbsp;|&nbsp; <a href="https://github.com/V0rtexLinux/RobloxServer">Source Code</a>
++                        <a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download</a> &nbsp;|&nbsp;
++                        <a href="<%: RobloxServer.Config.ClientsArchiveUrl %>" target="_blank" rel="noopener">Clients 2007-2013</a> &nbsp;|&nbsp; <a href="https://github.com/V0rtexLinux/RobloxServer">Source Code</a>
+                     </p>
+                     <div class="FooterLegaleseContainer">
+                         <p class="Legalese">
+diff --git a/RobloxServer.Web/Web.config b/RobloxServer.Web/Web.config
+index 6a6de06..2352dd5 100644
+--- a/RobloxServer.Web/Web.config
++++ b/RobloxServer.Web/Web.config
+@@ -37,11 +37,13 @@
+     <add key="FirstLocalAssetId" value="1900000000" />
+     <!-- Roblox | None: what /asset/?id= does with ids that are not stored here. -->
+     <add key="AssetFallback" value="Roblox" />
+-    <!-- Only 2012M and 2013M are supported by RobloxPlayerLauncher; other names are ignored. -->
+-    <add key="Clients" value="2012M,2013M" />
++    <!-- Clients games can be published for (2007-2013, year + E/M/L). Only 2012M and 2013M have join/host scripts. Remove the ones you do not install. -->
++    <add key="Clients" value="2007E,2007M,2007L,2008E,2008M,2008L,2009E,2009M,2009L,2010E,2010M,2010L,2011E,2011M,2011L,2012E,2012M,2012L,2013E,2013M,2013L" />
+     <add key="DefaultClient" value="2012M" />
+     <!-- Where "Download ROBLOX" goes when App_Data/Launcher/RobloxPlayerLauncher.exe does not exist (empty: GitHub releases). -->
+     <add key="LauncherDownloadUrl" value="" />
++    <!-- Where /Install/Download.ashx?client=2012M|2013M goes when that zip is not in App_Data/Clients (empty: ROBLOX 2007-2013 on archive.org). -->
++    <add key="ClientsArchiveUrl" value="" />
+   </appSettings>
+ 
+   <system.web>
+diff --git a/docs/playing.md b/docs/playing.md
+index 4ae5c8b..0cc67f7 100644
+--- a/docs/playing.md
++++ b/docs/playing.md
+@@ -2,7 +2,7 @@
+ 
+ Os jogos do RobloxServer são jogados pelo **[RobloxPlayerLauncher](https://github.com/V0rtexLinux/RobloxServerLauncher)**,
+ o launcher oficial do site no estilo do roblox.com de 2013: você clica em **Play** na página do jogo e ele abre.
+-Só os clientes **2012M** e **2013M** são suportados.
++O site hospeda e lista jogos dos clientes **2007 a 2013** (2007E, 2007M, 2007L ... 2013L). Só o **2012M** e o **2013M** têm script de entrar/hospedar; os outros são hospedados e rotulados, mas o launcher ainda não os inicia.
+ 
+ ## Publicar um jogo
+ 
+diff --git a/tests/smoke_test.py b/tests/smoke_test.py
+index aa795d1..e362f57 100644
+--- a/tests/smoke_test.py
++++ b/tests/smoke_test.py
+@@ -245,10 +245,10 @@ def main():
+     private = [g for g in json.loads(body)["data"] if g["name"] == "Private Place"]
+     check(len(private) == 1 and private[0]["client"] == "2013M", "owner sees private game with its client")
+     check(any(g["id"] == place_id and g["client"] == "2012M" for g in games), "Studio publish uses the default client (2012M)")
+-    status, _, body = admin.request("/Data/Upload.ashx?assetid=0&type=Place&name=Old&client=2009E&ispublic=false", PLACE,
++    status, _, body = admin.request("/Data/Upload.ashx?assetid=0&type=Place&name=Old&client=2006S&ispublic=false", PLACE,
+                                     {"Content-Type": "application/octet-stream"}, "POST")
+     status, _, body = admin.get("/Api/Games.ashx?id=%d" % int(body))
+-    check(json.loads(body)["data"][0]["client"] == "2012M", "unsupported clients (2009E) become 2012M")
++    check(json.loads(body)["data"][0]["client"] == "2012M", "unsupported clients (2006S) become 2012M")
+     status, _, body = player.get("/asset/?id=%d" % private[0]["id"])
+     check(status == 403, "private place file is protected")
+     status, _, body = player.get("/Asset/?ID=%d" % place_id)
+@@ -356,7 +356,7 @@ def main():
+     check(status == 200 and json.loads(me).get("userName") == "Noob_1", "launcher trades the ticket for a cookie")
+     status, _, _ = Client().get("/Login/Negotiate.ashx?suggest=" + body.decode())
+     check(status == 403, "the ticket works once")
+-    status, _, body = anon.get("/install/version.ashx?client=2009E")
++    status, _, body = anon.get("/install/version.ashx?client=2006S")
+     check(status == 404 and not json.loads(body)["available"], "install: unsupported client")
+     status, _, body = anon.get("/install/version.ashx?client=2013m")
+     check(status == 404 and json.loads(body)["client"] == "2013M", "install: 2013M not uploaded yet")
+-- 
+2.43.0
+
