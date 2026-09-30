@@ -1,4 +1,4 @@
-name: ASP.NET deploy to Vercel
+name: ASP.NET deploy to Vercel 
 
 on:
   push:
