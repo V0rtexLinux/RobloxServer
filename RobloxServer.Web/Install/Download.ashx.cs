@@ -5,7 +5,8 @@ namespace RobloxServer.Handlers.Install
 {
     /// <summary>
     /// /install/download.ashx?client=2012M|2013M|Launcher: the client zip or the launcher. Without a
-    /// launcher in App_Data/Launcher the launcher download goes to Config.LauncherDownloadUrl.
+    /// launcher in App_Data/Launcher the launcher download goes to Config.LauncherDownloadUrl; a client
+    /// without a zip in App_Data/Clients goes to Config.ClientsArchiveUrl.
     /// </summary>
     public class Download : HandlerBase
     {
@@ -18,6 +19,12 @@ namespace RobloxServer.Handlers.Install
                 if (name == ClientPackages.Launcher)
                 {
                     Response.Redirect(Config.LauncherDownloadUrl, false);
+                    return;
+                }
+                if (name != null)
+                {
+                    // A client this site does not host itself: send the person to the archive.org collection.
+                    Response.Redirect(Config.ClientsArchiveUrl, false);
                     return;
                 }
                 WriteStatus(404, "Not found");

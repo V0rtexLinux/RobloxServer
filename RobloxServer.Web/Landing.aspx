@@ -149,7 +149,8 @@
                 <div class="FooterContent">
                     <p class="FooterParagraph">
                         <a href="<%: ResolveUrl("~/Games") %>">Games</a> &nbsp;|&nbsp; <a href="<%: ResolveUrl("~/Browse.aspx") %>">People</a> &nbsp;|&nbsp;
-                        <a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download</a> &nbsp;|&nbsp; <a href="https://github.com/V0rtexLinux/RobloxServer">Source Code</a>
+                        <a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download</a> &nbsp;|&nbsp;
+                        <a href="<%: RobloxServer.Config.ClientsArchiveUrl %>" target="_blank" rel="noopener">Clients 2007-2013</a> &nbsp;|&nbsp; <a href="https://github.com/V0rtexLinux/RobloxServer">Source Code</a>
                     </p>
                     <div class="FooterLegaleseContainer">
                         <p class="Legalese">

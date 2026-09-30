@@ -196,6 +196,16 @@ namespace RobloxServer
             get { return Get("LauncherDownloadUrl", "https://github.com/V0rtexLinux/RobloxServerLauncher/releases/latest"); }
         }
 
+        /// <summary>Where a client download goes when its zip is not in App_Data/Clients (ROBLOX 2007-2013 collection on archive.org).</summary>
+        public static string ClientsArchiveUrl
+        {
+            get
+            {
+                string url = Get("ClientsArchiveUrl", "");
+                return string.IsNullOrWhiteSpace(url) ? "https://archive.org/download/ROBLOX20072013/ROBLOX%202007-2013.zip" : url.Trim();
+            }
+        }
+
         public static string DataPath
         {
             get { return HostingEnvironment.MapPath("~/App_Data") ?? AppDomain.CurrentDomain.BaseDirectory; }
