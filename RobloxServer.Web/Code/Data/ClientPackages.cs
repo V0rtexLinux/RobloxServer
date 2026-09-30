@@ -9,7 +9,7 @@ namespace RobloxServer.Data
 {
     /// <summary>
     /// Files RobloxPlayerLauncher installs from this site, like setup.roblox.com in 2013:
-    ///   App_Data/Clients/2012M.zip, App_Data/Clients/2013M.zip  (one zip per client)
+    ///   App_Data/Clients/2012M.zip, App_Data/Clients/2013M.zip, 2009E.zip...  (one zip per client, 2007-2013)
     ///   App_Data/Launcher/RobloxPlayerLauncher.exe            (optional, for self updates)
     /// The version of a package is the start of its SHA-256, so replacing a zip makes every
     /// launcher download the new one.

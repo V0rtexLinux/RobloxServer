@@ -245,10 +245,10 @@ def main():
     private = [g for g in json.loads(body)["data"] if g["name"] == "Private Place"]
     check(len(private) == 1 and private[0]["client"] == "2013M", "owner sees private game with its client")
     check(any(g["id"] == place_id and g["client"] == "2012M" for g in games), "Studio publish uses the default client (2012M)")
-    status, _, body = admin.request("/Data/Upload.ashx?assetid=0&type=Place&name=Old&client=2009E&ispublic=false", PLACE,
+    status, _, body = admin.request("/Data/Upload.ashx?assetid=0&type=Place&name=Old&client=2006S&ispublic=false", PLACE,
                                     {"Content-Type": "application/octet-stream"}, "POST")
     status, _, body = admin.get("/Api/Games.ashx?id=%d" % int(body))
-    check(json.loads(body)["data"][0]["client"] == "2012M", "unsupported clients (2009E) become 2012M")
+    check(json.loads(body)["data"][0]["client"] == "2012M", "unsupported clients (2006S) become 2012M")
     status, _, body = player.get("/asset/?id=%d" % private[0]["id"])
     check(status == 403, "private place file is protected")
     status, _, body = player.get("/Asset/?ID=%d" % place_id)
@@ -356,7 +356,7 @@ def main():
     check(status == 200 and json.loads(me).get("userName") == "Noob_1", "launcher trades the ticket for a cookie")
     status, _, _ = Client().get("/Login/Negotiate.ashx?suggest=" + body.decode())
     check(status == 403, "the ticket works once")
-    status, _, body = anon.get("/install/version.ashx?client=2009E")
+    status, _, body = anon.get("/install/version.ashx?client=2006S")
     check(status == 404 and not json.loads(body)["available"], "install: unsupported client")
     status, _, body = anon.get("/install/version.ashx?client=2013m")
     check(status == 404 and json.loads(body)["client"] == "2013M", "install: 2013M not uploaded yet")

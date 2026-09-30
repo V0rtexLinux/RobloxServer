@@ -59,7 +59,7 @@ namespace RobloxServer.Data
 
         /// <summary>
         /// Client a place is played with. Places published for clients that are no longer supported
-        /// (2006S...2011M from the Novetus days) are played with the default client.
+        /// (2006S and other names outside 2007-2013) are played with the default client.
         /// </summary>
         public static string ClientFor(Place place)
         {

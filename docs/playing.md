@@ -2,7 +2,7 @@
 
 Os jogos do RobloxServer são jogados pelo **[RobloxPlayerLauncher](https://github.com/V0rtexLinux/RobloxServerLauncher)**,
 o launcher oficial do site no estilo do roblox.com de 2013: você clica em **Play** na página do jogo e ele abre.
-Só os clientes **2012M** e **2013M** são suportados.
+O site hospeda e lista jogos dos clientes **2007 a 2013** (2007E, 2007M, 2007L ... 2013L). Só o **2012M** e o **2013M** têm script de entrar/hospedar; os outros são hospedados e rotulados, mas o launcher ainda não os inicia.
 
 ## Publicar um jogo
 

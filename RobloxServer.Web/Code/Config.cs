@@ -164,8 +164,16 @@ namespace RobloxServer
         /// <summary>None or Roblox. Roblox resolves unknown asset ids through assetdelivery.roblox.com like the old Node server.</summary>
         public static string AssetFallback { get { return Get("AssetFallback", "Roblox"); } }
 
-        /// <summary>The only clients RobloxPlayerLauncher knows how to install and start.</summary>
-        public static readonly string[] SupportedClients = { "2012M", "2013M" };
+        /// <summary>
+        /// Clients this site can host and list games for: 2007-2013, in the Novetus naming (year + E early, M mid, L late).
+        /// Only 2012M and 2013M have join/host scripts (App_Data/Templates); the others are hosted and labelled only.
+        /// </summary>
+        public static readonly string[] SupportedClients =
+        {
+            "2007E", "2007M", "2007L", "2008E", "2008M", "2008L", "2009E", "2009M", "2009L",
+            "2010E", "2010M", "2010L", "2011E", "2011M", "2011L", "2012E", "2012M", "2012L",
+            "2013E", "2013M", "2013L"
+        };
 
         /// <summary>Clients games can be published for: the "Clients" setting, limited to SupportedClients.</summary>
         public static string[] Clients
