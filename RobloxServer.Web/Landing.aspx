@@ -94,6 +94,15 @@
                                             <div class="sign-up-inner-row">
                                                 <span id="robloxConsentText">This is my real Roblox username</span>
                                             </div>
+                                            <p class="sign-up-help-text" style="font-size: 11px; color: #666; margin: 4px 0;">
+                                                If you say Yes, we'll look up this username on Roblox's public website
+                                                (roblox.com) just to confirm it exists and copy your public avatar
+                                                picture to show on your profile here. We don't get your password,
+                                                e-mail, or anything private — Roblox never shares that with us, and
+                                                we only do this once, right now, for the account you're creating.
+                                                If you say No (or this isn't really your Roblox username), we skip
+                                                this step entirely and nothing is looked up.
+                                            </p>
                                             <div>
                                                 <input type="radio" id="RobloxConsentYes" name="robloxConsent" value="yes" tabindex="6" <%= RobloxConsent == "yes" ? "checked=\"checked\"" : "" %> /><label for="RobloxConsentYes">Yes, link my public avatar</label>
                                                 <input type="radio" id="RobloxConsentNo" name="robloxConsent" value="no" tabindex="7" <%= RobloxConsent != "yes" ? "checked=\"checked\"" : "" %> /><label for="RobloxConsentNo">No</label>
