@@ -12,7 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
+      with:
+        lfs: true
     - name: Install Mono, fastcgi-mono-server4 and nginx
       run: |
         sudo apt-get update
