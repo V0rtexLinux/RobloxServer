@@ -214,6 +214,18 @@ namespace RobloxServer
             }
         }
 
+        /// <summary>Folder (GitHub Release) with one zip per client, e.g. .../releases/download/v0.1.0-alpha/2009E.zip.</summary>
+        public static string ClientsReleaseUrl
+        {
+            get
+            {
+                string url = Get("ClientsReleaseUrl", "");
+                if (string.IsNullOrWhiteSpace(url)) url = "https://github.com/V0rtexLinux/RobloxServer/releases/download/v0.1.0-alpha/";
+                url = url.Trim();
+                return url.EndsWith("/") ? url : url + "/";
+            }
+        }
+
         public static string DataPath
         {
             get { return HostingEnvironment.MapPath("~/App_Data") ?? AppDomain.CurrentDomain.BaseDirectory; }
