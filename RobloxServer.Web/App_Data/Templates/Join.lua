@@ -79,13 +79,21 @@ end)
 SetMessage("Connecting to server...")
 pcall(function() NetworkClient.Ticket = AuthTicket end)
 
-local connected
-connected, Player = pcall(function() return NetworkClient:PlayerConnect(UserId, ServerAddress, ServerPort) end)
-if (not connected) then
-	local ok = pcall(function()
-		Player = game:GetService("Players"):CreateLocalPlayer(UserId)
-		NetworkClient:Connect(ServerAddress, ServerPort)
-	end)
+-- Older clients (2010) have no NetworkClient:PlayerConnect. The failed pcall then returns the error
+-- MESSAGE (a string), which must never end up in Player: "TicketValue.Parent = Player" below would
+-- throw and the client closes itself right after starting.
+local connected, connectResult = pcall(function() return NetworkClient:PlayerConnect(UserId, ServerAddress, ServerPort) end)
+if (connected and type(connectResult) == "userdata") then
+	Player = connectResult
+else
+	pcall(function() Player = game:GetService("Players"):CreateLocalPlayer(UserId) end)
+	if (type(Player) ~= "userdata") then
+		Player = nil
+		-- "Local player already exists": use the one the client already made.
+		pcall(function() Player = game:GetService("Players").LocalPlayer end)
+	end
+	-- Connect even if the local player could not be created (it used to share one pcall with CreateLocalPlayer).
+	local ok = pcall(function() NetworkClient:Connect(ServerAddress, ServerPort) end)
 	if (not ok) then
 		SetMessage("Failed to connect to the Game.")
 	end
@@ -103,7 +111,9 @@ pcall(function() Player.CharacterAppearance = CharacterAppearance end)
 local TicketValue = Instance.new("StringValue")
 TicketValue.Name = "RSAuthTicket"
 TicketValue.Value = AuthTicket
-TicketValue.Parent = Player
+if (type(Player) == "userdata") then
+	pcall(function() TicketValue.Parent = Player end)
+end
 
 -- Tells the website this player is still here (Game/ClientPresence.ashx).
 if (PingUrl ~= "") then
