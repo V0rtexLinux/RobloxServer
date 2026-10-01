@@ -82,8 +82,23 @@ pcall(function() NetworkClient.Ticket = AuthTicket end)
 -- Older clients (2010) have no NetworkClient:PlayerConnect. The failed pcall then returns the error
 -- MESSAGE (a string), which must never end up in Player: "TicketValue.Parent = Player" below would
 -- throw and the client closes itself right after starting.
-local connected, connectResult = pcall(function() return NetworkClient:PlayerConnect(UserId, ServerAddress, ServerPort) end)
-if (connected and type(connectResult) == "userdata") then
+-- 2008-2010 clients document PlayerConnect(userId, server, port[, clientPort, threadSleepTime]): try both forms
+-- and keep each error so a failure can say why.
+local connected, connectResult, playerConnectErrors = false, nil, ""
+for attempt = 1, 2 do
+	local ok, result
+	if (attempt == 1) then
+		ok, result = pcall(function() return NetworkClient:PlayerConnect(UserId, ServerAddress, ServerPort) end)
+	else
+		ok, result = pcall(function() return NetworkClient:PlayerConnect(UserId, ServerAddress, ServerPort, 0, 20) end)
+	end
+	if (ok and type(result) == "userdata") then
+		connected, connectResult = true, result
+		break
+	end
+	playerConnectErrors = playerConnectErrors .. tostring(result) .. " | "
+end
+if (connected) then
 	Player = connectResult
 else
 	pcall(function() Player = game:GetService("Players"):CreateLocalPlayer(UserId) end)
@@ -104,7 +119,7 @@ else
 		end
 	end
 	if (not ok) then
-		SetMessage("Failed to connect to the Game. (" .. string.sub(tostring(connectError), 1, 160) .. ")")
+		SetMessage("Failed to connect to the Game. (" .. string.sub(playerConnectErrors, 1, 140) .. ")")
 	end
 end
 
