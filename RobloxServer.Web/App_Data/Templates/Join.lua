@@ -93,9 +93,18 @@ else
 		pcall(function() Player = game:GetService("Players").LocalPlayer end)
 	end
 	-- Connect even if the local player could not be created (it used to share one pcall with CreateLocalPlayer).
-	local ok = pcall(function() NetworkClient:Connect(ServerAddress, ServerPort) end)
+	-- 2012/2013 take (address, port); the 2008-2010 clients want (address, port, clientPort, threadSleepTime).
+	local ok, connectError = pcall(function() NetworkClient:Connect(ServerAddress, ServerPort) end)
 	if (not ok) then
-		SetMessage("Failed to connect to the Game.")
+		local ok2, connectError2 = pcall(function() NetworkClient:Connect(ServerAddress, ServerPort, 0, 20) end)
+		if (ok2) then
+			ok = true
+		else
+			connectError = tostring(connectError) .. " | " .. tostring(connectError2)
+		end
+	end
+	if (not ok) then
+		SetMessage("Failed to connect to the Game. (" .. string.sub(tostring(connectError), 1, 160) .. ")")
 	end
 end
 
