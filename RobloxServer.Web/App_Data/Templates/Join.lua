@@ -84,19 +84,37 @@ pcall(function() NetworkClient.Ticket = AuthTicket end)
 -- throw and the client closes itself right after starting.
 -- 2008-2010 clients document PlayerConnect(userId, server, port[, clientPort, threadSleepTime]): try both forms
 -- and keep each error so a failure can say why.
+-- Old clients speak IPv4 only: "::1", "localhost" or "::ffff:1.2.3.4" must become a plain IPv4 address.
+pcall(function()
+	local mapped = string.match(ServerAddress, "^::ffff:(%d+%.%d+%.%d+%.%d+)$")
+	if (mapped) then ServerAddress = mapped end
+	if (ServerAddress == "::1" or ServerAddress == "localhost" or ServerAddress == "") then ServerAddress = "127.0.0.1" end
+end)
+
 local connected, connectResult, playerConnectErrors = false, nil, ""
-for attempt = 1, 2 do
+for attempt = 1, 3 do
 	local ok, result
 	if (attempt == 1) then
+		ok, result = pcall(function() return NetworkClient:PlayerConnect(UserId, ServerAddress, ServerPort, 0, 20) end)
+	elseif (attempt == 2) then
 		ok, result = pcall(function() return NetworkClient:PlayerConnect(UserId, ServerAddress, ServerPort) end)
 	else
-		ok, result = pcall(function() return NetworkClient:PlayerConnect(UserId, ServerAddress, ServerPort, 0, 20) end)
+		ok, result = pcall(function() return NetworkClient:PlayerConnect(UserId, ServerAddress, ServerPort, 0) end)
 	end
 	if (ok and type(result) == "userdata") then
 		connected, connectResult = true, result
 		break
 	end
 	playerConnectErrors = playerConnectErrors .. tostring(result) .. " | "
+	-- A failed call can leave a half-made local player behind, and the next call then fails with
+	-- "Local player already exists": remove it before trying again.
+	pcall(function()
+		local lp = game:GetService("Players").LocalPlayer
+		if (lp) then
+			pcall(function() lp:Remove() end)
+			pcall(function() lp:remove() end)
+		end
+	end)
 end
 if (connected) then
 	Player = connectResult
@@ -119,7 +137,7 @@ else
 		end
 	end
 	if (not ok) then
-		SetMessage("Failed to connect to the Game. (" .. string.sub(playerConnectErrors, 1, 140) .. ")")
+		SetMessage("Failed to connect to the Game. (" .. ServerAddress .. ":" .. tostring(ServerPort) .. " " .. string.sub(playerConnectErrors, 1, 90) .. ")")
 	end
 end
 
