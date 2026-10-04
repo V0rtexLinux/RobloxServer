@@ -29,8 +29,7 @@ pcall(function() game:GetService("ChangeHistoryService"):SetEnabled(false) end)
 -- thread so a client without the core scripts still plays.
 delay(0, function() dofile("rbxasset://scripts\\cores\\StarterScript.lua") end)
 
-game:GetService("RunService"):Run()
-
+-- (RunService:Run() now starts after the connection attempt, further down)
 local NetworkClient = game:GetService("NetworkClient")
 local Player = nil
 local RequestingMarker = true
@@ -140,6 +139,10 @@ else
 		SetMessage("Failed to connect to the Game. (" .. ServerAddress .. ":" .. tostring(ServerPort) .. " " .. string.sub(playerConnectErrors, 1, 90) .. ")")
 	end
 end
+
+-- EXPERIMENT: Run() used to be called before PlayerConnect; a client that is already running a local game
+-- may refuse to open the network connection. Start it only once the connection attempt is over.
+pcall(function() game:GetService("RunService"):Run() end)
 
 pcall(function() Player.Name = UserName end)
 pcall(function() Player:SetSuperSafeChat(SuperSafeChat) end)
