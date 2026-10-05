@@ -218,7 +218,7 @@ namespace RobloxServer.Data
                 {
                     return Security.ClientIp.IsPrivate(requesterIp) || string.IsNullOrEmpty(Config.PublicGameAddress)
                         ? local
-                        : Config.PublicGameAddress;
+                        : PublicGameAddressV4();
                 }
             }
 
@@ -226,9 +226,93 @@ namespace RobloxServer.Data
                 && !Security.ClientIp.IsPrivate(requesterIp)
                 && !string.IsNullOrEmpty(Config.PublicGameAddress))
             {
-                return Config.PublicGameAddress;
+                return PublicGameAddressV4();
             }
             return server.Address;
+        }
+
+        /// <summary>
+        /// Address for one player joining one server. Same public IP as the host (same router) means the
+        /// player is on the host's network: hand out the LAN address, or 127.0.0.1 for the host itself,
+        /// never the public IP. Everyone else gets AddressFor.
+        /// </summary>
+        public static string AddressForJoin(GameServer server, long userId, string requesterIp, string siteAddress)
+        {
+            string requester = Security.ClientIp.ToGameAddress(requesterIp);
+            string lan = server.LanAddress;
+
+            if (!string.IsNullOrEmpty(lan) && Security.ClientIp.IsPrivate(requester) && !Security.ClientIp.IsLoopback(requester))
+            {
+                return lan;
+            }
+
+            if (SameNetworkAsHost(server, requesterIp))
+            {
+                if (!string.IsNullOrEmpty(lan))
+                {
+                    return lan;
+                }
+                if (Security.ClientIp.IsPrivate(server.Address))
+                {
+                    return server.Address;
+                }
+                if (userId == server.HostUserId)
+                {
+                    return "127.0.0.1";
+                }
+            }
+            return AddressFor(server, requesterIp, siteAddress);
+        }
+
+        /// <summary>True when the requester comes from the public IP the server registered with.</summary>
+        public static bool SameNetworkAsHost(GameServer server, string requesterIp)
+        {
+            string requester = Security.ClientIp.ToGameAddress(requesterIp);
+            return !string.IsNullOrEmpty(server.SourceIp)
+                && !Security.ClientIp.IsPrivate(requester)
+                && Security.ClientIp.ToGameAddress(server.SourceIp) == requester;
+        }
+
+        static string cachedPublicSource, cachedPublicV4;
+        static DateTime cachedPublicAt = DateTime.MinValue;
+
+        /// <summary>
+        /// PublicGameAddress as a plain IPv4 literal. The 2010M/2012M/2013M clients only speak IPv4 and
+        /// some builds do not resolve names in PlayerConnect, so a DNS name is resolved here (cached 60 s).
+        /// </summary>
+        public static string PublicGameAddressV4()
+        {
+            string configured = Config.PublicGameAddress;
+            IPAddress literal;
+            if (string.IsNullOrEmpty(configured) || IPAddress.TryParse(configured.Trim(), out literal))
+            {
+                return Security.ClientIp.ToGameAddress(configured);
+            }
+
+            lock (Sync)
+            {
+                if (configured == cachedPublicSource && cachedPublicV4 != null && (DateTime.UtcNow - cachedPublicAt).TotalSeconds < 60)
+                {
+                    return cachedPublicV4;
+                }
+                try
+                {
+                    foreach (IPAddress a in Dns.GetHostAddresses(configured.Trim()))
+                    {
+                        if (a.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        {
+                            cachedPublicSource = configured;
+                            cachedPublicV4 = a.ToString();
+                            cachedPublicAt = DateTime.UtcNow;
+                            return cachedPublicV4;
+                        }
+                    }
+                }
+                catch (System.Net.Sockets.SocketException)
+                {
+                }
+                return configured;
+            }
         }
 
         public static bool Touch(string jobId, Action<GameServer> change)

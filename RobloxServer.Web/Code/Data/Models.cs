@@ -105,6 +105,13 @@ namespace RobloxServer.Data
         public string Name { get; set; }
         public string Address { get; set; }
         public string SourceIp { get; set; }
+
+        /// <summary>
+        /// Private IPv4 address of the host on its own network, sent as lanAddress when the server registers.
+        /// Players that come from the same public IP (same router) get this instead of the public address,
+        /// because most home routers cannot loop a connection back to their own public IP (NAT hairpin).
+        /// </summary>
+        public string LanAddress { get; set; }
         public int Port { get; set; }
         public string Client { get; set; }
         public string Version { get; set; }

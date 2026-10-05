@@ -39,11 +39,23 @@ namespace RobloxServer.Handlers.Game
                 Db.AddRecentPlace(user.Id, place.Id);
             }
 
+            string gameAddress = GameServers.AddressForJoin(server, user.Id, Ip, Request.ServerVariables["LOCAL_ADDR"]);
+
+            // The host joining their own server (same public IP) may legitimately get 127.0.0.1.
+            bool hostOnOwnServer = user.Id == server.HostUserId && GameServers.SameNetworkAsHost(server, Ip);
+            if (!hostOnOwnServer && ClientIp.IsLoopback(gameAddress) && !ClientIp.IsLoopback(Ip))
+            {
+                // The client would connect to its own 127.0.0.1, fail, and the retries then report the
+                // misleading "local player already exists". Say what is really wrong instead.
+                WriteStatus(503, "Game server address is not reachable from the Internet: set PublicGameAddress in Web.config");
+                return;
+            }
+
             AuthTicket ticket = AuthTickets.Issue(user.Id, user.Name, server.PlaceId, server.JobId);
             var values = new Dictionary<string, string>
             {
                 { "BaseUrl", Templates.LuaLongString(Config.BaseUrl) },
-                { "ServerAddress", Templates.LuaLongString(GameServers.AddressFor(server, Ip, Request.ServerVariables["LOCAL_ADDR"])) },
+                { "ServerAddress", Templates.LuaLongString(gameAddress) },
                 { "ServerPort", server.Port.ToString() },
                 { "PlaceId", server.PlaceId.ToString() },
                 { "JobId", Templates.LuaLongString(server.JobId) },
