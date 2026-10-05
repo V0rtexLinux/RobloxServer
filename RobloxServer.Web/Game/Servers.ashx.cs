@@ -79,6 +79,16 @@ namespace RobloxServer.Handlers.Game
                 address = Ip;
             }
 
+            // Optional: the host's private IPv4 on its own network (see GameServer.LanAddress).
+            string lanAddress = null;
+            System.Net.IPAddress lanParsed;
+            if (System.Net.IPAddress.TryParse((Param("lanAddress") ?? "").Trim(), out lanParsed)
+                && lanParsed.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork
+                && !System.Net.IPAddress.IsLoopback(lanParsed) && ClientIp.IsPrivate(lanParsed.ToString()))
+            {
+                lanAddress = lanParsed.ToString();
+            }
+
             byte[] key = new byte[24];
             using (var rng = new RNGCryptoServiceProvider())
             {
@@ -93,6 +103,7 @@ namespace RobloxServer.Handlers.Game
                 // "::1" when hosting on the same PC as the site: the 2012M/2013M clients need IPv4.
                 Address = ClientIp.ToGameAddress(address.Trim()),
                 SourceIp = Ip,
+                LanAddress = lanAddress,
                 Port = port,
                 Client = PlaceService.ClientFor(place),
                 Version = Param("version") ?? "",
@@ -104,7 +115,8 @@ namespace RobloxServer.Handlers.Game
                 LastHeartbeat = DateTime.UtcNow
             };
             GameServers.Add(server);
-            Logging.Log(LogType.Backend, user.Name + " started job " + server.JobId + " for place " + place.Id + " at " + server.Address + ":" + server.Port);
+            Logging.Log(LogType.Backend, user.Name + " started job " + server.JobId + " for place " + place.Id + " at " + server.Address + ":" + server.Port
+                + (lanAddress != null ? " (lan " + lanAddress + ")" : "") + " from " + Ip);
 
             WriteJson(new
             {
