@@ -234,4 +234,38 @@ namespace RobloxServer.Data
             return false;
         }
     }
+
+    /// <summary>
+    /// Chave dos bots: App_Data/bot.key (aleatoria, criada sozinha na primeira vez; apague o arquivo para trocar).
+    /// O launcher que roda na mesma maquina le o mesmo arquivo (--site-dir). Nada secreto vai para o Git.
+    /// </summary>
+    public static class BotKeyFile
+    {
+        static readonly object Sync = new object();
+
+        public static string GetOrCreate()
+        {
+            lock (Sync)
+            {
+                string path = Path.Combine(Config.DataPath, "bot.key");
+                if (File.Exists(path))
+                {
+                    string existing = File.ReadAllText(path).Trim();
+                    if (existing.Length >= 32)
+                    {
+                        return existing;
+                    }
+                }
+                byte[] bytes = new byte[32];
+                using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+                {
+                    rng.GetBytes(bytes);
+                }
+                string key = BitConverter.ToString(bytes).Replace("-", "").ToLowerInvariant();
+                Directory.CreateDirectory(Config.DataPath);
+                File.WriteAllText(path, key);
+                return key;
+            }
+        }
+    }
 }

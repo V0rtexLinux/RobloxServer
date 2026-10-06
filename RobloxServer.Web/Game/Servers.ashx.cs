@@ -142,19 +142,8 @@ namespace RobloxServer.Handlers.Game
 
         bool RequireBotKey()
         {
-            string hash = Config.BotKeyHash;
-            if (string.IsNullOrEmpty(hash))
-            {
-                WriteStatus(403, "Defina BotKeyHash na configuracao do site para usar os bots.");
-                return false;
-            }
             string sent = Request.Headers["X-Api-Key"] ?? "";
-            string sentHash;
-            using (var sha = SHA256.Create())
-            {
-                sentHash = BitConverter.ToString(sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(sent))).Replace("-", "").ToLowerInvariant();
-            }
-            if (PasswordHasher.ConstantTimeEquals(hash, sentHash))
+            if (PasswordHasher.ConstantTimeEquals(BotKeyFile.GetOrCreate(), sent))
             {
                 return true;
             }

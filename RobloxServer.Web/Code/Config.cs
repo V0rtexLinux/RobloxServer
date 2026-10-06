@@ -113,9 +113,6 @@ namespace RobloxServer
         /// <summary>RCC-style shared secret passed as ?apiKey= by game servers (2015 behaviour).</summary>
         public static string ApiKey { get { return Get("ApiKey", ""); } }
 
-        /// <summary>SHA-256 (hex) da chave dos bots HOST. A chave em si nunca fica no repositorio.</summary>
-        public static string BotKeyHash { get { return Get("BotKeyHash", "").ToLowerInvariant(); } }
-
         public static bool RegistrationOpen { get { return GetBool("RegistrationOpen", true); } }
 
         /// <summary>User names that are site administrators ("Roblox" staff).</summary>
