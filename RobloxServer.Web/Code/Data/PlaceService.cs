@@ -268,4 +268,99 @@ namespace RobloxServer.Data
             }
         }
     }
+
+    /// <summary>
+    /// Pareamento de launchers de bot em OUTRA maquina: o admin gera um codigo (10 min, uso unico) logado no site,
+    /// o launcher troca o codigo por uma chave propria, guardada aqui so como hash (App_Data/bot-keys.txt).
+    /// Para revogar uma maquina, apague a linha dela (ou o arquivo).
+    /// </summary>
+    public static class BotPairing
+    {
+        static readonly object Sync = new object();
+        static string code;
+        static DateTime expires;
+        static int wrong;
+
+        static string KeysPath
+        {
+            get { return Path.Combine(Config.DataPath, "bot-keys.txt"); }
+        }
+
+        static string Sha256(string text)
+        {
+            using (var sha = System.Security.Cryptography.SHA256.Create())
+            {
+                return BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(text))).Replace("-", "").ToLowerInvariant();
+            }
+        }
+
+        public static string NewCode()
+        {
+            lock (Sync)
+            {
+                const string alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+                var bytes = new byte[10];
+                using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+                {
+                    rng.GetBytes(bytes);
+                }
+                var text = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    text.Append(alphabet[b % alphabet.Length]);
+                }
+                code = text.ToString();
+                expires = DateTime.UtcNow.AddMinutes(10);
+                wrong = 0;
+                return code;
+            }
+        }
+
+        /// <summary>Troca o codigo por uma chave nova. Null se o codigo estiver errado, vencido ou ja usado.</summary>
+        public static string Redeem(string sent)
+        {
+            lock (Sync)
+            {
+                if (code == null || DateTime.UtcNow > expires)
+                {
+                    return null;
+                }
+                if (!PasswordHasher.ConstantTimeEquals(code, (sent ?? "").Trim().ToUpperInvariant()))
+                {
+                    if (++wrong >= 10)
+                    {
+                        code = null;
+                    }
+                    return null;
+                }
+                code = null;
+                var bytes = new byte[32];
+                using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+                {
+                    rng.GetBytes(bytes);
+                }
+                string key = BitConverter.ToString(bytes).Replace("-", "").ToLowerInvariant();
+                Directory.CreateDirectory(Config.DataPath);
+                File.AppendAllText(KeysPath, Sha256(key) + "\n");
+                return key;
+            }
+        }
+
+        public static bool IsPairedKey(string sent)
+        {
+            if (string.IsNullOrEmpty(sent) || !File.Exists(KeysPath))
+            {
+                return false;
+            }
+            string hash = Sha256(sent);
+            foreach (string line in File.ReadAllLines(KeysPath))
+            {
+                if (PasswordHasher.ConstantTimeEquals(line.Trim(), hash))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }

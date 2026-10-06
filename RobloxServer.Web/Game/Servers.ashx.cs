@@ -27,6 +27,12 @@ namespace RobloxServer.Handlers.Game
                         WriteText(BotServers.ToText());
                     }
                     break;
+                case "botpaircode":
+                    BotPairCode();
+                    break;
+                case "botpair":
+                    BotPair();
+                    break;
                 case "botticket":
                     BotTicket();
                     break;
@@ -143,13 +149,41 @@ namespace RobloxServer.Handlers.Game
         bool RequireBotKey()
         {
             string sent = Request.Headers["X-Api-Key"] ?? "";
-            if (PasswordHasher.ConstantTimeEquals(BotKeyFile.GetOrCreate(), sent))
+            if (PasswordHasher.ConstantTimeEquals(BotKeyFile.GetOrCreate(), sent) || BotPairing.IsPairedKey(sent))
             {
                 return true;
             }
             Logging.Log(LogType.Security, "Chave de bot invalida em " + Request.Path + " vinda de " + Ip);
             WriteStatus(403, "Invalid key");
             return false;
+        }
+
+        void BotPairCode()
+        {
+            User user = RequireUser();
+            if (user == null)
+            {
+                return;
+            }
+            if (!Db.IsAdmin(user))
+            {
+                WriteStatus(403, "Apenas administradores.");
+                return;
+            }
+            WriteText("Codigo de pareamento (vale 10 minutos, uso unico): " + BotPairing.NewCode());
+        }
+
+        void BotPair()
+        {
+            string key = BotPairing.Redeem(Param("code"));
+            if (key == null)
+            {
+                Logging.Log(LogType.Security, "Pareamento de bot recusado, vindo de " + Ip);
+                WriteStatus(403, "Invalid or expired code");
+                return;
+            }
+            Logging.Log(LogType.Backend, "Launcher de bot pareado, vindo de " + Ip);
+            WriteText(key);
         }
 
         void BotTicket()
