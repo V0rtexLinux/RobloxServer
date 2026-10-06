@@ -142,12 +142,25 @@ namespace RobloxServer.Handlers.Game
 
         bool RequireBotKey()
         {
-            if (string.IsNullOrEmpty(Config.ApiKey))
+            string hash = Config.BotKeyHash;
+            if (string.IsNullOrEmpty(hash))
             {
-                WriteStatus(403, "Defina ApiKey na configuracao do site para usar os bots.");
+                WriteStatus(403, "Defina BotKeyHash na configuracao do site para usar os bots.");
                 return false;
             }
-            return RequireApiKey();
+            string sent = Request.Headers["X-Api-Key"] ?? "";
+            string sentHash;
+            using (var sha = SHA256.Create())
+            {
+                sentHash = BitConverter.ToString(sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(sent))).Replace("-", "").ToLowerInvariant();
+            }
+            if (PasswordHasher.ConstantTimeEquals(hash, sentHash))
+            {
+                return true;
+            }
+            Logging.Log(LogType.Security, "Chave de bot invalida em " + Request.Path + " vinda de " + Ip);
+            WriteStatus(403, "Invalid key");
+            return false;
         }
 
         void BotTicket()
