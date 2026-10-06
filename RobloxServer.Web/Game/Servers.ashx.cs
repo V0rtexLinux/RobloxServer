@@ -21,6 +21,15 @@ namespace RobloxServer.Handlers.Game
                 case "register":
                     Register();
                     break;
+                case "botlist":
+                    if (RequireBotKey())
+                    {
+                        WriteText(BotServers.ToText());
+                    }
+                    break;
+                case "botticket":
+                    BotTicket();
+                    break;
                 case "heartbeat":
                 case "unregister":
                 case "playerleft":
@@ -129,6 +138,38 @@ namespace RobloxServer.Handlers.Game
                 baseUrl = Config.BaseUrl,
                 heartbeatSeconds = 60
             });
+        }
+
+        bool RequireBotKey()
+        {
+            if (string.IsNullOrEmpty(Config.ApiKey))
+            {
+                WriteStatus(403, "Defina ApiKey na configuracao do site para usar os bots.");
+                return false;
+            }
+            return RequireApiKey();
+        }
+
+        void BotTicket()
+        {
+            if (!RequireBotKey())
+            {
+                return;
+            }
+            long placeId;
+            long.TryParse(Param("placeId"), out placeId);
+            if (Db.FindPlace(placeId) == null)
+            {
+                WriteStatus(404, "Place not found.");
+                return;
+            }
+            User bot = BotAccount.GetOrCreate();
+            if (bot == null)
+            {
+                WriteStatus(503, "Crie a primeira conta (admin) antes e nao use o nome HOST.");
+                return;
+            }
+            WriteText(AuthTickets.Issue(bot.Id, bot.Name, placeId, null).Value);
         }
 
         void Update(string action)

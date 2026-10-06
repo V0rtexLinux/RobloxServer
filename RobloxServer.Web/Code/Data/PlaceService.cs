@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using RobloxServer.Security;
@@ -94,24 +96,142 @@ namespace RobloxServer.Data
         /// <summary>Who may start a game server for a place (the HostPolicy setting).</summary>
         public static bool CanHost(User user, Place place)
         {
-            if (user == null || place == null || user.IsCurrentlyBanned)
-            {
-                return false;
-            }
-            switch ((Config.HostPolicy ?? "").ToLowerInvariant())
-            {
-                case "admin":
-                    return Db.IsAdmin(user);
-                case "owner":
-                    return place.CreatorId == user.Id || Db.IsAdmin(user);
-                default:
-                    return place.IsPublic || place.CreatorId == user.Id || Db.IsAdmin(user);
-            }
+            // Ninguem hospeda manualmente: so o bot HOST.
+            return user != null && place != null && !user.IsCurrentlyBanned && BotAccount.Is(user);
         }
 
         public static bool CanEdit(User user, Place place)
         {
             return user != null && place != null && (place.CreatorId == user.Id || Db.IsAdmin(user));
+        }
+    }
+
+    public static class BotAccount
+    {
+        public const string Name = "HOST";
+        const string Locked = "!"; // hash invalido: ninguem consegue logar com senha
+        static readonly object Sync = new object();
+
+        public static bool Is(User u)
+        {
+            return u != null && string.Equals(u.Name, Name, StringComparison.OrdinalIgnoreCase) && u.PasswordHash == Locked;
+        }
+
+        /// null se ainda nao ha nenhuma conta (a 1a conta vira admin) ou se o nome HOST ja e de uma conta comum.
+        public static User GetOrCreate()
+        {
+            lock (Sync)
+            {
+                User bot = Db.FindUser(Name);
+                if (bot != null) { return Is(bot) ? bot : null; }
+                if (Db.Users.All().Count == 0) { return null; }
+                return Db.Users.InsertWithId(u => u.Id, 1, id => new User
+                {
+                    Id = id, Name = Name, PasswordHash = Locked,
+                    Created = DateTime.UtcNow, LastOnline = DateTime.UtcNow
+                });
+            }
+        }
+    }
+
+    /// <summary>
+    /// Todo jogo (existente ou novo) ganha um bot HOST automaticamente. As portas ficam fixas por jogo em
+    /// App_Data/BotPorts.txt (placeId;porta). App_Data/BotServers.txt e opcional, so para ajustes:
+    ///   placeId;porta;endereco   define porta/endereco     !placeId   desliga o bot desse jogo     # comentario
+    /// </summary>
+    public static class BotServers
+    {
+        public const int FirstPort = 53641;
+        static readonly object Sync = new object();
+
+        public static string ToText()
+        {
+            lock (Sync)
+            {
+                var over = new Dictionary<long, string[]>();
+                var off = new HashSet<long>();
+                string cfg = Path.Combine(Config.DataPath, "BotServers.txt");
+                if (File.Exists(cfg))
+                {
+                    foreach (string raw in File.ReadAllLines(cfg))
+                    {
+                        string line = raw.Trim();
+                        long id;
+                        if (line.Length == 0 || line.StartsWith("#")) { continue; }
+                        if (line.StartsWith("!"))
+                        {
+                            if (long.TryParse(line.Substring(1).Trim(), out id)) { off.Add(id); }
+                            continue;
+                        }
+                        string[] p = line.Split(';');
+                        if (long.TryParse(p[0].Trim(), out id)) { over[id] = p; }
+                    }
+                }
+
+                string mapPath = Path.Combine(Config.DataPath, "BotPorts.txt");
+                var map = new Dictionary<long, int>();
+                if (File.Exists(mapPath))
+                {
+                    foreach (string raw in File.ReadAllLines(mapPath))
+                    {
+                        string[] p = raw.Trim().Split(';');
+                        long id; int port;
+                        if (p.Length == 2 && long.TryParse(p[0], out id) && int.TryParse(p[1], out port)) { map[id] = port; }
+                    }
+                }
+
+                var blocked = new HashSet<int>(map.Values);
+                foreach (var kv in over)
+                {
+                    int port;
+                    if (kv.Value.Length > 1 && int.TryParse(kv.Value[1].Trim(), out port)) { blocked.Add(port); }
+                }
+
+                var assigned = new HashSet<int>();
+                var result = new Dictionary<long, int>();
+                var text = new StringBuilder();
+                foreach (Place place in Db.Places.All().OrderBy(x => x.Id))
+                {
+                    if (off.Contains(place.Id)) { continue; }
+                    string[] o;
+                    over.TryGetValue(place.Id, out o);
+                    int port = 0;
+                    if (o != null && o.Length > 1 && int.TryParse(o[1].Trim(), out port) && port > 0 && port <= 65535 && !assigned.Contains(port))
+                    {
+                    }
+                    else if (map.TryGetValue(place.Id, out port) && !assigned.Contains(port) && !IsOverridePortOfOther(over, place.Id, port))
+                    {
+                    }
+                    else
+                    {
+                        port = FirstPort;
+                        while (blocked.Contains(port) || assigned.Contains(port)) { port++; }
+                        blocked.Add(port);
+                    }
+                    assigned.Add(port);
+                    result[place.Id] = port;
+                    string address = o != null && o.Length > 2 ? o[2].Trim() : "";
+                    text.Append(place.Id).Append(';').Append(port).Append(';').Append(address).Append('\n');
+                }
+
+                bool changed = result.Count != map.Count || result.Any(kv => !map.ContainsKey(kv.Key) || map[kv.Key] != kv.Value);
+                if (changed)
+                {
+                    Directory.CreateDirectory(Config.DataPath);
+                    File.WriteAllLines(mapPath, result.Select(kv => kv.Key + ";" + kv.Value).ToArray());
+                }
+                return text.ToString();
+            }
+        }
+
+        static bool IsOverridePortOfOther(Dictionary<long, string[]> over, long placeId, int port)
+        {
+            foreach (var kv in over)
+            {
+                int p;
+                if (kv.Key != placeId && kv.Value.Length > 1 && int.TryParse(kv.Value[1].Trim(), out p) && p == port) { return true; }
+            }
+            return false;
         }
     }
 }

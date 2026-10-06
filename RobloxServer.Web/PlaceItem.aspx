@@ -22,9 +22,7 @@
             <div class="ItemRight">
                 <div id="PlaceLauncher" runat="server">
                     <a class="btn-large btn-play" href="#" data-launch-mode="play">Play</a>
-                    <asp:PlaceHolder ID="HostPanel" runat="server" Visible="false">
-                        <a class="btn-medium btn-neutral HostButton" href="#" data-launch-mode="host">Host Server</a>
-                    </asp:PlaceHolder>
+                    <asp:PlaceHolder ID="HostPanel" runat="server" Visible="false" />
                 </div>
                 <div class="PlayInstructions">
                     <b><asp:Literal ID="NameLiteral2" runat="server" /></b> is played with the <b><asp:Literal ID="ClientLiteral2" runat="server" /></b> client.
@@ -48,7 +46,7 @@
             </div>
             <div class="ItemTabContent">
                 <h2 class="light">Running Games</h2>
-                <asp:PlaceHolder ID="NoServers" runat="server"><p>No servers are running this game right now. Click <b>Host Server</b> to start one.</p></asp:PlaceHolder>
+                <asp:PlaceHolder ID="NoServers" runat="server"><p>No servers are running this game right now. The HOST bot starts them automatically.</p></asp:PlaceHolder>
                 <table class="table grid">
                     <asp:Repeater ID="ServersRepeater" runat="server">
                         <HeaderTemplate><tr class="table-header"><th class="first">Server</th><th>Host</th><th>Players</th><th>Started</th></tr></HeaderTemplate>
