@@ -19,7 +19,7 @@
 3. Dê dois cliques em **`IniciarServidor.exe`** (ou no antigo `iniciar-servidor.bat`). O navegador abre `http://localhost:8080/`.
 4. Crie a primeira conta em *Sign Up* (ela vira administradora) e publique um jogo em *Build*.
 5. Coloque os clientes em `RobloxServer.Web/App_Data/Clients/2012M.zip` e `2013M.zip`, clique em **Download ROBLOX**,
-   rode o launcher uma vez e depois é só clicar em **Play** (ou **Host Server**) na página do jogo.
+   rode o launcher uma vez e depois é só clicar em **Play** na página do jogo. Os servidores são criados pelo bot HOST (veja [Modo bot](#modo-bot-servidores-247)).
 
 O **`IniciarServidor.exe`** abre uma janela com o estado do site e:
 
@@ -61,7 +61,7 @@ Um **Raspberry Pi Zero 2W** faz o port forwarding, o UPnP e o DNS da rede. Veja 
 * Publicação de jogos pelo site (`Develop.aspx`) ou pelo Studio 2015 (`/Data/Upload.ashx`).
 * `Visit.ashx`, `Join.ashx` e `GameServer.ashx` assinados com `--rbxsig` (RSA 1024 + SHA-1); os scripts de jogo 2012M/2013M
   (`App_Data/Templates/Join.lua` e `GameServer.lua`) seguem a conexão clássica do RBXPri/Novetus (licença MIT).
-* Botões **Play** e **Host Server** que abrem o RobloxPlayerLauncher (`robloxserver-player:`), com a janela "Starting ROBLOX...".
+* Botão **Play** que abre o RobloxPlayerLauncher (`robloxserver-player:`), com a janela "Starting ROBLOX...". Não há mais botão **Host Server**: quem hospeda é o [bot HOST](#modo-bot-servidores-247).
 * Clientes e launcher distribuídos pelo próprio site (`/install/`), com versão pelo SHA-256; a página Admin mostra o que está instalado.
 * `PlaceLauncher.ashx`, tickets de autenticação de uso único, `Login/Negotiate.ashx`, `ValidateTicket.ashx`.
 * `/GetAllowedMD5Hashes/` e `/GetAllowedSecurityVersions/` com `apiKey`.
@@ -71,6 +71,35 @@ Um **Raspberry Pi Zero 2W** faz o port forwarding, o UPnP e o DNS da rede. Veja 
 * Assets que não estão no servidor são redirecionados para o `assetdelivery.roblox.com`, como antes.
 
 Veja [docs/security-2015.md](docs/security-2015.md) para a lista completa das medidas de segurança (e das fraquezas mantidas de propósito).
+
+### Modo bot (servidores 24/7)
+
+Todo jogo publicado (os que já existem e os novos) ganha um servidor mantido por um bot chamado **HOST**, sem ninguém
+clicar em nada. O bot usa a mesma função do antigo botão *Host Server* (`GameStarter.Host` do launcher), só que sem entrar no jogo.
+
+* **Conta HOST:** criada sozinha na primeira vez, sem senha utilizável. Só ela pode hospedar (`PlaceService.CanHost`), e isso vale
+  também no servidor, não só na tela. Crie a primeira conta (administradora) antes de iniciar os bots.
+* **Lista de jogos:** o launcher pergunta ao site (`Game/Servers.ashx?action=botlist`) a cada 60 s. Jogo novo ganha servidor em cerca de
+  um minuto, jogo apagado perde o dele. Se o servidor cair, ou o site reiniciar e esquecer o job, o bot sobe de novo (com espera crescente).
+* **Portas UDP:** uma por jogo, a partir da `53641`, fixas em `App_Data/BotPorts.txt`. Libere-as no firewall e no roteador
+  (o Cloudflare Tunnel leva só HTTP/HTTPS, não UDP). Para quem está fora da rede, defina `PublicGameAddress` no `Web.config`.
+* **Ajustes opcionais** em `App_Data/BotServers.txt` (uma linha cada):
+  `placeId;porta;endereco` define porta e endereço de um jogo, `!placeId` desliga o bot desse jogo, `#` é comentário.
+* **Peso:** cada jogo é um cliente Roblox rodando 24/7. Em máquina fraca use `!placeId` nos jogos que não precisam ficar abertos.
+
+**Chave dos bots.** Nada secreto vai para o Git. Três formas, da mais simples à mais flexível:
+
+| Situação | Como |
+| --- | --- |
+| Launcher na **mesma máquina** do site | `RobloxPlayerLauncher.exe --bot-host --site-dir C:\caminho\RobloxServer.Web` (usa `http://localhost:8080/` se não passar `--site`). A chave aleatória fica em `App_Data/bot.key`, criada pelo site ou pelo launcher; apague o arquivo para trocar. |
+| Launcher em **outra máquina** | Pareamento único: logado como admin, abra `https://seusite/Game/Servers.ashx?action=botpaircode` (código de 10 min, uso único). Na outra máquina: `RobloxPlayerLauncher.exe --pair --site https://seusite/ --code CODIGO`. Depois: `RobloxPlayerLauncher.exe --bot-host --site https://seusite/`. |
+| Chave que você já tem | `RobloxPlayerLauncher.exe --set-key CHAVE` guarda a chave criptografada com o DPAPI do Windows (`%LocalAppData%\RobloxServer\bot.key`, só aquele usuário daquela máquina decifra). `--api-key CHAVE` também funciona, mas deixa a chave no atalho. |
+
+Cada máquina pareada recebe uma chave própria; o site guarda só o hash em `App_Data/bot-keys.txt`. Para revogar uma máquina, apague a linha dela.
+O pareamento exige `https://` (ou rede local), porque a chave viaja na resposta.
+
+**Deixar rodando 24/7:** o `IniciarServidor.exe` e o launcher são apps de janela e precisam de uma sessão do Windows aberta
+(não rodam bem como serviço). Use login automático e uma Tarefa Agendada "ao fazer logon" para cada um, e desligue a suspensão.
 
 ### Rodando
 
