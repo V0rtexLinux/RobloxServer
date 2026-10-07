@@ -16,7 +16,36 @@ namespace RobloxServer.Pages
     public class Forum : BasePage
     {
         const int PageSize = 15;
-        const string Style = "<style>.fm{font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#000;max-width:980px;margin:10px auto}.fm a{color:#0066cc;text-decoration:none}.fm a:hover{text-decoration:underline}.fm-side{float:left;width:190px;padding-right:20px}.fm-main{float:left;width:760px}.fm-bar{text-align:right;margin-bottom:8px}.fm-bar a{margin-left:14px}.fm-t{width:100%;border-collapse:collapse}.fm-t th{font-weight:bold;padding:4px 6px;text-align:center}.fm-t td{padding:5px 6px;vertical-align:top}.fm-t td.num{text-align:center;width:90px}.fm-t td.last{text-align:center;width:160px}.fm-cat{font-weight:bold;padding:12px 6px 2px 6px}.fm-err{background:#fde8e8;border:1px solid #d99;padding:6px 8px;margin-bottom:8px}.fm-post{border:1px solid #ccc;margin-bottom:10px;overflow:hidden}.fm-who{float:left;width:150px;padding:8px;background:#f3f3f3;min-height:60px}.fm-what{margin-left:166px;padding:8px;word-wrap:break-word}.fm textarea,.fm input.fm-in{width:100%;box-sizing:border-box;margin-bottom:6px}.fm h2{font-size:16px;margin:8px 0}.fm-crumb{margin-bottom:8px}.fm-pager{margin:8px 0}.fm-adm{margin:6px 0}</style>";
+        const string Style = @"<style>
+.fm{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#000;width:882px;margin:14px auto 30px auto}
+.fm a{color:#0066cc;text-decoration:none}.fm a:hover{text-decoration:underline}
+.fm-side{float:left;width:190px}
+.fm-main{float:left;width:662px;padding-top:17px}
+.fm-bar{text-align:right;margin:0 0 14px 0;font-size:12px}
+.fm-bar span.sep{color:#000;margin:0 6px 0 8px}
+.fm-bar img{vertical-align:middle;margin-right:2px;border:0}
+.fm-time{margin:0 0 4px 0}
+.fm-t{width:100%;border-collapse:collapse}
+.fm-t th{font-weight:bold;padding:3px 4px;text-align:center}
+.fm-t td{padding:4px 4px;vertical-align:top}
+.fm-t td.ico{width:38px;padding-right:2px}
+.fm-t td.num{text-align:center;width:60px}
+.fm-t td.last{text-align:center;width:129px}
+.fm-t td.last img{vertical-align:middle;margin-left:2px;border:0}
+.fm-cat{padding:9px 4px 1px 4px}
+.fm-sb{font-weight:bold;margin:0 0 6px 0;padding-top:2px}
+.fm-sb-row{white-space:nowrap}
+.fm-sb-row input.fm-q{width:104px;margin-right:4px;vertical-align:middle;box-sizing:border-box}
+.fm-sb-more{display:block;margin-top:14px}
+.fm-err{background:#fde8e8;border:1px solid #d99;padding:6px 8px;margin-bottom:8px}
+.fm-post{border:1px solid #ccc;margin-bottom:10px;overflow:hidden}
+.fm-who{float:left;width:150px;padding:8px;background:#f3f3f3;min-height:60px}
+.fm-what{margin-left:166px;padding:8px;word-wrap:break-word}
+.fm textarea,.fm input.fm-in{width:100%;box-sizing:border-box;margin-bottom:6px}
+.fm h2{font-size:16px;margin:8px 0}
+.fm-crumb{margin-bottom:8px}.fm-pager{margin:8px 0}.fm-adm{margin:6px 0}
+.fm-adv td{padding:3px 6px 3px 0}
+</style>";
 
         protected string Html = "";
 
@@ -230,6 +259,39 @@ namespace RobloxServer.Pages
         }
 
         // ---------- views (GET)
+        string TopBar()
+        {
+            string img = ResolveUrl("~/Images/Forum/");
+            var bar = new StringBuilder("<div class=\"fm-bar\">");
+            bar.Append("<span class=\"sep\">|</span><a href=\"" + Url("") + "\"><img src=\"" + img + "ico-home.png\" width=\"14\" height=\"14\" alt=\"\" />Home</a>");
+            bar.Append("<span class=\"sep\">|</span><a href=\"" + Url("?adv=1") + "\"><img src=\"" + img + "ico-search.png\" width=\"14\" height=\"14\" alt=\"\" />Search</a>");
+            User user = CurrentUser;
+            if (user == null)
+            {
+                bar.Append("<span class=\"sep\">|</span><a href=\"" + ResolveUrl("~/Register.aspx") + "\"><img src=\"" + img + "ico-register.png\" width=\"14\" height=\"14\" alt=\"\" />Register</a>");
+            }
+            else
+            {
+                bar.Append("<span class=\"sep\">|</span><a href=\"" + ResolveUrl("~/User.aspx?id=" + user.Id) + "\"><img src=\"" + img + "ico-register.png\" width=\"14\" height=\"14\" alt=\"\" />" + E(user.Name) + "</a>");
+            }
+            bar.Append("</div>");
+            return bar.ToString();
+        }
+
+        string SearchBox()
+        {
+            return "<div class=\"fm-sb\">Search Roblox Forums</div>"
+                + "<div class=\"fm-sb-row\"><input id=\"fmq\" type=\"text\" class=\"fm-q\" maxlength=\"60\" onkeydown=\"if(event.keyCode==13){fmGo();return false;}\" />"
+                + "<button type=\"button\" onclick=\"fmGo()\">Search</button></div>"
+                + "<a class=\"fm-sb-more\" href=\"" + Url("?adv=1") + "\">More search options</a>"
+                + "<script>function fmGo(){var v=document.getElementById('fmq').value;if(v){location.href='" + Url("?q=") + "'+encodeURIComponent(v);}}</script>";
+        }
+
+        string Now()
+        {
+            return "<div class=\"fm-time\">Current time: " + DateTime.Now.ToString("MMM d, h:mm tt", CultureInfo.InvariantCulture) + "</div>";
+        }
+
         string RenderPage(string error)
         {
             var sb = new StringBuilder(Style);
@@ -242,55 +304,65 @@ namespace RobloxServer.Pages
             }
             long t = ToLong(Request.QueryString["t"]);
             long f = ToLong(Request.QueryString["f"]);
+            long c = ToLong(Request.QueryString["c"]);
             string q = (Request.QueryString["q"] ?? "").Trim();
+            string author = (Request.QueryString["a"] ?? "").Trim();
             if (t > 0) { ThreadView(sb, t); }
             else if (f > 0) { BoardView(sb, f); }
-            else if (q.Length > 0) { SearchView(sb, q); }
-            else { IndexView(sb); }
+            else if (Request.QueryString["adv"] != null) { AdvancedView(sb); }
+            else if (q.Length > 0 || author.Length > 0) { SearchView(sb, q, author); }
+            else { IndexView(sb, c); }
             sb.Append("</div><div style=\"clear:both\"></div></div>");
             return sb.ToString();
         }
 
-        string TopBar()
+        /// <summary>"by NAME" plus the little online / offline icon the 2012 forum showed next to the name.</summary>
+        string ByLine(string name, Dictionary<string, bool> online)
         {
-            var bar = new StringBuilder("<div class=\"fm-bar\"><a href=\"" + Url("") + "\">Home</a>");
-            bar.Append("<a href=\"#\" onclick=\"document.getElementById('fmq').focus();return false;\">Search</a>");
-            if (CurrentUser == null)
+            if (string.IsNullOrEmpty(name)) { return ""; }
+            bool on;
+            online.TryGetValue(name, out on);
+            string state = on ? "Online" : "Offline";
+            return "by <a href=\"" + ResolveUrl("~/User.aspx?username=" + Uri.EscapeDataString(name)) + "\">" + E(name) + "</a>"
+                + "<img src=\"" + ResolveUrl(on ? "~/Images/Icons/online.png" : "~/Images/Icons/offline.png") + "\" width=\"12\" height=\"12\" alt=\"" + state + "\" title=\"" + state + "\" />";
+        }
+
+        static Dictionary<string, bool> OnlineMap(IEnumerable<string> names)
+        {
+            var wanted = new HashSet<string>(names.Where(n => !string.IsNullOrEmpty(n)), StringComparer.OrdinalIgnoreCase);
+            var map = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+            if (wanted.Count == 0) { return map; }
+            foreach (User u in Db.Users.Where(x => wanted.Contains(x.Name)))
             {
-                bar.Append("<a href=\"" + ResolveUrl("~/Register.aspx") + "\">Register</a><a href=\"" + ResolveUrl("~/Login.aspx") + "\">Login</a>");
+                map[u.Name] = (DateTime.UtcNow - u.LastOnline).TotalMinutes < 5;
             }
-            bar.Append("</div><div style=\"text-align:center;margin-bottom:8px\">Current time: ")
-               .Append(DateTime.Now.ToString("MMM d, hh:mm tt", CultureInfo.InvariantCulture)).Append("</div>");
-            return bar.ToString();
+            return map;
         }
 
-        string SearchBox()
-        {
-            return "<div style=\"font-weight:bold;margin:8px 0\">Search Forums</div>"
-                + "<input id=\"fmq\" type=\"text\" class=\"fm-in\" maxlength=\"60\" onkeydown=\"if(event.keyCode==13){fmGo();return false;}\" />"
-                + "<button type=\"button\" onclick=\"fmGo()\">Search</button>"
-                + "<script>function fmGo(){var v=document.getElementById('fmq').value;if(v){location.href='" + Url("?q=") + "'+encodeURIComponent(v);}}</script>";
-        }
-
-        void IndexView(StringBuilder sb)
+        void IndexView(StringBuilder sb, long categoryId)
         {
             List<ForumThread> threads = ForumStore.Threads.All();
             List<ForumBoard> boards = ForumStore.Boards.All();
-            sb.Append("<table class=\"fm-t\"><tr><th style=\"text-align:left\">Forum</th><th>Threads</th><th>Posts</th><th>Last Post</th></tr>");
-            foreach (ForumCategory c in ForumStore.Categories.All().OrderBy(x => x.Order))
+            var lastByBoard = boards.ToDictionary(b => b.Id, b => threads.Where(x => x.BoardId == b.Id).OrderByDescending(x => x.LastPostAt).FirstOrDefault());
+            Dictionary<string, bool> online = OnlineMap(lastByBoard.Values.Where(x => x != null).Select(x => x.LastPostBy));
+
+            sb.Append(Now());
+            sb.Append("<table class=\"fm-t\"><tr><th colspan=\"2\">Forum</th><th>Threads</th><th>Posts</th><th>Last Post</th></tr>");
+            foreach (ForumCategory c in ForumStore.Categories.All().Where(x => categoryId == 0 || x.Id == categoryId).OrderBy(x => x.Order))
             {
-                sb.Append("<tr><td colspan=\"4\" class=\"fm-cat\">").Append(E(c.Name)).Append("</td></tr>");
+                sb.Append("<tr><td colspan=\"5\" class=\"fm-cat\"><a href=\"").Append(Url("?c=" + c.Id)).Append("\">").Append(E(c.Name)).Append("</a></td></tr>");
                 foreach (ForumBoard b in boards.Where(x => x.CategoryId == c.Id).OrderBy(x => x.Order))
                 {
                     List<ForumThread> mine = threads.Where(x => x.BoardId == b.Id).ToList();
                     int posts = mine.Count + mine.Sum(x => x.Replies);
-                    ForumThread last = mine.OrderByDescending(x => x.LastPostAt).FirstOrDefault();
-                    sb.Append("<tr><td><a href=\"").Append(Url("?f=" + b.Id)).Append("\">").Append(E(b.Name)).Append("</a><br />")
+                    ForumThread last = lastByBoard[b.Id];
+                    sb.Append("<tr><td class=\"ico\"><img src=\"").Append(ResolveUrl("~/Images/Forum/board.png")).Append("\" width=\"32\" height=\"32\" alt=\"\" /></td>")
+                      .Append("<td><a href=\"").Append(Url("?f=" + b.Id)).Append("\">").Append(E(b.Name)).Append("</a><br />")
                       .Append(E(b.Description)).Append("</td><td class=\"num\">").Append(mine.Count.ToString("N0", CultureInfo.InvariantCulture))
                       .Append("</td><td class=\"num\">").Append(posts.ToString("N0", CultureInfo.InvariantCulture)).Append("</td><td class=\"last\">");
                     if (last != null)
                     {
-                        sb.Append("<b>").Append(Stamp(last.LastPostAt)).Append("</b><br />by ").Append(E(last.LastPostBy));
+                        sb.Append("<b>").Append(Stamp(last.LastPostAt)).Append("</b><br />").Append(ByLine(last.LastPostBy, online));
                     }
                     sb.Append("</td></tr>");
                 }
@@ -323,7 +395,9 @@ namespace RobloxServer.Pages
             List<ForumThread> threads = ForumStore.Threads.Where(t => t.BoardId == boardId)
                 .OrderByDescending(t => t.Pinned).ThenByDescending(t => t.LastPostAt).ToList();
             int page = PageParam();
+            Dictionary<string, bool> online = OnlineMap(threads.Skip((page - 1) * PageSize).Take(PageSize).Select(t => t.LastPostBy));
 
+            sb.Append(Now());
             sb.Append("<div class=\"fm-crumb\"><a href=\"").Append(Url("")).Append("\">Forum</a> &raquo; <b>").Append(E(board.Name)).Append("</b></div>");
             sb.Append("<table class=\"fm-t\"><tr><th style=\"text-align:left\">Thread</th><th>Author</th><th>Replies</th><th>Last Post</th></tr>");
             foreach (ForumThread t in threads.Skip((page - 1) * PageSize).Take(PageSize))
@@ -331,7 +405,7 @@ namespace RobloxServer.Pages
                 sb.Append("<tr><td>").Append(t.Pinned ? "[Pinned] " : "").Append(t.Locked ? "[Locked] " : "")
                   .Append("<a href=\"").Append(Url("?t=" + t.Id)).Append("\">").Append(E(t.Title)).Append("</a></td><td class=\"num\">")
                   .Append(E(t.AuthorName)).Append("</td><td class=\"num\">").Append(t.Replies)
-                  .Append("</td><td class=\"last\"><b>").Append(Stamp(t.LastPostAt)).Append("</b><br />by ").Append(E(t.LastPostBy)).Append("</td></tr>");
+                  .Append("</td><td class=\"last\"><b>").Append(Stamp(t.LastPostAt)).Append("</b><br />").Append(ByLine(t.LastPostBy, online)).Append("</td></tr>");
             }
             if (threads.Count == 0) { sb.Append("<tr><td colspan=\"4\">No threads yet. Be the first!</td></tr>"); }
             sb.Append("</table>");
@@ -402,22 +476,57 @@ namespace RobloxServer.Pages
             }
         }
 
-        void SearchView(StringBuilder sb, string q)
+        void SearchView(StringBuilder sb, string q, string author)
         {
             if (q.Length > 60) { q = q.Substring(0, 60); }
-            HashSet<long> ids = new HashSet<long>(ForumStore.Posts.Where(p => p.Body != null && p.Body.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0).Select(p => p.ThreadId));
+            if (author.Length > 40) { author = author.Substring(0, 40); }
+            bool titlesOnly = Request.QueryString["in"] == "titles";
+            long boardId = ToLong(Request.QueryString["b"]);
+
+            HashSet<long> ids = new HashSet<long>();
+            if (q.Length > 0 && !titlesOnly)
+            {
+                ids = new HashSet<long>(ForumStore.Posts.Where(p => p.Body != null && p.Body.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0).Select(p => p.ThreadId));
+            }
+            HashSet<long> byAuthor = null;
+            if (author.Length > 0)
+            {
+                byAuthor = new HashSet<long>(ForumStore.Posts.Where(p => string.Equals(p.AuthorName, author, StringComparison.OrdinalIgnoreCase)).Select(p => p.ThreadId));
+            }
             List<ForumThread> found = ForumStore.Threads
-                .Where(t => ids.Contains(t.Id) || (t.Title != null && t.Title.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0))
+                .Where(t => (boardId == 0 || t.BoardId == boardId)
+                    && (q.Length == 0 || ids.Contains(t.Id) || (t.Title != null && t.Title.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0))
+                    && (byAuthor == null || byAuthor.Contains(t.Id)))
                 .OrderByDescending(t => t.LastPostAt).Take(50).ToList();
-            sb.Append("<h2>Search: ").Append(E(q)).Append("</h2><table class=\"fm-t\"><tr><th style=\"text-align:left\">Thread</th><th>Author</th><th>Replies</th><th>Last Post</th></tr>");
+            Dictionary<string, bool> online = OnlineMap(found.Select(t => t.LastPostBy));
+
+            sb.Append(Now()).Append("<h2>Search: ").Append(E(q.Length > 0 ? q : author)).Append("</h2><table class=\"fm-t\"><tr><th style=\"text-align:left\">Thread</th><th>Author</th><th>Replies</th><th>Last Post</th></tr>");
             foreach (ForumThread t in found)
             {
                 sb.Append("<tr><td><a href=\"").Append(Url("?t=" + t.Id)).Append("\">").Append(E(t.Title)).Append("</a></td><td class=\"num\">")
                   .Append(E(t.AuthorName)).Append("</td><td class=\"num\">").Append(t.Replies)
-                  .Append("</td><td class=\"last\"><b>").Append(Stamp(t.LastPostAt)).Append("</b></td></tr>");
+                  .Append("</td><td class=\"last\"><b>").Append(Stamp(t.LastPostAt)).Append("</b><br />").Append(ByLine(t.LastPostBy, online)).Append("</td></tr>");
             }
             if (found.Count == 0) { sb.Append("<tr><td colspan=\"4\">No results.</td></tr>"); }
             sb.Append("</table>");
+        }
+
+        /// <summary>"More search options": keywords, titles only, one forum, one author.</summary>
+        void AdvancedView(StringBuilder sb)
+        {
+            sb.Append(Now()).Append("<h2>Search Forums</h2><table class=\"fm-adv\">")
+              .Append("<tr><td>Keywords:</td><td><input id=\"fma-q\" type=\"text\" maxlength=\"60\" style=\"width:260px\" /></td></tr>")
+              .Append("<tr><td>Search in:</td><td><select id=\"fma-in\"><option value=\"\">Titles and messages</option><option value=\"titles\">Titles only</option></select></td></tr>")
+              .Append("<tr><td>Forum:</td><td><select id=\"fma-b\"><option value=\"0\">All forums</option>");
+            foreach (ForumBoard b in ForumStore.Boards.All().OrderBy(x => x.CategoryId).ThenBy(x => x.Order))
+            {
+                sb.Append("<option value=\"").Append(b.Id).Append("\">").Append(E(b.Name)).Append("</option>");
+            }
+            sb.Append("</select></td></tr>")
+              .Append("<tr><td>Posted by:</td><td><input id=\"fma-a\" type=\"text\" maxlength=\"40\" style=\"width:160px\" /></td></tr>")
+              .Append("<tr><td></td><td><button type=\"button\" onclick=\"fmAdv()\">Search</button></td></tr></table>")
+              .Append("<script>function fmAdv(){var g=function(i){return document.getElementById(i).value;};var u='")
+              .Append(Url("?q=")).Append("'+encodeURIComponent(g('fma-q'))+'&in='+g('fma-in')+'&b='+g('fma-b')+'&a='+encodeURIComponent(g('fma-a'));if(g('fma-q')||g('fma-a')){location.href=u;}}</script>");
         }
     }
 }

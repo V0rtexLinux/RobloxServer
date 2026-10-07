@@ -244,3 +244,11 @@ table.table { border-collapse: collapse; width: 100%; border-top: 1px solid #9e9
 #BrowseContainer .BrowseSearch { margin-bottom: 12px; }
 #BrowseContainer .BrowseSearch .text-box { width: 220px; vertical-align: middle; }
 #BrowseContainer .BrowseTable td.BrowseAvatar { width: 50px; }
+
+/* Login dropdown of the header (2012 style) */
+#header-login-container { position: relative; }
+#header-login-panel { display: none; position: absolute; right: 0; top: 36px; width: 210px; padding: 10px 12px 12px 12px; background: #efefef; border: 1px solid #777; border-top: none; color: #000; line-height: 18px; z-index: 1030; text-align: left; }
+#header-login-panel label { display: block; font-size: 12px; font-weight: bold; margin: 4px 0 2px 0; }
+#header-login-panel input[type=text], #header-login-panel input[type=password] { width: 100%; box-sizing: border-box; font-size: 13px; padding: 3px; border: 1px solid #a8a8a8; }
+#header-login-panel input[type=submit] { margin-top: 10px; cursor: pointer; }
+#header-login-panel a.hl-more, #header-login-panel a.hl-more:visited { display: block; margin-top: 8px; font-size: 11px; color: #0055aa; }

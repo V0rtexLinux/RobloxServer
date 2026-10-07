@@ -27,7 +27,7 @@ namespace RobloxServer.Pages
             {
                 if (CurrentUser == null)
                 {
-                    Server.Transfer("~/Landing.aspx");
+                    Server.Transfer("~/Welcome.aspx");
                 }
                 else
                 {

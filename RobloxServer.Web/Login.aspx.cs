@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Web;
 using System.Web.UI.WebControls;
 using RobloxServer.Data;
 using RobloxServer.Security;
@@ -22,6 +23,16 @@ namespace RobloxServer.Pages
                 return;
             }
             FillBirthday(MonthSelect, DaySelect, YearSelect);
+
+            // Error of a failed login from the header dropdown / home page (Login/HeaderLogin.ashx).
+            HttpCookie failed = Request.Cookies["RBXLoginError"];
+            if (failed != null)
+            {
+                string text = HttpUtility.UrlDecode(failed.Value ?? "");
+                ErrorPanel.Visible = text.Length > 0;
+                ErrorLiteral.Text = Server.HtmlEncode(text.Length > 200 ? text.Substring(0, 200) : text);
+                Response.Cookies.Add(new HttpCookie("RBXLoginError", "") { Expires = DateTime.UtcNow.AddDays(-1) });
+            }
         }
 
         /// <summary>The Month / Day / Year lists of the 2013 signup forms.</summary>

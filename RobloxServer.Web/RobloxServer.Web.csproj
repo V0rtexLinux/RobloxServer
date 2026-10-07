@@ -96,6 +96,15 @@
     <Content Include="Default.aspx" />
     <Content Include="Develop.aspx" />
     <Content Include="Forum.aspx" />
+    <Content Include="Welcome.aspx" />
+    <Content Include="Catalog.aspx" />
+    <Content Include="Upgrade.aspx" />
+    <Content Include="Content\Pages\Welcome.css" />
+    <Content Include="Login\HeaderLogin.ashx" />
+    <Content Include="Images\Forum\board.png" />
+    <Content Include="Images\Forum\ico-home.png" />
+    <Content Include="Images\Forum\ico-search.png" />
+    <Content Include="Images\Forum\ico-register.png" />
     <Content Include="Error.aspx" />
     <Content Include="Error\Lua.ashx" />
     <Content Include="Game\BuildActionPermissionCheck.ashx" />
@@ -311,6 +320,21 @@
     <Compile Include="Develop.aspx.cs">
       <DependentUpon>Develop.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Welcome.aspx.cs">
+      <DependentUpon>Welcome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Catalog.aspx.cs">
+      <DependentUpon>Catalog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Upgrade.aspx.cs">
+      <DependentUpon>Upgrade.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login\HeaderLogin.ashx.cs">
+      <DependentUpon>HeaderLogin.ashx</DependentUpon>
     </Compile>
     <Compile Include="Forum.aspx.cs">
       <DependentUpon>Forum.aspx</DependentUpon>

@@ -19,7 +19,9 @@
                         <ul>
                             <li><a href="<%: ResolveUrl("~/") %>">Home</a></li>
                             <li><a href="<%: ResolveUrl("~/Games") %>" title="Games">Games</a></li>
+                            <li><a href="<%: ResolveUrl("~/Catalog.aspx") %>" title="Catalog">Catalog</a></li>
                             <li><a href="<%: ResolveUrl("~/Develop.aspx") %>" title="Build">Build</a></li>
+                            <li><a href="<%: ResolveUrl("~/Upgrade.aspx") %>" title="Upgrade">Upgrade</a></li>
                             <li><a href="<%: ResolveUrl("~/Forum.aspx") %>" title="Forum">Forum</a></li>
                             <li class="more-list-item">
                                 <div class="more-link-container"><a id="nav-more" title="More">More<span id="more-menu-toggle"></span></a></div>
@@ -58,8 +60,38 @@
                         <div id="header-login-container">
                             <a id="header-signup" href="<%: ResolveUrl("~/Register.aspx") %>">Sign Up</a>
                             <span id="header-or">or</span>
-                            <a id="header-login" class="btn-control btn-control-large" href="<%: ResolveUrl("~/Login.aspx") %>">Login <span class="grey-arrow">&#9660;</span></a>
+                            <a id="header-login" class="btn-control btn-control-large" href="<%: ResolveUrl("~/Login.aspx") %>" onclick="return rbxHeaderLogin();">Login <span class="grey-arrow">&#9660;</span></a>
+                            <div id="header-login-panel">
+                                <label for="hl_user">Username</label>
+                                <input type="text" name="hl_user" id="hl_user" maxlength="20" autocomplete="username" />
+                                <label for="hl_pass">Password</label>
+                                <input type="password" name="hl_pass" id="hl_pass" maxlength="200" autocomplete="current-password" />
+                                <input type="hidden" name="hl_return" value="<%: Request.RawUrl %>" />
+                                <input type="submit" id="hl_go" class="btn-control btn-control-medium" value="Login" formaction="<%: ResolveUrl("~/Login/HeaderLogin.ashx") %>" formnovalidate="formnovalidate" />
+                                <a class="hl-more" href="<%: ResolveUrl("~/Login.aspx") %>">Forgot your password?</a>
+                            </div>
                         </div>
+                        <script type="text/javascript">
+                            (function () {
+                                var panel = document.getElementById('header-login-panel');
+                                if (!panel) { return; }
+                                window.rbxHeaderLogin = function () {
+                                    var open = panel.style.display !== 'block';
+                                    panel.style.display = open ? 'block' : 'none';
+                                    if (open) { document.getElementById('hl_user').focus(); }
+                                    return false;
+                                };
+                                document.addEventListener('click', function (e) {
+                                    var box = document.getElementById('header-login-container');
+                                    if (box && !box.contains(e.target)) { panel.style.display = 'none'; }
+                                });
+                                ['hl_user', 'hl_pass'].forEach(function (id) {
+                                    document.getElementById(id).addEventListener('keydown', function (e) {
+                                        if (e.keyCode === 13) { e.preventDefault(); document.getElementById('hl_go').click(); }
+                                    });
+                                });
+                            })();
+                        </script>
                     </asp:PlaceHolder>
                 </div>
             </div>
