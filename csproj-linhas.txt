@@ -1,0 +1,88 @@
+    <Content Include="Messages.aspx" />
+    <Content Include="Friends.aspx" />
+    <Content Include="Inventory.aspx" />
+    <Content Include="Groups.aspx" />
+    <Content Include="Trade.aspx" />
+    <Content Include="BuildersClub.aspx" />
+    <Content Include="Asset\Rbxm.ashx" />
+    <Content Include="Content\Pages\Social2013.css" />
+    <Content Include="Images\Buttons\btn-small_silver_tile.png" />
+    <Content Include="Images\Buttons\cancel-blue2.png" />
+    <Content Include="Images\Buttons\sendTrade2.png" />
+    <Content Include="Images\Buttons\tradeItems.png" />
+    <Content Include="Images\Buttons\yes-gray2.png" />
+    <Content Include="Images\BuyBC\bc_lifetime_obc_lifetime_discount.png" />
+    <Content Include="Images\BuyBC\bc_lifetime_tbc_lifetime_discount.png" />
+    <Content Include="Images\BuyBC\tbc_lifetime_obc_lifetime_discount.png" />
+    <Content Include="Images\Groups\bg-speech_bottom.png" />
+    <Content Include="Images\Groups\bg-speech_top.png" />
+    <Content Include="Images\HardHatBullet.png" />
+    <Content Include="Images\HeaderGradientW800.png" />
+    <Content Include="Images\Icons\roblox_16x15.png" />
+    <Content Include="Images\JoinBulletBadges.png" />
+    <Content Include="Images\JoinBulletCreative.png" />
+    <Content Include="Images\JoinBulletFriends.png" />
+    <Content Include="Images\JoinBulletHappy.png" />
+    <Content Include="Images\JoinBulletHouse.png" />
+    <Content Include="Images\JoinBulletPencil.png" />
+    <Content Include="Images\JoinBulletScript.png" />
+    <Content Include="Images\JoinBulletShoppingBag.png" />
+    <Content Include="Images\JoinBulletStar.png" />
+    <Content Include="Images\JoinBulletStats.png" />
+    <Content Include="Images\JoinBulletTreasure.png" />
+    <Content Include="Images\JoinBulletWizardHat.png" />
+    <Content Include="Images\MultiplePlacesBullet.png" />
+    <Content Include="Images\ProgressIndicator4.gif" />
+    <Content Include="Images\SellBullet.png" />
+    <Content Include="Images\Sets\blue_arrow_btns_sprite.png" />
+    <Content Include="Images\UI\catalog\bg-27px_silver_btn.png" />
+    <Content Include="Images\bc_page_icon_sprites.png" />
+    <Content Include="Images\buybc\bc_sprites_math_disabled.png" />
+    <Content Include="Images\buybc\bc_sprites_math_enabled.png" />
+    <Content Include="Images\cssspecific\rbx2\abuse.png" />
+    <Content Include="Images\cssspecific\rbx2\head_infobox_icons.png" />
+    <Content Include="Images\cssspecific\rbx2\standardBox_01_bkg.png" />
+    <Content Include="Images\cssspecific\rbx2\tab_black_33h_t1.png" />
+    <Content Include="Images\cssspecific\rbx2\tab_black_33h_t2.png" />
+    <Content Include="Images\cssspecific\rbx2\tab_gray_33h_t1.png" />
+    <Content Include="Images\cssspecific\rbx2\tab_gray_33h_t2.png" />
+    <Content Include="Images\cssspecific\rbx2\tab_white_26h_t1.png" />
+    <Content Include="Images\cssspecific\rbx2\tab_white_26h_t2.png" />
+    <Content Include="Images\cssspecific\rbx2\tab_white_31h_t1.png" />
+    <Content Include="Images\cssspecific\rbx2\tab_white_31h_t2.png" />
+    <Content Include="Images\deleted_user_asset.png" />
+    <Content Include="Images\gamesPage_filterArrow.png" />
+    <Content Include="Images\missing_user_asset.png" />
+    <Content Include="Images\spinners\spinner16x16.gif" />
+    <Content Include="Images\topNav_black.png" />
+    <Compile Include="Messages.aspx.cs">
+      <DependentUpon>Messages.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Friends.aspx.cs">
+      <DependentUpon>Friends.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Inventory.aspx.cs">
+      <DependentUpon>Inventory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Groups.aspx.cs">
+      <DependentUpon>Groups.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Trade.aspx.cs">
+      <DependentUpon>Trade.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BuildersClub.aspx.cs">
+      <DependentUpon>BuildersClub.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asset\Rbxm.ashx.cs">
+      <DependentUpon>Rbxm.ashx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Code\Data\Catalog.cs" />
+    <Compile Include="Code\Data\Social.cs" />
+    <Compile Include="Code\Web\SocialPage.cs" />

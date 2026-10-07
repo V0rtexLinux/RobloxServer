@@ -1,0 +1,912 @@
+diff --git a/RobloxServer.Web/Catalog.aspx b/RobloxServer.Web/Catalog.aspx
+new file mode 100644
+index 0000000..f02aa59
+--- /dev/null
++++ b/RobloxServer.Web/Catalog.aspx
+@@ -0,0 +1,8 @@
++<%@ Page Title="Catalog" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Catalog.aspx.cs" Inherits="RobloxServer.Pages.Catalog" %>
++<asp:Content ID="Main" ContentPlaceHolderID="MainContent" runat="server">
++    <div style="width: 970px; margin: 20px auto; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px;">
++        <h1>Catalog</h1>
++        <p>The catalog (hats, gear, faces and shirts) is not part of this server: every member plays with the default character look.</p>
++        <p>What you can do here: <a href="<%: ResolveUrl("~/Games") %>">play games</a>, <a href="<%: ResolveUrl("~/Develop.aspx") %>">build and publish your own</a> and talk in the <a href="<%: ResolveUrl("~/Forum.aspx") %>">forum</a>.</p>
++    </div>
++</asp:Content>
+diff --git a/RobloxServer.Web/Catalog.aspx.cs b/RobloxServer.Web/Catalog.aspx.cs
+new file mode 100644
+index 0000000..a5dbdc6
+--- /dev/null
++++ b/RobloxServer.Web/Catalog.aspx.cs
+@@ -0,0 +1,8 @@
++using RobloxServer.Web;
++
++namespace RobloxServer.Pages
++{
++    public class Catalog : BasePage
++    {
++    }
++}
+diff --git a/RobloxServer.Web/Code/Data/Forum.cs b/RobloxServer.Web/Code/Data/Forum.cs
+index e5cfd08..b431cfc 100644
+--- a/RobloxServer.Web/Code/Data/Forum.cs
++++ b/RobloxServer.Web/Code/Data/Forum.cs
+@@ -66,51 +66,89 @@ namespace RobloxServer.Data
+             }
+         }
+ 
++        // Forum index text of the 2012 site. Category rows: {name, old name or null}. Board rows: {name, description, old name or null}.
++        static readonly string[][] Layout =
++        {
++            new[] { "ROBLOX", "RobloxServer" },
++            new[] { "All Things ROBLOX", "The area for discussions purely about ROBLOX \u2013 the features, the games, and company news.", "All Things RobloxServer" },
++            new[] { "Help (Technical Support and Account Issues)", "Seeking account or technical help? Post your questions here.", null },
++            new[] { "I Made That", "Calling all creative ROBLOXians! Movie makers, model builders, decal artists and re-texturers - this is your forum.", null },
++            new[] { "ROBLOX Contests", "Get involved with ROBLOX Contests! We're discussing ongoing and future contests in this forum.", "Contests" },
++            new[] { "ROBLOX Global", "This forum is the place to find other players from your country, find online pen pals, and post discussions in foreign languages.", "Global" },
++            new[] { "Suggestions & Ideas", "Do you have a suggestion and ideas for ROBLOX? Share your feedback here.", null },
++            new[] { "Club Houses", null },
++            new[] { "ROBLOX Talk", "A popular hangout where ROBLOXians talk about various topics.", "Talk" },
++            new[] { "Off Topic", "When no other forum makes sense for your post, Off Topic will help it make even less sense.", null },
++            new[] { "Clans & Guilds", "Talk about what's going on in your Clans, Companies, and Guilds, and about the Groups feature in general.", null },
++            new[] { "Let's Make a Deal", "A fast paced community of wheelers and dealers. Post what you have to offer or see if anyone is willing to part with that special thing you really want.", null },
++            new[] { "Game Creation and Development", null },
++            new[] { "Building Helpers", "Learn the ins and outs of building structures in ROBLOX. Share your techniques with other builders, discuss designs, and draft plans. Help others!", null }
++        };
++
++        /// <summary>Creates the forum index on first run; on older data renames the boards the first seed called differently.</summary>
+         public static void EnsureSeed()
+         {
+             lock (SeedLock)
+             {
+                 if (Boards.All().Count > 0)
+                 {
++                    Rename();
+                     return;
+                 }
+-                Seed("RobloxServer", new[]
+-                {
+-                    new[] { "All Things RobloxServer", "Everything about the site: features, games and news." },
+-                    new[] { "Help (Technical Support and Account Issues)", "Need help with your account or something is broken? Ask here." },
+-                    new[] { "I Made That", "Show off your builds, models, decals and videos." },
+-                    new[] { "Contests", "Take part in community contests and see what is coming up." },
+-                    new[] { "Global", "Meet players from your country and talk in other languages." },
+-                    new[] { "Suggestions & Ideas", "Have an idea for the site? Share your feedback." }
+-                });
+-                Seed("Club Houses", new[]
++                ForumCategory category = null;
++                int order = 0;
++                foreach (string[] row in Layout)
+                 {
+-                    new[] { "Talk", "A popular hangout where members talk about anything." },
+-                    new[] { "Off Topic", "When no other forum fits your post, it goes here." },
+-                    new[] { "Clans & Guilds", "Talk about your clans, companies and groups." },
+-                    new[] { "Let's Make a Deal", "Trade and swap: say what you offer and what you want." }
+-                });
+-                Seed("Game Creation and Development", new[]
+-                {
+-                    new[] { "Building Helpers", "Learn how to build, share techniques and plan your projects." }
+-                });
++                    if (row.Length == 2)
++                    {
++                        string categoryName = row[0];
++                        int categoryOrder = Categories.All().Count;
++                        category = Categories.InsertWithId(x => x.Id, 1, id => new ForumCategory { Id = id, Name = categoryName, Order = categoryOrder });
++                        order = 0;
++                        continue;
++                    }
++                    string name = row[0];
++                    string description = row[1];
++                    long categoryId = category.Id;
++                    int boardOrder = order++;
++                    Boards.InsertWithId(x => x.Id, 1, id => new ForumBoard
++                    {
++                        Id = id, CategoryId = categoryId, Name = name, Description = description, Order = boardOrder
++                    });
++                }
+             }
+         }
+ 
+-        static void Seed(string category, string[][] boards)
++        static bool renamed;
++
++        /// <summary>Once per run: boards and categories that still have the names of the first seed get the 2012 text.</summary>
++        static void Rename()
+         {
+-            int order = Categories.All().Count;
+-            ForumCategory c = Categories.InsertWithId(x => x.Id, 1, id => new ForumCategory { Id = id, Name = category, Order = order });
+-            int index = 0;
+-            foreach (string[] b in boards)
++            if (renamed)
+             {
+-                string name = b[0];
+-                string description = b[1];
+-                int boardOrder = index++;
+-                Boards.InsertWithId(x => x.Id, 1, id => new ForumBoard
++                return;
++            }
++            renamed = true;
++            foreach (string[] row in Layout)
++            {
++                if (row.Length == 2)
+                 {
+-                    Id = id, CategoryId = c.Id, Name = name, Description = description, Order = boardOrder
+-                });
++                    string categoryName = row[0];
++                    string oldCategory = row[1];
++                    if (oldCategory != null && Categories.Find(c => c.Name == categoryName) == null)
++                    {
++                        Categories.Update(c => c.Name == oldCategory, c => c.Name = categoryName);
++                    }
++                    continue;
++                }
++                string name = row[0];
++                string description = row[1];
++                string old = row[2];
++                ForumBoard existing = Boards.Find(x => x.Name == name || (old != null && x.Name == old));
++                if (existing != null && (existing.Name != name || existing.Description != description))
++                {
++                    Boards.Update(x => x.Id == existing.Id, x => { x.Name = name; x.Description = description; });
++                }
+             }
+         }
+     }
+diff --git a/RobloxServer.Web/Content/Pages/Welcome.css b/RobloxServer.Web/Content/Pages/Welcome.css
+new file mode 100644
+index 0000000..6ab7e76
+--- /dev/null
++++ b/RobloxServer.Web/Content/Pages/Welcome.css
+@@ -0,0 +1,67 @@
++/* Home page of visitors (2012 look). Width of the site body: 970px. */
++#wl { width: 970px; margin: 0 auto; font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #000; }
++#wl a { text-decoration: none; }
++#wl a:hover { text-decoration: underline; }
++#wl-left { float: left; width: 650px; }
++#wl-right { float: right; width: 300px; }
++.wl-row { height: 244px; }
++
++/* Member Login */
++#wl-login { float: left; width: 258px; height: 242px; border: 1px solid #bbb; background: #f3f3f3; }
++#wl-login .wl-login-title { font-weight: bold; font-size: 12px; letter-spacing: 1px; color: #555; padding: 8px 10px 6px 10px; border-bottom: 1px solid #ddd; background: #e8e8e8; }
++#wl-login label { display: block; font-weight: bold; margin: 8px 10px 2px 10px; }
++#wl-login input[type=text], #wl-login input[type=password] { display: block; width: 230px; margin: 0 10px; padding: 3px; font-size: 13px; border: 1px solid #a8a8a8; box-sizing: content-box; }
++#wl-login a.wl-forgot, #wl-login a.wl-forgot:visited { display: block; margin: 4px 10px 0 10px; font-size: 11px; color: #0055aa; }
++#wl-login input.wl-signin { margin: 8px 10px 0 10px; padding: 4px 16px; font-weight: bold; font-size: 13px; color: #333; cursor: pointer; border: 1px solid #999; border-radius: 3px; background: #e6e6e6; }
++#wl-login input.wl-signin:hover { background: #d9d9d9; }
++#wl-login .wl-notmember { margin: 12px 10px 0 10px; padding-top: 10px; border-top: 1px solid #ddd; }
++#wl-login .wl-notmember span { display: inline-block; vertical-align: middle; margin-right: 8px; font-size: 13px; }
++#wl-login a.wl-signup, #wl-login a.wl-signup:visited { display: inline-block; vertical-align: middle; padding: 6px 16px; font-weight: bold; font-size: 14px; color: #fff; border: 1px solid #1d5aa8; border-radius: 3px; background: #2a7ad5; }
++#wl-login a.wl-signup:hover { background: #1f67b8; text-decoration: none; }
++
++/* Video box */
++#wl-video { float: left; margin-left: 12px; width: 362px; height: 199px; padding: 6px; background: #000; border: 1px solid #222; position: relative; }
++#wl-video img { display: block; }
++#wl-video .wl-play-overlay { position: absolute; left: 50%; top: 50%; width: 56px; height: 40px; margin: -20px 0 0 -28px; border-radius: 8px; background: rgba(20, 20, 20, 0.8); border: 1px solid #666; }
++#wl-video .wl-play-overlay:after { content: ""; position: absolute; left: 22px; top: 11px; border-left: 16px solid #fff; border-top: 9px solid transparent; border-bottom: 9px solid transparent; }
++#wl-video a:hover .wl-play-overlay { background: rgba(200, 30, 30, 0.9); }
++
++/* Banner */
++#wl-banner { height: 76px; margin-top: 8px; padding: 0 12px; line-height: 76px; overflow: hidden; border: 1px solid #333; background: linear-gradient(90deg, #5a1010 0%, #1b1b1b 35%, #111 100%); }
++#wl-banner .wl-banner-logo { display: inline-block; vertical-align: middle; line-height: 1; padding: 6px 10px; margin-right: 14px; color: #fff; font-weight: bold; font-size: 22px; letter-spacing: 1px; background: #c7191b; border-radius: 4px; text-shadow: 1px 1px 0 #600; }
++#wl-banner .wl-banner-text { display: inline-block; vertical-align: middle; color: #fff; font-weight: bold; font-size: 15px; }
++#wl-banner a.wl-banner-btn, #wl-banner a.wl-banner-btn:visited { float: right; margin-top: 20px; line-height: 1; padding: 11px 20px; font-weight: bold; font-size: 17px; color: #fff; border-radius: 3px; border: 1px solid #1d5aa8; background: #2a7ad5; }
++#wl-banner a.wl-banner-btn:hover { background: #1f67b8; text-decoration: none; }
++#wl-banner .wl-arrow { font-size: 14px; margin-right: 4px; }
++
++/* Featured Free Game */
++#wl-featured-title { margin: 14px 0 6px 0; font-size: 28px; font-weight: bold; font-family: Arial, Helvetica, sans-serif; color: #000; }
++#wl-featured { overflow: hidden; }
++#wl-featured.wl-empty { padding: 14px; border: 1px solid #ccc; background: #f6f6f6; font-size: 13px; }
++.wl-feat-info { float: left; width: 250px; }
++.wl-feat-name { font-weight: bold; font-size: 13px; margin-bottom: 8px; }
++.wl-feat-name a { color: #000; }
++.wl-feat-name span { font-weight: normal; font-size: 11px; color: #555; }
++.wl-feat-name span a { color: #0055aa; }
++#wl a.wl-play-this, #wl a.wl-play-this:visited { display: inline-block; padding: 8px 18px; margin-bottom: 10px; font-weight: bold; font-size: 15px; color: #fff; border: 1px solid #1d5aa8; border-radius: 3px; background: #2a7ad5; }
++#wl a.wl-play-this:hover { background: #1f67b8; text-decoration: none; }
++.wl-feat-info dl { margin: 4px 0 0 0; font-size: 11px; color: #666; }
++.wl-feat-info dt { float: left; clear: left; width: 62px; }
++.wl-feat-info dd { margin: 0 0 3px 62px; }
++.wl-feat-thumb { float: right; }
++.wl-feat-thumb img { display: block; border: 1px solid #aaa; }
++
++/* Right column */
++#wl-bigplay, #wl-bigplay:visited { display: block; width: 260px; height: 260px; margin: 0 auto 14px auto; border-radius: 50%; text-align: center; color: #fff; background: radial-gradient(circle at 50% 30%, #4ed03a 0%, #2da31b 60%, #1f7d11 100%); border: 3px solid #fff; box-shadow: 0 0 0 2px #2a8a1a, 0 3px 8px rgba(0, 0, 0, 0.35); }
++#wl-bigplay span { display: block; padding-top: 62px; font-size: 56px; font-weight: bold; line-height: 62px; text-shadow: 2px 2px 0 #166209; }
++#wl-bigplay:hover { text-decoration: none; filter: brightness(1.08); }
++.wl-promo { height: 120px; margin-bottom: 12px; padding: 12px 14px; box-sizing: border-box; border: 1px solid #1d3d6e; color: #fff; }
++.wl-promo-download { background: linear-gradient(135deg, #2a62b4, #0f2f63); }
++.wl-promo-forum { background: linear-gradient(135deg, #3a8a2e, #1b4a14); }
++.wl-promo b { font-size: 16px; }
++.wl-promo p { margin: 6px 0 10px 0; font-size: 12px; line-height: 16px; }
++#wl .wl-promo a, #wl .wl-promo a:visited { display: inline-block; padding: 5px 12px; font-weight: bold; color: #000; background: #fff; border-radius: 3px; }
++#wl-news { margin-top: 6px; }
++.wl-news-title { font-weight: bold; font-size: 12px; color: #555; padding-bottom: 4px; border-bottom: 1px solid #ddd; margin-bottom: 4px; }
++.wl-news-item { padding: 3px 0; font-size: 12px; }
++.wl-news-item a { color: #0055aa; }
+diff --git a/RobloxServer.Web/Content/Site.css b/RobloxServer.Web/Content/Site.css
+index 0670993..2d8548c 100644
+--- a/RobloxServer.Web/Content/Site.css
++++ b/RobloxServer.Web/Content/Site.css
+@@ -244,3 +244,11 @@ table.table { border-collapse: collapse; width: 100%; border-top: 1px solid #9e9
+ #BrowseContainer .BrowseSearch { margin-bottom: 12px; }
+ #BrowseContainer .BrowseSearch .text-box { width: 220px; vertical-align: middle; }
+ #BrowseContainer .BrowseTable td.BrowseAvatar { width: 50px; }
++
++/* Login dropdown of the header (2012 style) */
++#header-login-container { position: relative; }
++#header-login-panel { display: none; position: absolute; right: 0; top: 36px; width: 210px; padding: 10px 12px 12px 12px; background: #efefef; border: 1px solid #777; border-top: none; color: #000; line-height: 18px; z-index: 1030; text-align: left; }
++#header-login-panel label { display: block; font-size: 12px; font-weight: bold; margin: 4px 0 2px 0; }
++#header-login-panel input[type=text], #header-login-panel input[type=password] { width: 100%; box-sizing: border-box; font-size: 13px; padding: 3px; border: 1px solid #a8a8a8; }
++#header-login-panel input[type=submit] { margin-top: 10px; cursor: pointer; }
++#header-login-panel a.hl-more, #header-login-panel a.hl-more:visited { display: block; margin-top: 8px; font-size: 11px; color: #0055aa; }
+diff --git a/RobloxServer.Web/Default.aspx.cs b/RobloxServer.Web/Default.aspx.cs
+index e660121..fbe95a4 100644
+--- a/RobloxServer.Web/Default.aspx.cs
++++ b/RobloxServer.Web/Default.aspx.cs
+@@ -27,7 +27,7 @@ namespace RobloxServer.Pages
+             {
+                 if (CurrentUser == null)
+                 {
+-                    Server.Transfer("~/Landing.aspx");
++                    Server.Transfer("~/Welcome.aspx");
+                 }
+                 else
+                 {
+diff --git a/RobloxServer.Web/Forum.aspx.cs b/RobloxServer.Web/Forum.aspx.cs
+index ec5e6d3..d80962b 100644
+--- a/RobloxServer.Web/Forum.aspx.cs
++++ b/RobloxServer.Web/Forum.aspx.cs
+@@ -16,7 +16,36 @@ namespace RobloxServer.Pages
+     public class Forum : BasePage
+     {
+         const int PageSize = 15;
+-        const string Style = "<style>.fm{font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#000;max-width:980px;margin:10px auto}.fm a{color:#0066cc;text-decoration:none}.fm a:hover{text-decoration:underline}.fm-side{float:left;width:190px;padding-right:20px}.fm-main{float:left;width:760px}.fm-bar{text-align:right;margin-bottom:8px}.fm-bar a{margin-left:14px}.fm-t{width:100%;border-collapse:collapse}.fm-t th{font-weight:bold;padding:4px 6px;text-align:center}.fm-t td{padding:5px 6px;vertical-align:top}.fm-t td.num{text-align:center;width:90px}.fm-t td.last{text-align:center;width:160px}.fm-cat{font-weight:bold;padding:12px 6px 2px 6px}.fm-err{background:#fde8e8;border:1px solid #d99;padding:6px 8px;margin-bottom:8px}.fm-post{border:1px solid #ccc;margin-bottom:10px;overflow:hidden}.fm-who{float:left;width:150px;padding:8px;background:#f3f3f3;min-height:60px}.fm-what{margin-left:166px;padding:8px;word-wrap:break-word}.fm textarea,.fm input.fm-in{width:100%;box-sizing:border-box;margin-bottom:6px}.fm h2{font-size:16px;margin:8px 0}.fm-crumb{margin-bottom:8px}.fm-pager{margin:8px 0}.fm-adm{margin:6px 0}</style>";
++        const string Style = @"<style>
++.fm{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#000;width:882px;margin:14px auto 30px auto}
++.fm a{color:#0066cc;text-decoration:none}.fm a:hover{text-decoration:underline}
++.fm-side{float:left;width:190px}
++.fm-main{float:left;width:662px;padding-top:17px}
++.fm-bar{text-align:right;margin:0 0 14px 0;font-size:12px}
++.fm-bar span.sep{color:#000;margin:0 6px 0 8px}
++.fm-bar img{vertical-align:middle;margin-right:2px;border:0}
++.fm-time{margin:0 0 4px 0}
++.fm-t{width:100%;border-collapse:collapse}
++.fm-t th{font-weight:bold;padding:3px 4px;text-align:center}
++.fm-t td{padding:4px 4px;vertical-align:top}
++.fm-t td.ico{width:38px;padding-right:2px}
++.fm-t td.num{text-align:center;width:60px}
++.fm-t td.last{text-align:center;width:129px}
++.fm-t td.last img{vertical-align:middle;margin-left:2px;border:0}
++.fm-cat{padding:9px 4px 1px 4px}
++.fm-sb{font-weight:bold;margin:0 0 6px 0;padding-top:2px}
++.fm-sb-row{white-space:nowrap}
++.fm-sb-row input.fm-q{width:104px;margin-right:4px;vertical-align:middle;box-sizing:border-box}
++.fm-sb-more{display:block;margin-top:14px}
++.fm-err{background:#fde8e8;border:1px solid #d99;padding:6px 8px;margin-bottom:8px}
++.fm-post{border:1px solid #ccc;margin-bottom:10px;overflow:hidden}
++.fm-who{float:left;width:150px;padding:8px;background:#f3f3f3;min-height:60px}
++.fm-what{margin-left:166px;padding:8px;word-wrap:break-word}
++.fm textarea,.fm input.fm-in{width:100%;box-sizing:border-box;margin-bottom:6px}
++.fm h2{font-size:16px;margin:8px 0}
++.fm-crumb{margin-bottom:8px}.fm-pager{margin:8px 0}.fm-adm{margin:6px 0}
++.fm-adv td{padding:3px 6px 3px 0}
++</style>";
+ 
+         protected string Html = "";
+ 
+@@ -230,6 +259,39 @@ namespace RobloxServer.Pages
+         }
+ 
+         // ---------- views (GET)
++        string TopBar()
++        {
++            string img = ResolveUrl("~/Images/Forum/");
++            var bar = new StringBuilder("<div class=\"fm-bar\">");
++            bar.Append("<span class=\"sep\">|</span><a href=\"" + Url("") + "\"><img src=\"" + img + "ico-home.png\" width=\"14\" height=\"14\" alt=\"\" />Home</a>");
++            bar.Append("<span class=\"sep\">|</span><a href=\"" + Url("?adv=1") + "\"><img src=\"" + img + "ico-search.png\" width=\"14\" height=\"14\" alt=\"\" />Search</a>");
++            User user = CurrentUser;
++            if (user == null)
++            {
++                bar.Append("<span class=\"sep\">|</span><a href=\"" + ResolveUrl("~/Register.aspx") + "\"><img src=\"" + img + "ico-register.png\" width=\"14\" height=\"14\" alt=\"\" />Register</a>");
++            }
++            else
++            {
++                bar.Append("<span class=\"sep\">|</span><a href=\"" + ResolveUrl("~/User.aspx?id=" + user.Id) + "\"><img src=\"" + img + "ico-register.png\" width=\"14\" height=\"14\" alt=\"\" />" + E(user.Name) + "</a>");
++            }
++            bar.Append("</div>");
++            return bar.ToString();
++        }
++
++        string SearchBox()
++        {
++            return "<div class=\"fm-sb\">Search Roblox Forums</div>"
++                + "<div class=\"fm-sb-row\"><input id=\"fmq\" type=\"text\" class=\"fm-q\" maxlength=\"60\" onkeydown=\"if(event.keyCode==13){fmGo();return false;}\" />"
++                + "<button type=\"button\" onclick=\"fmGo()\">Search</button></div>"
++                + "<a class=\"fm-sb-more\" href=\"" + Url("?adv=1") + "\">More search options</a>"
++                + "<script>function fmGo(){var v=document.getElementById('fmq').value;if(v){location.href='" + Url("?q=") + "'+encodeURIComponent(v);}}</script>";
++        }
++
++        string Now()
++        {
++            return "<div class=\"fm-time\">Current time: " + DateTime.Now.ToString("MMM d, h:mm tt", CultureInfo.InvariantCulture) + "</div>";
++        }
++
+         string RenderPage(string error)
+         {
+             var sb = new StringBuilder(Style);
+@@ -242,55 +304,65 @@ namespace RobloxServer.Pages
+             }
+             long t = ToLong(Request.QueryString["t"]);
+             long f = ToLong(Request.QueryString["f"]);
++            long c = ToLong(Request.QueryString["c"]);
+             string q = (Request.QueryString["q"] ?? "").Trim();
++            string author = (Request.QueryString["a"] ?? "").Trim();
+             if (t > 0) { ThreadView(sb, t); }
+             else if (f > 0) { BoardView(sb, f); }
+-            else if (q.Length > 0) { SearchView(sb, q); }
+-            else { IndexView(sb); }
++            else if (Request.QueryString["adv"] != null) { AdvancedView(sb); }
++            else if (q.Length > 0 || author.Length > 0) { SearchView(sb, q, author); }
++            else { IndexView(sb, c); }
+             sb.Append("</div><div style=\"clear:both\"></div></div>");
+             return sb.ToString();
+         }
+ 
+-        string TopBar()
++        /// <summary>"by NAME" plus the little online / offline icon the 2012 forum showed next to the name.</summary>
++        string ByLine(string name, Dictionary<string, bool> online)
+         {
+-            var bar = new StringBuilder("<div class=\"fm-bar\"><a href=\"" + Url("") + "\">Home</a>");
+-            bar.Append("<a href=\"#\" onclick=\"document.getElementById('fmq').focus();return false;\">Search</a>");
+-            if (CurrentUser == null)
+-            {
+-                bar.Append("<a href=\"" + ResolveUrl("~/Register.aspx") + "\">Register</a><a href=\"" + ResolveUrl("~/Login.aspx") + "\">Login</a>");
+-            }
+-            bar.Append("</div><div style=\"text-align:center;margin-bottom:8px\">Current time: ")
+-               .Append(DateTime.Now.ToString("MMM d, hh:mm tt", CultureInfo.InvariantCulture)).Append("</div>");
+-            return bar.ToString();
++            if (string.IsNullOrEmpty(name)) { return ""; }
++            bool on;
++            online.TryGetValue(name, out on);
++            string state = on ? "Online" : "Offline";
++            return "by <a href=\"" + ResolveUrl("~/User.aspx?username=" + Uri.EscapeDataString(name)) + "\">" + E(name) + "</a>"
++                + "<img src=\"" + ResolveUrl(on ? "~/Images/Icons/online.png" : "~/Images/Icons/offline.png") + "\" width=\"12\" height=\"12\" alt=\"" + state + "\" title=\"" + state + "\" />";
+         }
+ 
+-        string SearchBox()
++        static Dictionary<string, bool> OnlineMap(IEnumerable<string> names)
+         {
+-            return "<div style=\"font-weight:bold;margin:8px 0\">Search Forums</div>"
+-                + "<input id=\"fmq\" type=\"text\" class=\"fm-in\" maxlength=\"60\" onkeydown=\"if(event.keyCode==13){fmGo();return false;}\" />"
+-                + "<button type=\"button\" onclick=\"fmGo()\">Search</button>"
+-                + "<script>function fmGo(){var v=document.getElementById('fmq').value;if(v){location.href='" + Url("?q=") + "'+encodeURIComponent(v);}}</script>";
++            var wanted = new HashSet<string>(names.Where(n => !string.IsNullOrEmpty(n)), StringComparer.OrdinalIgnoreCase);
++            var map = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
++            if (wanted.Count == 0) { return map; }
++            foreach (User u in Db.Users.Where(x => wanted.Contains(x.Name)))
++            {
++                map[u.Name] = (DateTime.UtcNow - u.LastOnline).TotalMinutes < 5;
++            }
++            return map;
+         }
+ 
+-        void IndexView(StringBuilder sb)
++        void IndexView(StringBuilder sb, long categoryId)
+         {
+             List<ForumThread> threads = ForumStore.Threads.All();
+             List<ForumBoard> boards = ForumStore.Boards.All();
+-            sb.Append("<table class=\"fm-t\"><tr><th style=\"text-align:left\">Forum</th><th>Threads</th><th>Posts</th><th>Last Post</th></tr>");
+-            foreach (ForumCategory c in ForumStore.Categories.All().OrderBy(x => x.Order))
++            var lastByBoard = boards.ToDictionary(b => b.Id, b => threads.Where(x => x.BoardId == b.Id).OrderByDescending(x => x.LastPostAt).FirstOrDefault());
++            Dictionary<string, bool> online = OnlineMap(lastByBoard.Values.Where(x => x != null).Select(x => x.LastPostBy));
++
++            sb.Append(Now());
++            sb.Append("<table class=\"fm-t\"><tr><th colspan=\"2\">Forum</th><th>Threads</th><th>Posts</th><th>Last Post</th></tr>");
++            foreach (ForumCategory c in ForumStore.Categories.All().Where(x => categoryId == 0 || x.Id == categoryId).OrderBy(x => x.Order))
+             {
+-                sb.Append("<tr><td colspan=\"4\" class=\"fm-cat\">").Append(E(c.Name)).Append("</td></tr>");
++                sb.Append("<tr><td colspan=\"5\" class=\"fm-cat\"><a href=\"").Append(Url("?c=" + c.Id)).Append("\">").Append(E(c.Name)).Append("</a></td></tr>");
+                 foreach (ForumBoard b in boards.Where(x => x.CategoryId == c.Id).OrderBy(x => x.Order))
+                 {
+                     List<ForumThread> mine = threads.Where(x => x.BoardId == b.Id).ToList();
+                     int posts = mine.Count + mine.Sum(x => x.Replies);
+-                    ForumThread last = mine.OrderByDescending(x => x.LastPostAt).FirstOrDefault();
+-                    sb.Append("<tr><td><a href=\"").Append(Url("?f=" + b.Id)).Append("\">").Append(E(b.Name)).Append("</a><br />")
++                    ForumThread last = lastByBoard[b.Id];
++                    sb.Append("<tr><td class=\"ico\"><img src=\"").Append(ResolveUrl("~/Images/Forum/board.png")).Append("\" width=\"32\" height=\"32\" alt=\"\" /></td>")
++                      .Append("<td><a href=\"").Append(Url("?f=" + b.Id)).Append("\">").Append(E(b.Name)).Append("</a><br />")
+                       .Append(E(b.Description)).Append("</td><td class=\"num\">").Append(mine.Count.ToString("N0", CultureInfo.InvariantCulture))
+                       .Append("</td><td class=\"num\">").Append(posts.ToString("N0", CultureInfo.InvariantCulture)).Append("</td><td class=\"last\">");
+                     if (last != null)
+                     {
+-                        sb.Append("<b>").Append(Stamp(last.LastPostAt)).Append("</b><br />by ").Append(E(last.LastPostBy));
++                        sb.Append("<b>").Append(Stamp(last.LastPostAt)).Append("</b><br />").Append(ByLine(last.LastPostBy, online));
+                     }
+                     sb.Append("</td></tr>");
+                 }
+@@ -323,7 +395,9 @@ namespace RobloxServer.Pages
+             List<ForumThread> threads = ForumStore.Threads.Where(t => t.BoardId == boardId)
+                 .OrderByDescending(t => t.Pinned).ThenByDescending(t => t.LastPostAt).ToList();
+             int page = PageParam();
++            Dictionary<string, bool> online = OnlineMap(threads.Skip((page - 1) * PageSize).Take(PageSize).Select(t => t.LastPostBy));
+ 
++            sb.Append(Now());
+             sb.Append("<div class=\"fm-crumb\"><a href=\"").Append(Url("")).Append("\">Forum</a> &raquo; <b>").Append(E(board.Name)).Append("</b></div>");
+             sb.Append("<table class=\"fm-t\"><tr><th style=\"text-align:left\">Thread</th><th>Author</th><th>Replies</th><th>Last Post</th></tr>");
+             foreach (ForumThread t in threads.Skip((page - 1) * PageSize).Take(PageSize))
+@@ -331,7 +405,7 @@ namespace RobloxServer.Pages
+                 sb.Append("<tr><td>").Append(t.Pinned ? "[Pinned] " : "").Append(t.Locked ? "[Locked] " : "")
+                   .Append("<a href=\"").Append(Url("?t=" + t.Id)).Append("\">").Append(E(t.Title)).Append("</a></td><td class=\"num\">")
+                   .Append(E(t.AuthorName)).Append("</td><td class=\"num\">").Append(t.Replies)
+-                  .Append("</td><td class=\"last\"><b>").Append(Stamp(t.LastPostAt)).Append("</b><br />by ").Append(E(t.LastPostBy)).Append("</td></tr>");
++                  .Append("</td><td class=\"last\"><b>").Append(Stamp(t.LastPostAt)).Append("</b><br />").Append(ByLine(t.LastPostBy, online)).Append("</td></tr>");
+             }
+             if (threads.Count == 0) { sb.Append("<tr><td colspan=\"4\">No threads yet. Be the first!</td></tr>"); }
+             sb.Append("</table>");
+@@ -402,22 +476,57 @@ namespace RobloxServer.Pages
+             }
+         }
+ 
+-        void SearchView(StringBuilder sb, string q)
++        void SearchView(StringBuilder sb, string q, string author)
+         {
+             if (q.Length > 60) { q = q.Substring(0, 60); }
+-            HashSet<long> ids = new HashSet<long>(ForumStore.Posts.Where(p => p.Body != null && p.Body.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0).Select(p => p.ThreadId));
++            if (author.Length > 40) { author = author.Substring(0, 40); }
++            bool titlesOnly = Request.QueryString["in"] == "titles";
++            long boardId = ToLong(Request.QueryString["b"]);
++
++            HashSet<long> ids = new HashSet<long>();
++            if (q.Length > 0 && !titlesOnly)
++            {
++                ids = new HashSet<long>(ForumStore.Posts.Where(p => p.Body != null && p.Body.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0).Select(p => p.ThreadId));
++            }
++            HashSet<long> byAuthor = null;
++            if (author.Length > 0)
++            {
++                byAuthor = new HashSet<long>(ForumStore.Posts.Where(p => string.Equals(p.AuthorName, author, StringComparison.OrdinalIgnoreCase)).Select(p => p.ThreadId));
++            }
+             List<ForumThread> found = ForumStore.Threads
+-                .Where(t => ids.Contains(t.Id) || (t.Title != null && t.Title.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0))
++                .Where(t => (boardId == 0 || t.BoardId == boardId)
++                    && (q.Length == 0 || ids.Contains(t.Id) || (t.Title != null && t.Title.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0))
++                    && (byAuthor == null || byAuthor.Contains(t.Id)))
+                 .OrderByDescending(t => t.LastPostAt).Take(50).ToList();
+-            sb.Append("<h2>Search: ").Append(E(q)).Append("</h2><table class=\"fm-t\"><tr><th style=\"text-align:left\">Thread</th><th>Author</th><th>Replies</th><th>Last Post</th></tr>");
++            Dictionary<string, bool> online = OnlineMap(found.Select(t => t.LastPostBy));
++
++            sb.Append(Now()).Append("<h2>Search: ").Append(E(q.Length > 0 ? q : author)).Append("</h2><table class=\"fm-t\"><tr><th style=\"text-align:left\">Thread</th><th>Author</th><th>Replies</th><th>Last Post</th></tr>");
+             foreach (ForumThread t in found)
+             {
+                 sb.Append("<tr><td><a href=\"").Append(Url("?t=" + t.Id)).Append("\">").Append(E(t.Title)).Append("</a></td><td class=\"num\">")
+                   .Append(E(t.AuthorName)).Append("</td><td class=\"num\">").Append(t.Replies)
+-                  .Append("</td><td class=\"last\"><b>").Append(Stamp(t.LastPostAt)).Append("</b></td></tr>");
++                  .Append("</td><td class=\"last\"><b>").Append(Stamp(t.LastPostAt)).Append("</b><br />").Append(ByLine(t.LastPostBy, online)).Append("</td></tr>");
+             }
+             if (found.Count == 0) { sb.Append("<tr><td colspan=\"4\">No results.</td></tr>"); }
+             sb.Append("</table>");
+         }
++
++        /// <summary>"More search options": keywords, titles only, one forum, one author.</summary>
++        void AdvancedView(StringBuilder sb)
++        {
++            sb.Append(Now()).Append("<h2>Search Forums</h2><table class=\"fm-adv\">")
++              .Append("<tr><td>Keywords:</td><td><input id=\"fma-q\" type=\"text\" maxlength=\"60\" style=\"width:260px\" /></td></tr>")
++              .Append("<tr><td>Search in:</td><td><select id=\"fma-in\"><option value=\"\">Titles and messages</option><option value=\"titles\">Titles only</option></select></td></tr>")
++              .Append("<tr><td>Forum:</td><td><select id=\"fma-b\"><option value=\"0\">All forums</option>");
++            foreach (ForumBoard b in ForumStore.Boards.All().OrderBy(x => x.CategoryId).ThenBy(x => x.Order))
++            {
++                sb.Append("<option value=\"").Append(b.Id).Append("\">").Append(E(b.Name)).Append("</option>");
++            }
++            sb.Append("</select></td></tr>")
++              .Append("<tr><td>Posted by:</td><td><input id=\"fma-a\" type=\"text\" maxlength=\"40\" style=\"width:160px\" /></td></tr>")
++              .Append("<tr><td></td><td><button type=\"button\" onclick=\"fmAdv()\">Search</button></td></tr></table>")
++              .Append("<script>function fmAdv(){var g=function(i){return document.getElementById(i).value;};var u='")
++              .Append(Url("?q=")).Append("'+encodeURIComponent(g('fma-q'))+'&in='+g('fma-in')+'&b='+g('fma-b')+'&a='+encodeURIComponent(g('fma-a'));if(g('fma-q')||g('fma-a')){location.href=u;}}</script>");
++        }
+     }
+ }
+diff --git a/RobloxServer.Web/Login.aspx.cs b/RobloxServer.Web/Login.aspx.cs
+index a38d3bd..f4d5217 100644
+--- a/RobloxServer.Web/Login.aspx.cs
++++ b/RobloxServer.Web/Login.aspx.cs
+@@ -1,5 +1,6 @@
+ using System;
+ using System.Globalization;
++using System.Web;
+ using System.Web.UI.WebControls;
+ using RobloxServer.Data;
+ using RobloxServer.Security;
+@@ -22,6 +23,16 @@ namespace RobloxServer.Pages
+                 return;
+             }
+             FillBirthday(MonthSelect, DaySelect, YearSelect);
++
++            // Error of a failed login from the header dropdown / home page (Login/HeaderLogin.ashx).
++            HttpCookie failed = Request.Cookies["RBXLoginError"];
++            if (failed != null)
++            {
++                string text = HttpUtility.UrlDecode(failed.Value ?? "");
++                ErrorPanel.Visible = text.Length > 0;
++                ErrorLiteral.Text = Server.HtmlEncode(text.Length > 200 ? text.Substring(0, 200) : text);
++                Response.Cookies.Add(new HttpCookie("RBXLoginError", "") { Expires = DateTime.UtcNow.AddDays(-1) });
++            }
+         }
+ 
+         /// <summary>The Month / Day / Year lists of the 2013 signup forms.</summary>
+diff --git a/RobloxServer.Web/Login/HeaderLogin.ashx b/RobloxServer.Web/Login/HeaderLogin.ashx
+new file mode 100644
+index 0000000..29f02c9
+--- /dev/null
++++ b/RobloxServer.Web/Login/HeaderLogin.ashx
+@@ -0,0 +1 @@
++<%@ WebHandler Language="C#" CodeBehind="HeaderLogin.ashx.cs" Class="RobloxServer.Handlers.Login.HeaderLogin" %>
+diff --git a/RobloxServer.Web/Login/HeaderLogin.ashx.cs b/RobloxServer.Web/Login/HeaderLogin.ashx.cs
+new file mode 100644
+index 0000000..bfd78b6
+--- /dev/null
++++ b/RobloxServer.Web/Login/HeaderLogin.ashx.cs
+@@ -0,0 +1,41 @@
++using System;
++using System.Web;
++using RobloxServer.Data;
++using RobloxServer.Security;
++using RobloxServer.Web;
++
++namespace RobloxServer.Handlers.Login
++{
++    /// <summary>
++    /// Login/HeaderLogin.ashx: target of the "Login" dropdown in the header and of the Member Login box of the home page.
++    /// A good login goes back to the page the visitor was on; a bad one goes to Login.aspx with the message.
++    /// </summary>
++    public class HeaderLogin : HandlerBase
++    {
++        protected override void Handle()
++        {
++            if (Request.HttpMethod != "POST")
++            {
++                Response.Redirect("~/Login.aspx", false);
++                return;
++            }
++
++            string error;
++            User user = Auth.Login(Request.Form["hl_user"], Request.Form["hl_pass"], Context, out error);
++            if (user == null)
++            {
++                string text = error ?? "Incorrect username or password.";
++                Response.Cookies.Add(new HttpCookie("RBXLoginError", HttpUtility.UrlEncode(text))
++                {
++                    HttpOnly = true,
++                    Expires = DateTime.UtcNow.AddMinutes(2)
++                });
++                Response.Redirect("~/Login.aspx", false);
++                return;
++            }
++
++            Auth.SignIn(user, Context);
++            Response.Redirect(Accounts.AfterLogin(user, Request.Form["hl_return"]), false);
++        }
++    }
++}
+diff --git a/RobloxServer.Web/RobloxServer.Web.csproj b/RobloxServer.Web/RobloxServer.Web.csproj
+index dd6759b..eb0cc07 100644
+--- a/RobloxServer.Web/RobloxServer.Web.csproj
++++ b/RobloxServer.Web/RobloxServer.Web.csproj
+@@ -96,6 +96,15 @@
+     <Content Include="Default.aspx" />
+     <Content Include="Develop.aspx" />
+     <Content Include="Forum.aspx" />
++    <Content Include="Welcome.aspx" />
++    <Content Include="Catalog.aspx" />
++    <Content Include="Upgrade.aspx" />
++    <Content Include="Content\Pages\Welcome.css" />
++    <Content Include="Login\HeaderLogin.ashx" />
++    <Content Include="Images\Forum\board.png" />
++    <Content Include="Images\Forum\ico-home.png" />
++    <Content Include="Images\Forum\ico-search.png" />
++    <Content Include="Images\Forum\ico-register.png" />
+     <Content Include="Error.aspx" />
+     <Content Include="Error\Lua.ashx" />
+     <Content Include="Game\BuildActionPermissionCheck.ashx" />
+@@ -312,6 +321,21 @@
+       <DependentUpon>Develop.aspx</DependentUpon>
+       <SubType>ASPXCodeBehind</SubType>
+     </Compile>
++    <Compile Include="Welcome.aspx.cs">
++      <DependentUpon>Welcome.aspx</DependentUpon>
++      <SubType>ASPXCodeBehind</SubType>
++    </Compile>
++    <Compile Include="Catalog.aspx.cs">
++      <DependentUpon>Catalog.aspx</DependentUpon>
++      <SubType>ASPXCodeBehind</SubType>
++    </Compile>
++    <Compile Include="Upgrade.aspx.cs">
++      <DependentUpon>Upgrade.aspx</DependentUpon>
++      <SubType>ASPXCodeBehind</SubType>
++    </Compile>
++    <Compile Include="Login\HeaderLogin.ashx.cs">
++      <DependentUpon>HeaderLogin.ashx</DependentUpon>
++    </Compile>
+     <Compile Include="Forum.aspx.cs">
+       <DependentUpon>Forum.aspx</DependentUpon>
+       <SubType>ASPXCodeBehind</SubType>
+diff --git a/RobloxServer.Web/Site.Master b/RobloxServer.Web/Site.Master
+index cf1eba8..f40f406 100644
+--- a/RobloxServer.Web/Site.Master
++++ b/RobloxServer.Web/Site.Master
+@@ -19,7 +19,9 @@
+                         <ul>
+                             <li><a href="<%: ResolveUrl("~/") %>">Home</a></li>
+                             <li><a href="<%: ResolveUrl("~/Games") %>" title="Games">Games</a></li>
++                            <li><a href="<%: ResolveUrl("~/Catalog.aspx") %>" title="Catalog">Catalog</a></li>
+                             <li><a href="<%: ResolveUrl("~/Develop.aspx") %>" title="Build">Build</a></li>
++                            <li><a href="<%: ResolveUrl("~/Upgrade.aspx") %>" title="Upgrade">Upgrade</a></li>
+                             <li><a href="<%: ResolveUrl("~/Forum.aspx") %>" title="Forum">Forum</a></li>
+                             <li class="more-list-item">
+                                 <div class="more-link-container"><a id="nav-more" title="More">More<span id="more-menu-toggle"></span></a></div>
+@@ -58,8 +60,38 @@
+                         <div id="header-login-container">
+                             <a id="header-signup" href="<%: ResolveUrl("~/Register.aspx") %>">Sign Up</a>
+                             <span id="header-or">or</span>
+-                            <a id="header-login" class="btn-control btn-control-large" href="<%: ResolveUrl("~/Login.aspx") %>">Login <span class="grey-arrow">&#9660;</span></a>
++                            <a id="header-login" class="btn-control btn-control-large" href="<%: ResolveUrl("~/Login.aspx") %>" onclick="return rbxHeaderLogin();">Login <span class="grey-arrow">&#9660;</span></a>
++                            <div id="header-login-panel">
++                                <label for="hl_user">Username</label>
++                                <input type="text" name="hl_user" id="hl_user" maxlength="20" autocomplete="username" />
++                                <label for="hl_pass">Password</label>
++                                <input type="password" name="hl_pass" id="hl_pass" maxlength="200" autocomplete="current-password" />
++                                <input type="hidden" name="hl_return" value="<%: Request.RawUrl %>" />
++                                <input type="submit" id="hl_go" class="btn-control btn-control-medium" value="Login" formaction="<%: ResolveUrl("~/Login/HeaderLogin.ashx") %>" formnovalidate="formnovalidate" />
++                                <a class="hl-more" href="<%: ResolveUrl("~/Login.aspx") %>">Forgot your password?</a>
++                            </div>
+                         </div>
++                        <script type="text/javascript">
++                            (function () {
++                                var panel = document.getElementById('header-login-panel');
++                                if (!panel) { return; }
++                                window.rbxHeaderLogin = function () {
++                                    var open = panel.style.display !== 'block';
++                                    panel.style.display = open ? 'block' : 'none';
++                                    if (open) { document.getElementById('hl_user').focus(); }
++                                    return false;
++                                };
++                                document.addEventListener('click', function (e) {
++                                    var box = document.getElementById('header-login-container');
++                                    if (box && !box.contains(e.target)) { panel.style.display = 'none'; }
++                                });
++                                ['hl_user', 'hl_pass'].forEach(function (id) {
++                                    document.getElementById(id).addEventListener('keydown', function (e) {
++                                        if (e.keyCode === 13) { e.preventDefault(); document.getElementById('hl_go').click(); }
++                                    });
++                                });
++                            })();
++                        </script>
+                     </asp:PlaceHolder>
+                 </div>
+             </div>
+diff --git a/RobloxServer.Web/Upgrade.aspx b/RobloxServer.Web/Upgrade.aspx
+new file mode 100644
+index 0000000..2d82bfd
+--- /dev/null
++++ b/RobloxServer.Web/Upgrade.aspx
+@@ -0,0 +1,8 @@
++<%@ Page Title="Upgrade" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Upgrade.aspx.cs" Inherits="RobloxServer.Pages.Upgrade" %>
++<asp:Content ID="Main" ContentPlaceHolderID="MainContent" runat="server">
++    <div style="width: 970px; margin: 20px auto; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px;">
++        <h1>Builders Club</h1>
++        <p>There is nothing to buy on this server: every member already has everything. Publishing places, hosting servers and using the forum are free for all accounts.</p>
++        <p><a href="<%: ResolveUrl("~/Develop.aspx") %>">Start building</a> or <a href="<%: ResolveUrl("~/Games") %>">play a game</a>.</p>
++    </div>
++</asp:Content>
+diff --git a/RobloxServer.Web/Upgrade.aspx.cs b/RobloxServer.Web/Upgrade.aspx.cs
+new file mode 100644
+index 0000000..666750c
+--- /dev/null
++++ b/RobloxServer.Web/Upgrade.aspx.cs
+@@ -0,0 +1,8 @@
++using RobloxServer.Web;
++
++namespace RobloxServer.Pages
++{
++    public class Upgrade : BasePage
++    {
++    }
++}
+diff --git a/RobloxServer.Web/Welcome.aspx b/RobloxServer.Web/Welcome.aspx
+new file mode 100644
+index 0000000..e4aab98
+--- /dev/null
++++ b/RobloxServer.Web/Welcome.aspx
+@@ -0,0 +1,83 @@
++<%@ Page Title="Home" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Welcome.aspx.cs" Inherits="RobloxServer.Pages.Welcome" %>
++<asp:Content ID="Head" ContentPlaceHolderID="HeadContent" runat="server">
++    <link href="<%: ResolveUrl("~/Content/Pages/Welcome.css") %>" rel="stylesheet" type="text/css" />
++</asp:Content>
++<asp:Content ID="Main" ContentPlaceHolderID="MainContent" runat="server">
++    <div id="wl">
++        <div id="wl-left">
++            <div class="wl-row">
++                <div id="wl-login">
++                    <div class="wl-login-title">MEMBER LOGIN</div>
++                    <label for="wl_user">Username:</label>
++                    <input type="text" name="hl_user" id="wl_user" maxlength="20" autocomplete="username" />
++                    <label for="wl_pass">Password:</label>
++                    <input type="password" name="hl_pass" id="wl_pass" maxlength="200" autocomplete="current-password" />
++                    <input type="hidden" name="hl_return" value="/" />
++                    <a class="wl-forgot" href="<%: ForgotUrl %>">forgot your password?</a>
++                    <input type="submit" id="wl_go" class="wl-signin" value="Sign In" formaction="<%: ResolveUrl("~/Login/HeaderLogin.ashx") %>" formnovalidate="formnovalidate" />
++                    <div class="wl-notmember">
++                        <span>Not a member?</span>
++                        <a class="wl-signup" href="<%: ResolveUrl("~/Register.aspx") %>">Sign Up</a>
++                    </div>
++                </div>
++                <div id="wl-video">
++                    <a href="<%: ResolveUrl("~/Games") %>" title="Browse games">
++                        <img src="<%: ResolveUrl("~/Images/Thumbs/Place1_420x230.jpg") %>" width="360" height="197" alt="Games" />
++                        <span class="wl-play-overlay"></span>
++                    </a>
++                </div>
++            </div>
++
++            <div id="wl-banner">
++                <span class="wl-banner-logo"><%: RobloxServer.Config.SiteName %></span>
++                <span class="wl-banner-text">The Free Online Building Game</span>
++                <a class="wl-banner-btn" href="<%: PlayUrl %>"><span class="wl-arrow">&#9654;</span> Play Now</a>
++            </div>
++
++            <h1 id="wl-featured-title">Featured Free Game</h1>
++            <% if (HasFeatured) { %>
++            <div id="wl-featured">
++                <div class="wl-feat-info">
++                    <div class="wl-feat-name"><a href="<%: FeaturedUrl %>"><%: FeaturedName %></a> <span>by <a href="<%: FeaturedByUrl %>"><%: FeaturedBy %></a></span></div>
++                    <a class="wl-play-this" href="<%: FeaturedUrl %>">Play This</a>
++                    <dl>
++                        <dt>Updated:</dt><dd><%: FeaturedUpdated %></dd>
++                        <dt>Visited:</dt><dd><%: FeaturedVisits %> times</dd>
++                    </dl>
++                </div>
++                <a class="wl-feat-thumb" href="<%: FeaturedUrl %>"><img src="<%: FeaturedThumb %>" width="330" height="181" alt="<%: FeaturedName %>" /></a>
++            </div>
++            <% } else { %>
++            <div id="wl-featured" class="wl-empty">No games have been published yet. Sign up and <a href="<%: ResolveUrl("~/Develop.aspx") %>">publish the first one</a>!</div>
++            <% } %>
++        </div>
++
++        <div id="wl-right">
++            <a id="wl-bigplay" href="<%: PlayUrl %>"><span>Play<br />Now</span></a>
++            <div class="wl-promo wl-promo-download">
++                <b>Play on your PC</b>
++                <p>Get the launcher once, then press <b>Play</b> on any game page.</p>
++                <a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download <%: RobloxServer.Config.SiteName %></a>
++            </div>
++            <div class="wl-promo wl-promo-forum">
++                <b>Join the conversation</b>
++                <p>Ask for help, show your builds and make friends in the forum.</p>
++                <a href="<%: ResolveUrl("~/Forum.aspx") %>">Open the Forum</a>
++            </div>
++            <div id="wl-news">
++                <div class="wl-news-title"><%: RobloxServer.Config.SiteName.ToUpperInvariant() %> NEWS</div>
++                <%= NewsHtml %>
++            </div>
++        </div>
++        <div style="clear: both"></div>
++    </div>
++    <script type="text/javascript">
++        (function () {
++            ['wl_user', 'wl_pass'].forEach(function (id) {
++                document.getElementById(id).addEventListener('keydown', function (e) {
++                    if (e.keyCode === 13) { e.preventDefault(); document.getElementById('wl_go').click(); }
++                });
++            });
++        })();
++    </script>
++</asp:Content>
+diff --git a/RobloxServer.Web/Welcome.aspx.cs b/RobloxServer.Web/Welcome.aspx.cs
+new file mode 100644
+index 0000000..d2f6951
+--- /dev/null
++++ b/RobloxServer.Web/Welcome.aspx.cs
+@@ -0,0 +1,103 @@
++using System;
++using System.Linq;
++using System.Text;
++using System.Web;
++using RobloxServer.Data;
++using RobloxServer.Web;
++
++namespace RobloxServer.Pages
++{
++    /// <summary>
++    /// Home page of visitors (2012 look): Member Login, the Play Now buttons, the featured game and the news.
++    /// Members are sent to My/Home. No server controls: the login box posts to Login/HeaderLogin.ashx.
++    /// </summary>
++    public class Welcome : BasePage
++    {
++        protected bool HasFeatured;
++        protected string FeaturedName = "";
++        protected string FeaturedBy = "";
++        protected string FeaturedUrl = "";
++        protected string FeaturedByUrl = "";
++        protected string FeaturedThumb = "";
++        protected string FeaturedUpdated = "";
++        protected string FeaturedVisits = "";
++        protected string PlayUrl = "";
++        protected string ForgotUrl = "";
++        protected string NewsHtml = "";
++
++        protected override bool AllowBanned
++        {
++            get { return true; }
++        }
++
++        protected void Page_Load(object sender, EventArgs e)
++        {
++            if (CurrentUser != null)
++            {
++                Response.Redirect("~/My/Home.aspx", true);
++                return;
++            }
++
++            PlayUrl = ResolveUrl("~/Games");
++            ForgotUrl = ResolveUrl("~/Login.aspx");
++
++            var servers = GameServers.All();
++            var featured = Db.Places.Where(p => p.IsPublic)
++                .Select(p => new { Place = p, Playing = servers.Where(s => s.PlaceId == p.Id).Sum(s => s.PlayerCount) })
++                .OrderByDescending(x => x.Playing).ThenByDescending(x => x.Place.Visits).ThenByDescending(x => x.Place.Updated)
++                .FirstOrDefault();
++            if (featured != null)
++            {
++                Place place = featured.Place;
++                HasFeatured = true;
++                FeaturedName = place.Name;
++                FeaturedBy = place.CreatorName;
++                FeaturedUrl = ResolveUrl("~/PlaceItem.aspx?id=" + place.Id);
++                FeaturedByUrl = ResolveUrl("~/User.aspx?id=" + place.CreatorId);
++                FeaturedThumb = PlaceThumb(place.Id, "420x230");
++                FeaturedUpdated = Ago(place.Updated);
++                FeaturedVisits = place.Visits.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
++                PlayUrl = FeaturedUrl;
++            }
++
++            NewsHtml = News();
++        }
++
++        string News()
++        {
++            ForumStore.EnsureSeed();
++            ForumBoard board = ForumStore.Boards.All().OrderBy(b => b.CategoryId).ThenBy(b => b.Order).FirstOrDefault();
++            var sb = new StringBuilder();
++            if (board != null)
++            {
++                foreach (ForumThread t in ForumStore.Threads.Where(x => x.BoardId == board.Id).OrderByDescending(x => x.Pinned).ThenByDescending(x => x.Created).Take(3))
++                {
++                    sb.Append("<div class=\"wl-news-item\"><a href=\"").Append(HttpUtility.HtmlAttributeEncode(ResolveUrl("~/Forum.aspx?t=" + t.Id))).Append("\">")
++                      .Append(HttpUtility.HtmlEncode(t.Title)).Append("</a></div>");
++                }
++            }
++            if (sb.Length == 0)
++            {
++                sb.Append("<div class=\"wl-news-item\"><a href=\"").Append(HttpUtility.HtmlAttributeEncode(ResolveUrl("~/Forum.aspx"))).Append("\">No news yet: visit the Forum</a></div>");
++            }
++            return sb.ToString();
++        }
++
++        /// <summary>"4 months ago", like the featured game box.</summary>
++        static string Ago(DateTime utc)
++        {
++            TimeSpan span = DateTime.UtcNow - DateTime.SpecifyKind(utc, DateTimeKind.Utc);
++            if (span.TotalMinutes < 1) { return "just now"; }
++            if (span.TotalHours < 1) { return Plural((int)span.TotalMinutes, "minute"); }
++            if (span.TotalDays < 1) { return Plural((int)span.TotalHours, "hour"); }
++            if (span.TotalDays < 30) { return Plural((int)span.TotalDays, "day"); }
++            if (span.TotalDays < 365) { return Plural((int)(span.TotalDays / 30), "month"); }
++            return Plural((int)(span.TotalDays / 365), "year");
++        }
++
++        static string Plural(int n, string unit)
++        {
++            return n + " " + unit + (n == 1 ? "" : "s") + " ago";
++        }
++    }
++}
