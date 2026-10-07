@@ -95,6 +95,7 @@
     <Content Include="Data\Upload.ashx" />
     <Content Include="Default.aspx" />
     <Content Include="Develop.aspx" />
+    <Content Include="Forum.aspx" />
     <Content Include="Error.aspx" />
     <Content Include="Error\Lua.ashx" />
     <Content Include="Game\BuildActionPermissionCheck.ashx" />
@@ -279,6 +280,7 @@
     <Compile Include="Code\Data\Genres.cs" />
     <Compile Include="Code\Data\Models.cs" />
     <Compile Include="Code\Data\PlaceService.cs" />
+    <Compile Include="Code\Data\Forum.cs" />
     <Compile Include="Code\Data\XmlTable.cs" />
     <Compile Include="Code\Data\RemoteBlobStore.cs" />
     <Compile Include="Code\Data\RobloxLookup.cs" />
@@ -308,6 +310,10 @@
     </Compile>
     <Compile Include="Develop.aspx.cs">
       <DependentUpon>Develop.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forum.aspx.cs">
+      <DependentUpon>Forum.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Develop.aspx.designer.cs">
