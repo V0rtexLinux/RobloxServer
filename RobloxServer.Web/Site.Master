@@ -20,6 +20,7 @@
                             <li><a href="<%: ResolveUrl("~/") %>">Home</a></li>
                             <li><a href="<%: ResolveUrl("~/Games") %>" title="Games">Games</a></li>
                             <li><a href="<%: ResolveUrl("~/Develop.aspx") %>" title="Build">Build</a></li>
+                            <li><a href="<%: ResolveUrl("~/Forum.aspx") %>" title="Forum">Forum</a></li>
                             <li class="more-list-item">
                                 <div class="more-link-container"><a id="nav-more" title="More">More<span id="more-menu-toggle"></span></a></div>
                                 <div class="dropdownnavcontainer">
