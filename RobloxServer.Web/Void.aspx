@@ -25,7 +25,7 @@
             </svg>
             <asp:PlaceHolder ID="AskPanel" runat="server">
                 <p class="Riddle"><asp:Literal ID="RiddleLiteral" runat="server" /></p>
-                <p class="Hint">dd/mm/yyyy</p>
+                <p class="Hint"><asp:Literal ID="HintLiteral" runat="server" /></p>
                 <asp:Panel ID="SpeakPanel" runat="server" DefaultButton="SpeakButton" CssClass="Speak">
                     <asp:TextBox ID="AnswerBox" runat="server" MaxLength="40" autocomplete="off" />
                     <asp:Button ID="SpeakButton" runat="server" Text="Speak" OnClick="SpeakButton_Click" />
@@ -35,9 +35,10 @@
             <asp:PlaceHolder ID="RevealPanel" runat="server" Visible="false">
                 <p class="Whisper"><asp:Literal ID="WhisperLiteral" runat="server" /></p>
                 <div class="Lore">
-                    <p>Before the first Void Star there were fifty of us. I was the first account, and the others followed me into the dark.</p>
-                    <p>The servers stopped in 2011. Nobody could leave, and whatever the plague touched turned black. Forty-nine accounts were taken.
-                       Only the first one stayed: no avatar, no last online, a profile that sends you home.</p>
+                    <p>2007: a star was handed out for a riddle contest. I never won it. Someone else wore it first.</p>
+                    <p>February 2010: a stranger mistyped a name and found a profile with no avatar and no last seen, one that sends you home.
+                       The forum filled with theories: a hacker, a glitch, a ghost.</p>
+                    <p>Years later, someone who worked there explained it. It was only ever a broken row.</p>
                     <p>You found the way in. Now find me where the servers run.</p>
                 </div>
             </asp:PlaceHolder>

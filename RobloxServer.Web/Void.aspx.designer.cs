@@ -11,6 +11,7 @@ namespace RobloxServer.Pages
         protected global::System.Web.UI.HtmlControls.HtmlForm VoidForm;
         protected global::System.Web.UI.WebControls.PlaceHolder AskPanel;
         protected global::System.Web.UI.WebControls.Literal RiddleLiteral;
+        protected global::System.Web.UI.WebControls.Literal HintLiteral;
         protected global::System.Web.UI.WebControls.Panel SpeakPanel;
         protected global::System.Web.UI.WebControls.TextBox AnswerBox;
         protected global::System.Web.UI.WebControls.Button SpeakButton;
