@@ -101,6 +101,8 @@ O pareamento exige `https://` (ou rede local), porque a chave viaja na resposta.
 **Deixar rodando 24/7:** o `IniciarServidor.exe` e o launcher são apps de janela e precisam de uma sessão do Windows aberta
 (não rodam bem como serviço). Use login automático e uma Tarefa Agendada "ao fazer logon" para cada um, e desligue a suspensão. O script `hospedagem/instalar-hospedagem.ps1` (PowerShell como Administrador) faz isso tudo: cria as duas tarefas, libera as portas UDP dos bots, desliga a suspensão (inclusive ao fechar a tampa) e, se você passar `-TunnelToken`, instala o Cloudflare Tunnel como serviço. `-Remove` desfaz.
 
+Para uma máquina **sem tela e sem teclado**, `hospedagem/pendrive/` monta um pendrive que instala o Windows 10 sozinho e já liga tudo (veja `montar-pendrive.ps1`). A senha do Windows nunca vai para o Git: ela é passada no script.
+
 ### Rodando
 
 * **Windows / IIS:** [docs/setting-up.md](docs/setting-up.md)
