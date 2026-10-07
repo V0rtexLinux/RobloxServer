@@ -1,0 +1,2918 @@
+/* Paginas sociais 2013 (Catalog, Inbox, Friends, Inventory/Stuff, Groups, Trade, Builders Club).
+   Regras extraidas do CSS da recriacao RobloxLabs/web (MIT, ver LICENSE-RobloxLabs.txt) e do bundle AllCSS_20120319. */
+.Button {cursor: pointer;
+	background-color: #fff;
+	border: solid 1px #333;
+	color: #333;
+	font-family: Verdana, Sans-Serif;
+	font-size: .9em;
+	padding: 3px 10px 3px 10px;
+	text-decoration: none;}
+.Button:link, .Button:visited {border: solid 1px #777;
+	color: #777;}
+.Button:hover, .Button:active {background-color: #6e99c9;
+	border: solid 1px #000;
+	color: #fff;}
+.PopupMenu .Button {line-height: 2.5em;}
+.PopupMenu .Button:hover {background-color: #6e99c9;
+	color: #fff;}
+.SystemAlert {background-color: #FFF;
+	text-align: center;
+	color: #FFF;
+	border: 2px solid #000;
+	padding: 1px;}
+.SystemAlertText {font-size: 16px;
+	font-weight: bold;
+	background-color: #F00;
+	padding: 2px;}
+.SystemAlert a {color: White;}
+.StandardBoxLight {float: inherit;
+	border: 1px solid #3B526B;
+	padding: 10px 10px 10px 10px;
+	margin-bottom: 10px;
+	display: block;}
+.StandardBoxLightHeader {float: inherit;
+	background-color: #3B526B;
+	text-align: center;
+	color: #FFF;
+	text-align: left;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 5px 10px 5px 20px;
+	display: block;}
+.ParentsLearningContent .StandardBoxLightHeader {margin: 10px 0;}
+#BuildersClubContainer div.icons {background-image: url(../../Images/bc_page_icon_sprites.png);
+	background-repeat: no-repeat;
+	width: 32px;
+	display: inline-block;
+	text-align: center;}
+#BuildersClubContainer div.maps_icon {background-position: 0 1px;
+	height: 30px;}
+#BuildersClubContainer div.money_icon {background-position: 0 -28px;
+	height: 28px;}
+#BuildersClubContainer div.shirt_icon {background-position: 0 -55px;
+	height: 30px;}
+#BuildersClubContainer div.ads_icon {background-position: 0 -85px;
+	height: 30px;}
+#BuildersClubContainer div.bc_icon {background-position: 0 -115px;
+	height: 31px;}
+#BuildersClubContainer div.gear_icon {background-position: 0 -146px;
+	height: 30px;}
+#BuildersClubContainer div.groups_icon {background-position: 0 -173px;
+	height: 23px;}
+#BuildersClubContainer div.badges_icon {background-position: 0 -196px;
+	height: 30px;}
+#BuildersClubContainer div.beta_icon {background-position: 0 -228px;
+	height: 31px;}
+#BuildersClubContainer div.tbc_icon {background-position: 0 -263px;
+	height: 31px;}
+#BuildersClubContainer div.obc_icon {background-position: 0 -297px;
+	height: 31px;}
+#BuildersClubContainer div.personalserver_icon {background-position: 0 -329px;
+	height: 30px;}
+#BuildersClubContainer div.upgrades_enabled {background-image: url(../../Images/buybc/bc_sprites_math_enabled.png);
+	background-repeat: no-repeat;
+	display: inline-block;
+	height: 95px;
+	width: 128px;}
+#BuildersClubContainer div.upgrades_disabled {background-image: url(../../Images/buybc/bc_sprites_math_disabled.png);
+	background-repeat: no-repeat;
+	display: inline-block;
+	height: 95px;
+	width: 128px;}
+#BuildersClubContainer div.bcmonthly {background-position: 0 0;}
+#BuildersClubContainer div.bc6 {background-position: -128px 0;}
+#BuildersClubContainer div.bc12 {background-position: -256px 0;}
+#BuildersClubContainer div.bclife {background-position: -384px 0;}
+#BuildersClubContainer div.tbcmonthly {background-position: 0 -95px;}
+#BuildersClubContainer div.tbc6 {background-position: -128px -95px;}
+#BuildersClubContainer div.tbc12 {background-position: -256px -95px;}
+#BuildersClubContainer div.tbclife {background-position: -384px -95px;}
+#BuildersClubContainer div.obcmonthly {background-position: 0 -191px;}
+#BuildersClubContainer div.obc6 {background-position: -128px -191px;}
+#BuildersClubContainer div.obc12 {background-position: -256px -191px;}
+#BuildersClubContainer div.obclife {background-position: -384px -191px;}
+#BuildersClubContainer .bctotbcconversion {background-image: url(../../Images/BuyBC/bc_lifetime_tbc_lifetime_discount.png);
+	background-repeat: no-repeat;
+	height: 95px;
+	width: 128px;}
+#BuildersClubContainer .bctoobcconversion {background-image: url(../../Images/BuyBC/bc_lifetime_obc_lifetime_discount.png);
+	background-repeat: no-repeat;
+	height: 95px;
+	width: 128px;}
+#BuildersClubContainer .tbctoobcconversion {background-image: url(../../Images/BuyBC/tbc_lifetime_obc_lifetime_discount.png);
+	background-repeat: no-repeat;
+	height: 95px;
+	width: 128px;}
+#BuildersClubContainer upgrade_button {cursor: pointer;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace {color: #6e99c9;
+	margin: 0 auto;
+	background: none;
+	float: none;
+	width: 155px;
+	height: 50px;
+	border: none;
+	padding-right: 0;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace a {position: static;
+	margin: 0;}
+.StandardBox .SmallHeaderAlertSpaceLeft .message_icon {position: static;
+	height: 16px;
+	margin: 3px;
+	width: 13px;}
+.StandardBox .SmallHeaderAlertSpaceLeft .friends_icon {position: static;
+	height: 16px;
+	margin: 3px;
+	width: 16px;}
+.StandardBox .SmallHeaderAlertSpaceLeft .robux_icon {position: static;
+	height: 16px;
+	margin: 3px;
+	width: 16px;}
+.StandardBox .SmallHeaderAlertSpaceLeft .tickets_icon {position: static;
+	height: 16px;
+	margin: 3px;
+	width: 16px;}
+.StandardBox .SmallHeaderAlertSpaceLeft .FriendsAlert {background: #FFF;
+	border-left: 1px solid #6E99C9;
+	width: 49%;
+	margin-top: 0;}
+.StandardBox .SmallHeaderAlertSpaceLeft .MessageAlert {background: #FFF;
+	width: 49%;
+	margin-top: 0;}
+.StandardBox .SmallHeaderAlertSpaceLeft .RobuxAlert {background: #FFF;
+	border-top: 1px solid #6E99C9;
+	width: 49%;
+	margin-top: 0;}
+.StandardBox .SmallHeaderAlertSpaceLeft .TicketsAlert {background: #FFF;
+	border-top: 1px solid #6E99C9;
+	border-left: 1px solid #6E99C9;
+	width: 49%;
+	margin-top: 0;}
+a.invertedcontesttab {float: left;
+	background: #bebebe;
+	padding: 3px 6px;
+	color: black;
+	margin-right: 4px;
+	text-decoration: none;
+	display: block;
+	font-size: 11px;
+	font-family: Arial;
+	border-bottom: 1px solid #9e9e9e;
+	border-right: 1px solid #9e9e9e;
+	border-left: 1px solid #9e9e9e;}
+a.invertedcontesttab:hover {background: #d6d6d6;
+	border-bottom: 1px solid #9e9e9e;
+	border-right: 1px solid #9e9e9e;
+	border-left: 1px solid #9e9e9e;
+	color: black;}
+a.invertedcontesttabselected {float: left;
+	background: white;
+	margin-bottom: -1px;
+	z-index: 6;
+	border-bottom: 1px solid #9e9e9e;
+	border-right: 1px solid #9e9e9e;
+	border-left: 1px solid #9e9e9e;
+	color: #363636;
+	margin-right: 4px;
+	text-decoration: none;
+	display: block;}
+a.contesttab {float: left;
+	background: #bebebe;
+	padding: 5px;
+	color: black;
+	margin-left: 4px;
+	text-decoration: none;
+	display: block;
+	font-size: 13px;
+	height: 14px;
+	position: relative;
+	margin-top: 3px;
+	font-family: Arial;
+	border-top: 1px solid #9e9e9e;
+	border-right: 1px solid #9e9e9e;
+	border-left: 1px solid #9e9e9e;}
+a.contesttab:hover {background: #d6d6d6;
+	color: black;}
+a.contesttabselected {float: left;
+	background: white;
+	margin-bottom: -1px;
+	z-index: 6;
+	border-top: 1px solid #9e9e9e;
+	border-right: 1px solid #9e9e9e;
+	border-left: 1px solid #9e9e9e;
+	padding: 5px;
+	color: #363636;
+	height: 17px;
+	margin-left: 4px;
+	text-decoration: none;
+	display: block;
+	font-size: 13px;}
+.overrideColumn1c .ShadowedStandardBox {width: 561px;}
+.overrideColumn1c .ShadowedStandardBoxHeader {width: 551px;}
+.overrideColumn2c .ShadowedStandardBox {width: 310px;}
+.overrideColumn2c .ShadowedStandardBoxHeader {width: 300px;}
+#CatalogContainer .Assets .FooterPager {padding: 2px 0;
+	text-align: right;}
+#CatalogContainer .Assets .FooterPager .Label {font-size: 1em;
+	vertical-align: middle;}
+#CatalogContainer .Asset {margin: -1px 0 15px -1px;
+	vertical-align: top;
+	width: 122px;}
+#CatalogContainer .Asset .AssetThumbnail {border: solid 1px #EEE;
+	height: 110px;
+	text-align: center;
+	width: 110px;
+	background-color: #FFF;}
+#CatalogContainer .Asset .AssetDetails {font-family: Verdana, Sans-Serif;
+	overflow: hidden;
+	padding: 2px 0 6px 0;
+	width: 110px;}
+#CatalogContainer .AssetName a {font-size: .9em;
+	font-weight: bold;
+	line-height: 1.5em;
+	vertical-align: top;}
+.Assets .StandardBoxHeader {width: 660px;}
+.Assets .StandardBox {width: 660px;}
+.CustomizeCharacterContainer .Asset {float: left;
+	margin: 5px 7px 5px 0;
+	text-align: left;
+	vertical-align: top;
+	width: 112px;}
+.CustomizeCharacterContainer .Asset .AssetThumbnail {height: 110px;
+	position: relative;
+	text-align: center;
+	width: 110px;}
+.CustomizeCharacterContainer .Asset .AssetDetails {overflow: hidden;
+	padding: 2px 0 6px 0;
+	text-align: left;
+	width: 110px;}
+.CustomizeCharacterContainer .AssetName a {font-size: .9em;
+	font-weight: bold;
+	line-height: 1.5em;
+	vertical-align: top;}
+.CustomizeCharacterContainer .FooterPager {border-top: solid 1px #000;
+	clear: left;
+	margin: 10px 0 0 0;
+	padding: 3px 0;
+	text-align: center;}
+.AttireChooser .FooterPager .Label {font-size: 1em;
+	vertical-align: middle;}
+.TradingDashboard .FooterPager {margin: 0 auto;}
+.TradingDashboard .FooterPager {padding-top: 5px;
+	text-align: center;}
+#GamesContainer #Games .FooterPager {margin: 20px 24px 0 0;
+	padding: 2px 0;
+	text-align: right;}
+#GamesContainer #Games .FooterPager .Label {font-size: 1em;
+	vertical-align: middle;}
+.SearchBoxBack .StandardBox {background: #6e99c9;}
+#BCOnlyPlaces .StandardBoxHeaderGray {width: 410px;
+	height: 27px;
+	padding: 9px 2px 0 2px;
+	*padding: 5px 2px 0 2px;}
+#BCOnlyPlaces .StandardBox {height: 188px;
+	padding: 2px 0;}
+#mid-column .FooterPager {clear: both;
+	text-align: center;
+	margin: 0;
+	padding-top: 10px;
+	*padding: 0;}
+#mid-column .FooterPager input {width: 30px;}
+#mid-column .FooterPager span {display: inline-block;}
+#mid-column .FooterPager span span, #mid-column .FooterPager span a {display: inline-block;
+	width: 12px;
+	height: 12px;}
+#mid-column .FooterPager span span, #mid-column .FooterPager span a, #mid-column .FooterPager span div {float: left;}
+#mid-column .FooterPager span a:hover {background-color: #fff;
+	text-decoration: none;}
+#mid-column .FooterPager input {text-align: center;}
+#mid-column .FooterPager div.paging_pagenums_container {display: inline;
+	float: none;}
+#mid-column .FooterPager .paging_wrapper {margin: 0 5px;
+	position: relative;
+	top: 2px;
+	*top: 0;
+	*margin-left: 17px;}
+#mid-column .FooterPager .paging_wrapper input, #mid-column .FooterPager .paging_wrapper span, #mid-column .FooterPager .paging_wrapper div, #mid-column .FooterPager .paging_wrapper {font-size: 11px;
+	height: 11px;
+	line-height: 1em;}
+#mid-column .FooterPager .paging_wrapper input {*vertical-align;}
+.GroupMember .OnlineStatus {position: absolute;
+	padding: 2px;}
+#GroupsPeopleContainer .StandardTabGrayActive, #GroupsPeopleContainer .StandardTabGray {position: relative;
+	cursor: pointer;}
+#left-column .StandardBox, #mid-column .StandardBox, #right-column .StandardBox {background: url(../../Images/cssspecific/rbx2/standardBox_01_bkg.png) top repeat-x white;
+	color: #000;}
+#left-column .StandardBox a, #mid-column .StandardBox a, #right-column .StandardBox a {color: #095fb5;}
+#left-column .StandardBox .ReportAbuse .AbuseButton a, #mid-column .StandardBox .ReportAbuse .AbuseButton a, #right-column .StandardBox .ReportAbuse .AbuseButton a {color: Red;}
+.GroupListItemContainer {clear: left;
+	padding: 5px 0 5px 14px;}
+.GroupListItemContainer a {display: block;}
+.GroupListItemContainer:hover, .GroupListItemContainer.selected:hover {background-color: #fff;
+	cursor: pointer;}
+.GroupListItemContainer.selected {background: url(../../Images/gamesPage_filterArrow.png) 4px center no-repeat;}
+.selected .GroupListName {font-weight: bold;}
+.GroupListImageContainer, .GroupListName {float: left;
+	font-size: 11px;}
+.GroupListName a, .GroupListName a:hover, .GroupListName a:visited {color: #000;
+	text-decoration: none;}
+.GroupListImageContainer img {background-color: #fff;
+	border: 1px solid #fff;}
+.GroupListName {overflow: hidden;
+	width: 90px;
+	height: 32px;
+	text-align: left;
+	position: relative;
+	padding: 0 7px;
+	padding-top: 12px;}
+#left-column .StandardBox {overflow: hidden;
+	float: left;
+	text-align: center;
+	width: 100%;
+	background: #E8E8E8;}
+.FooterPager {font-family: Arial, Helvetica, sans-serif;}
+.GroupListContainer {padding: 0;}
+#InboxContainer {margin-top: 10px;}
+#InboxContainer #InboxPane {float: left;
+	position: relative;
+	top: -2px;
+	width: 700px;}
+#InboxContainer h2 {font-family: Verdana, Sans-Serif;
+	font-size: 2.5em;
+	font-weight: normal;
+	letter-spacing: .5em;
+	line-height: 1em;
+	margin: 0 0 10px 0;
+	padding: 0;}
+#InboxContainer .Ads_WideSkyscraper {border: solid 1px #000;
+	float: right;
+	text-align: right;
+	width: 160px;}
+#InboxContainer #Inbox {border: solid 1px #000;}
+#InboxContainer .Buttons {margin: 10px 0;
+	text-align: center;}
+#InboxContainer .InboxHeader {background: url(../../Images/topNav_black.png);
+	border: none;
+	color: #fff;
+	font: 1.2em/normal Verdana, sans-serif;
+	font-weight: lighter;
+	letter-spacing: .15em;
+	text-align: center;}
+#InboxContainer .InboxRow {cursor: pointer;
+	font: normal 1em/normal Verdana, sans-serif;}
+#InboxContainer .InboxRow_Unread {cursor: pointer;
+	font: bold 1em/normal Verdana, sans-serif;}
+#InboxContainer .InboxRow:hover, #InboxContainer .InboxRow_Unread:hover, #InboxContainer .SystemAlertMessage:hover, #InboxContainer .SystemAlertMessage_Unread:hover {background-color: #6e99c9;
+	color: #fff;}
+#InboxContainer .InboxHeader a, #InboxContainer .InboxPager a, #InboxContainer .InboxRow:hover a, #InboxContainer .InboxRow_Unread:hover a, #InboxContainer .SystemAlertMessage:hover a, #InboxContainer .SystemAlertMessage_Unread:hover a {color: #fff;}
+#InboxContainer .InboxPager {background-color: #999;
+	font: bold 1.2em/normal Verdana, sans-serif;
+	letter-spacing: .15em;
+	text-align: center;}
+#InboxContainer .SystemAlertMessage, #InboxContainer .SystemAlertMessage_Unread {cursor: pointer;
+	font: normal 1em/normal Verdana, sans-serif;
+	color: #F00;}
+#InboxContainer .SystemAlertMessage a, #InboxContainer .SystemAlertMessage_Unread a {color: #F00;}
+#InboxContainer .SystemAlertMessage_Unread {font: bold 1em/normal Verdana, sans-serif;}
+#ItemContainer .StandardBoxHeader, #ItemContainer .StandardBox {width: 709px;}
+#ItemContainer #Summary #PublicDomainPurchase #BuyForFree .Button:hover {background-color: #6e99c9;
+	border: solid 1px #000;}
+#ItemContainer #Summary #RobuxPurchase #BuyWithRobux .Button:hover {background-color: #49b745;
+	border: solid 1px #000;}
+#ItemContainer #Summary #TicketsPurchase #BuyWithTickets .Button:hover {background-color: #fdd017;
+	border: solid 1px #000;}
+#ItemContainer #Ownership .Button, #ItemContainer .PlayGames .Button {background-color: #fff;}
+#ItemContainer #Ownership .Button:Hover {background-color: #fff;
+	border: solid 1px #f00;
+	color: #f00;}
+#ItemContainer .PlayGames .Button:Hover {background-color: #fff;
+	border: solid 1px Green;
+	color: Green;}
+#ItemContainer .CommentsContainer .FooterPager {padding: 5px 0;
+	text-align: right;}
+#ConfigurePlaceContainer .ResetPlaceRow .Button {margin: 0 auto;}
+#EditItemContainer .Button {border-color: #555;
+	color: #555;
+	cursor: pointer;}
+#EditItemContainer .Button:hover {background-color: #6e99c9;
+	color: #fff;}
+.WideAspectRatio .AssetThumbnail {background-color: #FFF;
+	border: 1px #000;
+	height: 100px;
+	width: 160px;}
+.WideAspectRatio .AssetDetails {overflow: hidden;
+	padding: 5px;
+	height: 90px;
+	width: 158px;}
+.WideAspectRatio .AssetName a {line-height: 1.5em;
+	vertical-align: top;}
+.MessageContainer .MultilineTextBox {min-height: 50px;}
+.MessageContainer #AdsPane {border: solid 1px #000;
+	float: left;
+	width: 160px;}
+.MessageContainer #MessagePane {float: left;
+	margin: 0 0 0 60px;
+	width: 650px;}
+.MessageContainer h3 {text-align: left;
+	width: 622px;}
+.MessageContainer #MessagePane .Buttons {width: 622px;}
+.MessageContainer #MessagePane .Buttons .Button {margin: 10px 0 0 10px;}
+.MessageContainer .Label {font-weight: bold;
+	padding: 6px 0 3px 0;}
+.MessageContainer .MessageReaderContainer {border: solid 1px #000;
+	padding: 10px;
+	width: 95%;}
+.EmptyInbox {text-align: center;
+	margin: 20px 0;}
+.MessageEditor #CannedResponses .Button {padding: 3px 5px;}
+.MessageContainer #Confirmation h3 {text-align: left;
+	width: 422px;}
+.MessageContainer #Confirmation .Buttons {width: 422px;}
+.MessageContainer #Confirmation #Message {border: solid 1px #000;
+	padding: 10px;
+	width: 95%;}
+#InvitationContainer .Button {float: right;
+	font-family: Verdana, Sans-Serif;
+	padding: 3px 10px 3px 10px;
+	text-decoration: none;}
+.MyRobloxContainer .Column1a .StandardBox em {display: none;
+	font-style: normal;
+	position: absolute;
+	z-index: 2;
+	background: #3B526B;
+	color: #FFF;
+	padding: 3px;
+	border: 4px solid #C6D9FD;
+	width: 200px;}
+.MyRobloxContainer .Column1a .StandardBox ul li {padding: 4px;}
+#ConfigurePlaceContainer .ResetPlaceRow .Button {margin: 0 auto;}
+#ConfigurePlaceContainer .Button {border-color: #555;
+	color: #555;
+	cursor: pointer;}
+#ConfigurePlaceContainer .Button:hover {background-color: #6e99c9;
+	color: #fff;}
+#SetsPane.StandardBox {background: url(../../Images/cssspecific/rbx2/standardBox_01_bkg.png) top repeat-x white;}
+.ShadowedStandardBox {position: relative;
+	z-index: 0;
+	_padding-bottom: 6px;
+	_overflow-y: hidden;
+	margin-bottom: 10px;}
+.ShadowedStandardBox .Header {background: url(../../Images/HeaderGradientW800.png) repeat-y top left;
+	text-align: center;
+	color: White;
+	height: 20px;
+	line-height: 20px;
+	font-size: 15px;
+	font-weight: bold;
+	display: block;
+	position: relative;
+	z-index: 0;
+	white-space: nowrap;}
+.ShadowedStandardBox .Content {position: relative;
+	z-index: 0;
+	border: 2px solid #6e99c9;
+	background-color: White;
+	height: 100%;
+	_height: 3000px;
+	padding: 10px 10px 10px 10px;}
+.ShadowedStandardBox .Button {cursor: pointer;
+	background-color: #B6CCE4;
+	color: #435D77;
+	text-decoration: none;
+	border: solid 1px #ccc;
+	padding: 3px 10px 3px 10px;
+	font-family: Verdana;
+	font-size: 10px;
+	font-weight: bold;
+	text-align: center;
+	white-space: nowrap;}
+.ShadowedStandardBox .Button:link, .ShadowedStandardBox .Button:visited {background-color: #B6CCE4;
+	color: #435D77;
+	text-decoration: none;}
+.ShadowedStandardBox .Button:hover, .ShadowedStandardBox .Button:active {background-color: #5F84A8;
+	color: White;
+	text-decoration: none;}
+#InviteAFriendContainer .Button {border: solid 1px #000;
+	color: #000;
+	font-family: Verdana, Sans-Serif;
+	margin: 0 0 0 10px;
+	padding: 3px 10px 3px 10px;
+	text-decoration: none;}
+#StoreContainer #Products #FooterPager {margin: 0 24px 0 10px;
+	padding: 2px 0;
+	text-align: right;}
+#StoreContainer #Products #FooterPager .Label {font-size: 1em;
+	vertical-align: middle;}
+#CancelBuildersClubContainer {background-color: #fff;
+	font-family: Arial, Sans-Serif;
+	margin: 0 auto;
+	padding: 20px 80px;}
+#CancelBuildersClubContainer h2 {font-family: Arial, Sans-Serif;
+	font-size: 2.5em;
+	font-weight: normal;
+	line-height: 1em;
+	margin: 0;
+	padding: 0;}
+#MembershipOptions .Label {text-align: center;}
+#WhyJoin {display: inline;
+	float: left;
+	margin: 30px 10px 20px 90px;
+	padding: 0;
+	width: 375px;}
+#WhyJoin h3 {font-size: 15pt;
+	font-weight: normal;
+	letter-spacing: .2em;
+	margin: 0 0 15px 0;
+	padding: 0;}
+#WhyJoin #MembershipBenefits {list-style: none;
+	margin: 0;
+	padding: 0;}
+#WhyJoin #MembershipBenefits li {background-position: 0 0;
+	background-repeat: no-repeat;
+	font-family: Arial, Sans-Serif;
+	font-size: 11pt;
+	margin: 0 0 10px 10px;
+	min-height: 32px;
+	padding: 0 0 0 40px;}
+#WhyJoin .MembershipBenefits {list-style: none;
+	margin: 0;
+	padding: 0;}
+#WhyJoin .MembershipBenefits li {background-position: 0 0;
+	background-repeat: no-repeat;
+	font-family: Arial, Sans-Serif;
+	font-size: 11pt;
+	margin: 0 0 10px 10px;
+	min-height: 32px;
+	padding: 0 0 0 40px;}
+#WhyJoin .MembershipBenefits .Benefit_MultiplePlaces {background-image: url(../../Images/MultiplePlacesBullet.png);}
+#WhyJoin .MembershipBenefits .Benefit_RobuxAllowance {background-image: url(../../Images/AllowanceBullet.png);}
+#WhyJoin .MembershipBenefits .Benefit_SellContent {background-image: url(../../Images/SellBullet.png);}
+#WhyJoin .MembershipBenefits .Benefit_SuppressAds {background-image: url(../../Images/AdSuppressionBullet.png);}
+#WhyJoin .MembershipBenefits .Benefit_ExclusiveHat {background-image: url(../../Images/HardHatBullet.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_OwnPlace {background-image: url(../../Images/JoinBulletHouse.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_GetTix {background-image: url(../../Images/JoinBulletTreasure.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_BuyStuff {background-image: url(../../Images/JoinBulletShoppingBag.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_CustomizeGuy {background-image: url(../../Images/JoinBulletWizardHat.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_Username {background-image: url(../../Images/JoinBulletStar.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_Forums {background-image: url(../../Images/JoinBulletScript.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_Stats {background-image: url(../../Images/JoinBulletStats.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_Comments {background-image: url(../../Images/JoinBulletPencil.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_Badges {background-image: url(../../Images/JoinBulletBadges.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_Friends {background-image: url(../../Images/JoinBulletFriends.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_WeRock {background-image: url(../../Images/JoinBulletCreative.png);}
+#WhyJoin #MembershipBenefits #SignupBenefit_OhYeahItsFree {background-image: url(../../Images/JoinBulletHappy.png);}
+#PaymentContainer .Button, #PayPalContainer .Button {font-size: 16px;
+	margin: 0 3px;}
+#BuildersClubContainer {font-family: Arial, Sans-Serif;
+	margin: 0 auto;
+	width: 900px;}
+#BuildersClubContainer #LeftColumn {background-color: #fff;
+	width: 575px;
+	float: left;
+	margin-top: 10px;}
+#BuildersClubContainer #LeftColumn #MembershipOptions {margin-bottom: 50px;
+	padding: 10px 10px 0 10px;}
+#BuildersClubContainer #LeftColumn #MembershipOptions .MembershipButton {margin: 0 4px 0 4px;
+	float: left;
+	width: 130px;}
+#BuildersClubContainer #LeftColumn #MembershipOptions .BCButtonLabel {color: #6e99c9;
+	margin-top: 4px;
+	text-align: center;}
+#BuildersClubContainer #LeftColumn h1 {font-size: 20px;
+	color: #6e99c9;
+	font-style: italic;
+	font-weight: bold;}
+#MembershipOptionsTable {width: 500px;
+	margin: auto;}
+#MembershipOptionsTable tr {text-align: center;}
+#MembershipOptionsTable td {width: 100px;
+	margin: 38px;}
+#MembershipOptionsTable td .BCButton {padding-left: 35px;
+	padding-right: 0;}
+#MembershipOptionsTable .BCText {padding-right: 20px;
+	width: 150px;
+	text-align: left;}
+#BuildersClubContainer #LeftColumn #WindowsOnlyWarning {padding-left: 10px;
+	padding-bottom: 1px;}
+#BuildersClubContainer #RightColumn {margin: 10px 0 10px 5px;
+	width: 290px;
+	float: right;}
+#RightColumn #ManageAccount #CancelMembershipButton {text-align: center;}
+#UserContainer {font-family: Verdana, Sans-Serif;}
+#UserContainer #LeftBank {float: left;
+	text-align: center;
+	width: 444px;}
+#UserContainer #RightBank {float: right;
+	text-align: center;
+	width: 444px;}
+#UserContainer #LeftBank #UserPageLargeRectangleAd {border: none;}
+#UserAssetsPane {clear: both;
+	margin: 10px 0 0 0;
+	text-align: center;}
+#UserAssetsPane {margin-bottom: 10px;}
+#UserAssetsPane #UserAssets h4 {background-color: #ccc;
+	border-bottom: solid 1px #000;
+	color: #333;
+	font-family: Comic Sans MS, Verdana, Sans-Serif;
+	margin: 0;
+	text-align: center;}
+#Friends {margin-top: 10px;}
+#Friends h4 {font-size: 10pt;
+	font-weight: bold;
+	line-height: 1em;
+	margin-bottom: 5px;
+	margin-top: 5px;}
+.Friend {width: 125px;
+	height: 180px;
+	overflow: hidden;}
+.Friend .Avatar {text-align: center;}
+.Friend .Summary, .Friend .Options {margin-top: 5px;
+	text-align: center;}
+#UserContainer .CollapsiblePanelHint {color: #999;
+	padding: 5px;
+	text-align: center;}
+#UserContainer #AssetsMenu {float: left;
+	width: 158px;}
+#UserContainer #AssetSearchOption {float: left;}
+#UserContainer #AssetUploadOption {float: right;}
+#UserContainer #AssetsList {clear: both;}
+#UserAssetsPane .AssetsMenuItem {border: solid 1px #777;
+	margin: 15px;
+	padding: 3px 10px;
+	width: 100px;}
+#UserAssetsPane .AssetsMenuItem:hover {border: solid 1px #000;
+	cursor: pointer;
+	margin: 15px;
+	width: 100px;}
+#UserAssetsPane .AssetsMenuItem_Selected {background-color: #6e99c9;
+	border: solid 1px #000;
+	margin: 15px;
+	padding: 3px 10px;
+	width: 100px;}
+#UserAssetsPane .AssetsMenuButton {color: #777;
+	font: normal 14px/normal Verdana, sans-serif;}
+#UserAssetsPane .AssetsMenuButton:hover {color: #000;
+	text-decoration: none;}
+#UserAssetsPane .AssetsMenuButton_Selected {color: #fff;
+	font: normal 14px/normal Verdana, sans-serif;
+	text-decoration: none;}
+#UserPlaces .Place .PlayOptions .Button {border-color: #333;
+	color: #333;
+	margin: 0 3px;}
+#UserPlaces .Place .PlayOptions .Button:hover {background-color: #6e99c9;
+	color: #fff;}
+#UserContainer #AssetsContent {float: left;
+	font-family: Verdana, Sans-Serif;
+	margin: 0 auto;
+	margin-left: 28px;
+	margin-right: 28px;
+	min-width: 0;
+	padding-bottom: 10px;
+	padding-left: 0;
+	padding-right: 0;
+	position: relative;
+	text-align: left;
+	width: 662px;}
+#UserContainer #AssetsContent .HeaderPager, #UserContainer #FavoritesContent .HeaderPager, #UserContainer #AssetsContent .FooterPager, #UserContainer #FavoritesContent .FooterPager {clear: both;
+	margin: 0 12px 0 10px;
+	padding: 2px 0;
+	text-align: center;}
+#UserContainer #AssetsContent .HeaderPager, #UserContainer #FavoritesContent .HeaderPager {margin-bottom: 10px;}
+#UserContainer #AssetsContent .HeaderPager .Label, #UserContainer #FavoritesContent .HeaderPager .Label, #UserContainer #AssetsContent .FooterPager .Label, #UserContainer #FavoritesContent .FooterPager .Label {font-size: 1em;
+	vertical-align: middle;}
+#UserContainer .Asset {margin: 0 10px 15px 10px;
+	vertical-align: top;
+	width: 112px;}
+#UserContainer .Asset .AssetThumbnail {border: solid 1px #000;
+	height: 110px;
+	position: relative;
+	text-align: center;
+	width: 110px;}
+#UserContainer .Asset .AssetDetails {overflow: hidden;
+	padding: 2px 0 6px 0;
+	text-align: left;
+	width: 110px;}
+#UserContainer .AssetName a {font-size: .9em;
+	font-weight: bold;
+	line-height: 1.5em;
+	vertical-align: top;}
+#UserContainer .Label, #UserContainer .Detail, #UserContainer .DetailHighlighted, #UserContainer .PriceInRobux, #UserContainer .PriceInTickets {font-size: .8em;}
+#UserContainer .DetailHighlighted {color: Red;
+	font-weight: bold;}
+#UserContainer .PriceInRobux {color: Green;
+	font-weight: bold;}
+#UserContainer .PriceInTickets {color: #fbb117;
+	font-weight: bold;}
+.StandardBox, .StandardBoxWhite, .StandardBoxGray {float: none;
+	border: 2px solid #6e99c9;
+	background-color: White;
+	padding: 10px 10px 10px 10px;
+	margin-bottom: 10px;
+	display: block;}
+.StandardBoxWhite {*zoom: 1;}
+.StandardBoxGrey {float: inherit;
+	border: 2px solid #6e99c9;
+	background-color: #A6A6A6;
+	padding: 10px 10px 10px 10px;
+	margin-bottom: 10px;
+	display: block;}
+.StandardBoxHeader, .StandardBoxHeaderGray, .StandardTabWhite, .StandardTabGray, .StandardTabGrayActive {float: none;
+	background-color: #6e99c9;
+	text-align: center;
+	color: White;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 5px 12px 5px 12px;
+	display: block;
+	*display: inline;
+	*zoom: 1;}
+.StandardBoxHeaderGray {background-color: #A6A6A6;}
+.StandardTabWhite, .StandardTabGrayActive, .StandardTabGray {display: inline-block;
+	height: 26px;
+	z-index: 2;
+	position: relative;
+	*display: inline;
+	*zoom: 1;}
+.StandardTabWhite span {*padding-right: 14px;}
+.StandardTabGray {background-color: #b4cde9;
+	margin-right: 4px;}
+.StandardTabGrayActive {margin-right: 4px;}
+.StandardTabGray a, .StandardTabGrayActive a {color: White;}
+.StandardTabGray a:hover, .StandardTabGrayActive a:hover {text-decoration: none;}
+.StandardTabGray:hover, .StandardTabGrayActive {background-color: #6c98cb;
+	color: White;}
+#GroupsPeopleContainer .StandardTabGray, #GroupsPeopleContainer .StandardTabGrayActive {position: relative;
+	top: -4px;}
+.Column1a .StandardBox {width: 266px;}
+.Column1a .StandardBoxHeader, .Column1a .StandardBoxHeaderGray {width: 266px;}
+.Column2a .StandardBox {width: 576px;}
+.Column2a .StandardBoxHeader, .Column2a .StandardBoxHeaderGray {width: 576px;}
+.Column1b .StandardBox {width: 166px;}
+.Column1b .StandardBoxHeader, .Column1b .StandardBoxHeaderGray {width: 166px;}
+.Column2b .StandardBox {width: 466px;}
+.Column2b .StandardBoxHeader, .Column2b .StandardBoxHeaderGray {width: 466px;}
+.Column3b .StandardBox {width: 166px;}
+.Column3b .StandardBoxHeader, .Column3b .StandardBoxHeaderGray {width: 166px;}
+.Column1c .StandardBox {width: 556px;}
+.Column1c .StandardBoxHeader, .Column1c .StandardBoxHeaderGray {width: 556px;}
+.Column2c .StandardBox {width: 266px;}
+.Column2c .StandardBoxHeader, .Column2c .StandardBoxHeaderGray {width: 266px;}
+.Column1d .StandardBox, .Column1d .StandardBoxWhite {width: 416px;}
+.Column1d .StandardBoxHeader, .Column1d .StandardBoxHeaderGray, .Column1d .StandardTabWhite {width: 416px;}
+.Column2d .StandardBox, .Column2d .StandardBoxWhite {width: 416px;}
+.Column2d .StandardBoxHeader, .Column2d .StandardBoxHeaderGray, .Column2d .StandardTabWhite {width: 416px;}
+.Column1e .StandardBox {width: 136px;}
+.Column1e .StandardBoxHeader, .Column1e .StandardBoxHeaderGray {width: 126px;}
+.Column2e .StandardBoxGray {width: 726px;
+	padding: 5px;}
+.Column2e .StandardBoxHeader, .Column2e .StandardBoxHeaderGray {width: 356px;}
+.Column1f .StandardBox {width: 356px;}
+.Column1f .StandardBoxHeader, .Column1f .StandardBoxHeaderGray {width: 356px;}
+.Column2f .StandardBox {width: 476px;}
+.Column2f .StandardBoxHeader, .Column2f .StandardBoxHeaderGray {width: 476px;}
+#BuildersClubContainer {margin-left: -5px;}
+#CatalogContainer>.StandardBox {padding: 3px 6px 8px 5px;}
+.Assets .StandardBoxHeader {width: 660px;}
+.Assets .StandardBox {width: 660px;}
+#BCOnlyPlaces .StandardBoxHeaderGray {width: 399px;
+	height: 33px;
+	padding: 0 7px 0 16px;}
+#BCOnlyPlaces .StandardBox {padding: 5px;}
+.Column2b .StandardBoxGrey {width: 454px;}
+#CancelBuildersClubContainer h2 {font-family: Arial, Helvetica, Sans-Serif;
+	color: #444;
+	font-size: 32px;
+	font-weight: bold;
+	letter-spacing: 0;}
+#BuildersClubContainer #LeftColumn {margin-left: 5px;}
+#BuildersClubContainer #RightColumn {margin-right: 5px;
+	font-family: Arial, Helvetica, Sans-Serif;
+	font-size: 14px;
+	color: #000;
+	width: 285px;}
+#BuildersClubContainer #RightColumn .StandardBox {width: 273px;}
+#BuildersClubContainer #RightColumn .StrongRed {font-family: Arial, Helvetica, Sans-Serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #f00;}
+#BuildersClubContainer #RightColumn h3 {font-weight: bold;
+	font-family: Arial, Helvetica, Sans-Serif;
+	font-size: 18px;
+	color: #333;}
+#BuildersClubContainer #RightColumn .RefCode {font-weight: bold;
+	font-family: Arial, Helvetica, Sans-Serif;
+	font-size: 30px;
+	color: #666;
+	display: block;
+	margin-bottom: 16px;}
+.StandardBox {padding: 5px;
+	margin-bottom: 8px;
+	background: url(../../Images/cssspecific/rbx2/standardBox_01_bkg.png) top repeat-x #fff;
+	border: 1px solid #aaa;
+	z-index: 0;}
+.StandardBoxHeader, .StandardBoxHeaderGray {height: 33px;
+	padding: 0 7px 0 5px;
+	text-align: left;
+	z-index: 2;
+	background: url(../../Images/cssspecific/rbx2/tab_black_33h_t1.png) no-repeat left top;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+	color: #fff;
+	z-index: 0;}
+.StandardBoxHeaderGray {background: url(../../Images/cssspecific/rbx2/tab_gray_33h_t1.png) no-repeat left top;}
+.StandardBoxHeader span, .StandardBoxHeaderGray span {display: block;
+	width: 100%;
+	height: 29px;
+	padding: 5px 5px 0 2px;
+	background: url(../../Images/cssspecific/rbx2/tab_black_33h_t2.png) no-repeat right top;
+	overflow: hidden;}
+.StandardBoxHeaderGray span {background: url(../../Images/cssspecific/rbx2/tab_gray_33h_t2.png) no-repeat right top;}
+.StandardTabWhite {background: url(../../Images/cssspecific/rbx2/tab_white_26h_t1.png) no-repeat left top;
+	padding: 0 4px;
+	float: none;
+	text-align: left;}
+.StandardTabWhite span {display: block;
+	width: 100%;
+	*width: 115%;
+	height: 26px;
+	padding: 5px 5px 0 9px;
+	*padding-right: 14px;
+	background: url(../../Images/cssspecific/rbx2/tab_white_26h_t2.png) no-repeat right top;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #000;
+	font-weight: normal;}
+.StandardBoxWhite {position: relative;
+	top: -1px;
+	background: #fff;
+	border: 1px solid #ccc;
+	padding: 8px;
+	color: Black;}
+.StandardTabGray, .StandardTabGrayActive {position: relative;
+	background: url(../../Images/cssspecific/rbx2/tab_white_31h_t1.png) no-repeat left top;
+	background-position: left 0;
+	height: 31px;
+	padding: 0;
+	text-align: left;
+	cursor: pointer;
+	margin: 0;}
+.StandardTabGray span, .StandardTabGrayActive span {background: url(../../Images/cssspecific/rbx2/tab_white_31h_t2.png) no-repeat right top;
+	background-position: right 0;
+	height: 25px;
+	padding: 6px 16px 0 8px;
+	margin: 0 0 0 4px;
+	color: #333;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	display: block;}
+.StandardTabGray a, .StandardTabGrayActive a {color: #333;}
+.StandardTabGrayActive {background-position: left -62px;}
+.StandardTabGrayActive span {background-position: right -62px;}
+.StandardTabGray:hover {position: relative;
+	background: url(../../Images/cssspecific/rbx2/tab_white_31h_t1.png) no-repeat left top;
+	background-position: left -31px;
+	height: 31px;
+	padding: 0;
+	z-index: 2;
+	text-align: left;
+	margin: 0;}
+.StandardTabGray span:hover {background: url(../../Images/cssspecific/rbx2/tab_white_31h_t2.png) no-repeat right top;
+	background-position: right -31px;
+	height: 25px;
+	padding: 6px 16px 0 8px;
+	margin: 0 0 0 4px;
+	color: #333;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	display: block;}
+.StandardBoxGray {position: relative;
+	top: -2px;
+	padding: 8px 5px;
+	background: url(../../Images/cssspecific/rbx2/standardBox_01_bkg.png) top repeat-x #fff;
+	border: 1px solid #aaa;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace {position: relative;
+	top: 0;
+	width: 155px;
+	height: 50px;
+	border: 1px solid #ccc;
+	margin: 0;
+	padding: 0;
+	margin-left: auto;
+	margin-right: auto;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	background: none;
+	float: none;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace a {position: absolute;
+	width: 43px;
+	padding-left: 18px;
+	background: url(../../Images/cssspecific/rbx2/head_infobox_icons.png) no-repeat 0 0;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace a:hover {text-decoration: none;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .MessageAlert {border: none;
+	background: none;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .MessageAlert a {left: 13px;
+	top: 8px;
+	color: #444;
+	background-position: -2px 0;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .MessageAlert a:hover {color: #aaa;
+	background-position: -2px -20px;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .RobuxAlert {border: none;
+	background: none;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .RobuxAlert a {left: 13px;
+	top: 28px;
+	color: #080;
+	background-position: -2px -41px;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .RobuxAlert a:hover {color: #0d0;
+	background-position: -2px -61px;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .FriendsAlert {border: none;
+	background: none;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .FriendsAlert a {left: 79px;
+	top: 8px;
+	color: #05b;
+	background-position: -2px -81px;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .FriendsAlert a:hover {color: #0cf;
+	background-position: -2px -101px;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .TicketsAlert {border: none;
+	background: none;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .TicketsAlert a {left: 79px;
+	top: 28px;
+	color: #a61;
+	background-position: -2px -121px;}
+.StandardBox .SmallHeaderAlertSpaceLeft .AlertSpace .TicketsAlert a:hover {color: #fb6;
+	background-position: -2px -141px;}
+.StandardBox .SmallHeaderAlertSpaceLeft div.icons {display: none;}
+.StandardBox .SmallHeaderAlertSpaceLeft div.message_icon {display: none;}
+.StandardBox .SmallHeaderAlertSpaceLeft div.friends_icon {display: none;}
+.StandardBox .SmallHeaderAlertSpaceLeft div.robux_icon {display: none;}
+.StandardBox .SmallHeaderAlertSpaceLeft div.tickets_icon {display: none;}
+#GroupsPeopleContainer .StandardTabGray, #GroupsPeopleContainer .StandardTabGrayActive {position: relative;
+	top: 2px;}
+.Column2e .StandardBoxHeaderGray {margin: 0;
+	width: 726px;}
+.Column2e .StandardBoxGray {width: 726px;}
+.ShadowedStandardBox .Header {height: 33px;
+	padding: 0 7px 0 5px;
+	text-align: left;
+	z-index: 2;
+	background: url(../../Images/cssspecific/rbx2/tab_black_33h_t1.png) no-repeat left top;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+	color: #fff;}
+.ShadowedStandardBox .Header span {display: block;
+	width: 100%;
+	height: 29px;
+	background: url(../../Images/cssspecific/rbx2/tab_black_33h_t2.png) no-repeat right top;
+	overflow: hidden;
+	height: 26px;
+	padding: 7px 4px 0 3px;}
+.ShadowedStandardBox .Content {padding: 5px;
+	margin-bottom: 8px;
+	background: url(../../Images/cssspecific/rbx2/standardBox_01_bkg.png) top repeat-x #fff;
+	border: 1px solid #aaa;}
+.Column1d .StandardTabWhite, .Column2d .StandardTabWhite {width: auto;}
+/* ---- Inbox.css ---- */
+#InboxContainer
+{
+    margin-top: 10px;
+}
+
+#InboxContainer #InboxPane
+{
+    float: left;
+    position:relative;
+    top:-2px;
+    width: 700px;
+}
+
+.InboxDateField
+{
+    text-align:right;
+}
+
+#InboxContainer h2
+{
+	font-family: Verdana, Sans-Serif;
+	font-size: 2.5em;
+	font-weight: normal;
+	letter-spacing: 0.5em;
+	line-height: 1em;
+	margin: 0 0 10px 0;
+	padding: 0;
+}
+
+#InboxContainer #Inbox
+{
+	border: solid 1px #000;
+}
+
+#InboxContainer .Buttons
+{
+	margin: 10px 0;
+	text-align: center;
+}
+
+#InboxContainer .InboxHeader
+{
+	background: url(../../Images/topNav_black.png);
+    border: none;
+	color: #fff;
+	font: 1.2em/normal Verdana, sans-serif;
+	font-weight: lighter;
+	letter-spacing: 0.15em;
+    text-align: center;	
+}
+
+#InboxContainer .InboxRow
+{
+	cursor: pointer;
+	font: normal 1em/normal Verdana, sans-serif;
+}
+
+#InboxContainer .InboxRow_Unread
+{
+	cursor: pointer;
+	font: bold 1em/normal Verdana, sans-serif;
+}
+
+#InboxContainer .InboxRow:hover,
+#InboxContainer .InboxRow_Unread:hover,
+#InboxContainer .SystemAlertMessage:hover,
+#InboxContainer .SystemAlertMessage_Unread: hover
+{
+	background-color: #6e99c9;
+	color: #fff;
+}
+
+#InboxContainer .InboxHeader a,
+#InboxContainer .InboxPager a,
+#InboxContainer .InboxRow:hover a,
+#InboxContainer .InboxRow_Unread:hover a,
+#InboxContainer .SystemAlertMessage:hover a,
+#InboxContainer .SystemAlertMessage_Unread:hover a
+{
+	color: #fff;
+}
+
+#InboxContainer .InboxPager
+{
+	background-color: #999;
+	font: bold 1.2em/normal Verdana, sans-serif;
+	letter-spacing: 0.15em;
+	text-align: center;
+}
+
+#InboxContainer .SystemAlertMessage,
+#InboxContainer .SystemAlertMessage_Unread
+{
+    cursor: pointer;
+	font: normal 1em/normal Verdana, sans-serif;
+}
+#InboxContainer .SystemAlertMessage_Unread
+{
+	font: bold 1em/normal Verdana, sans-serif;
+}
+#Messages .SystemAlertMessage div.RobloxMailIcon, #InboxContainer .SystemAlertMessage_Unread div.RobloxMailIcon
+{
+    background : url(../../Images/Icons/roblox_16x15.png) no-repeat;
+    height:15px;
+    width:16px;
+    float:left;
+    margin-right:3px;
+}
+#Messages .InboxRow_Unread div.RobloxMailIcon, #Messages .InboxRow div.RobloxMailIcon 
+{
+    display:none;
+}
+
+/* ---- Message.css ---- */
+.MessageContainer
+{
+}
+
+.MessageContainer .MultilineTextBox
+{
+	min-height: 50px;
+}
+
+.MessageContainer #AdsPane
+{
+	float: left;
+	width: 160px;
+}
+
+.MessageContainer #MessagePane
+{
+	float: left;
+	margin: 0 0 0 60px;
+	width: 650px;
+}
+
+.MessageContainer h3
+{
+	text-align: left;
+	width: 622px;
+}
+
+.MessageContainer #MessagePane .Buttons
+{
+	width: 622px;
+}
+
+.MessageContainer #MessagePane .Buttons .Button
+{
+	margin: 10px 0 0 10px;
+    display: inline-block;
+}
+
+.MessageContainer .TextBox
+{
+}
+
+.MessageContainer .Label
+{
+	font-weight: bold;
+	padding: 6px 0 3px 0;
+}
+
+.MessageContainer .MessageReaderContainer
+{
+	border: solid 1px #000;
+	padding: 10px;
+	width: 95%;
+}
+
+.MessageReaderContainer #Message
+{
+	text-align: left;
+}
+
+#Message #DateSent
+{
+	text-align: left;
+}
+
+#Message #Author
+{
+	margin: 0;
+	text-align: left;
+}
+
+#Message #Subject
+{
+	display:inline-block;
+	*display: inline;
+	font-weight: bold;
+	margin: 0;
+	text-align: center;
+	overflow: hidden;
+	width:350px;
+	*zoom: 1;
+}
+
+#Message .Body
+{
+	text-align: left;
+	vertical-align: top;
+}
+
+#MessageEditorContainer
+{
+	border: solid 1px #000;
+	padding: 10px;
+	width: 95%;
+}
+.EmptyInbox
+{
+    text-align:center;
+    margin:20px 0px;
+}
+.MessageEditor
+{
+	text-align: left;
+}
+
+.MessageEditor #From
+{
+	text-align: left;
+	width: 39%;
+}
+
+.MessageEditor #To
+{
+	margin: 5px 0 0 0;
+	text-align: left;
+	width: 39%;
+}
+
+.MessageEditor .CannedResponsesPanel
+{
+	background-color: #eee;
+	border: solid 1px #000;
+	margin: 30px 0;
+	width: 200px;
+}
+
+.MessageEditor .CannedResponsesPanel h4
+{
+	background-color: #ccc;
+	border-bottom: solid 1px #000;
+	font-size: 1.3em;
+	margin: 0;
+	text-align: center;
+	display: block;
+}
+
+.MessageEditor #CannedResponses
+{
+	margin: 0;
+	padding: 5px 0;
+	width: 200px;
+}
+
+.MessageEditor .CannedResponse
+{
+	margin: 0;
+	padding: 7px 5px;
+	text-align: center;
+	width: 190px;
+}
+
+.MessageEditor #CannedResponses .Button
+{
+	padding: 3px 5px;
+}
+
+
+.MessageEditor .Body
+{
+	text-align: left;
+	vertical-align: top;
+}
+
+.MessageContainer #Confirmation h3
+{
+	text-align: left;
+	width: 422px;
+}
+
+.MessageContainer #Confirmation .Buttons
+{
+	width: 422px;
+}
+
+.MessageContainer #Confirmation #Message
+{
+	border: solid 1px #000;
+	padding: 10px;
+	width: 95%;
+}
+
+
+.MessageReaderContainer #Message
+{
+	float: left;
+	text-align: left;
+}
+
+.ReportAbuse 
+{
+    text-align:left;
+}
+
+.ReportAbuse .AbuseButton a {
+    color:#FF9999;
+    background:none;
+    padding-left: 16px;
+    padding-bottom: 2px;
+}
+
+.ReportAbuse .AbuseButton a:hover {
+    background:url(../../Images/cssspecific/rbx2/abuse.png) no-repeat scroll 0 2px transparent;
+    color:#FF0000;
+}
+
+.ReportAbuse img {
+    display:none;
+}
+/* ---- Trade.css ---- */
+
+#ButtonCancel, #ButtonCancel:hover, #ButtonYes, #ButtonYes:hover {
+  cursor: pointer;
+  width: 176px;
+  float: left;
+  height: 50px; }
+
+#ButtonYes, #ButtonYes:hover {
+  background: url(../../Images/Buttons/yes-gray2.png) top;
+  margin-right: 10px;
+  width: 100px; }
+
+#ButtonYes:hover {
+  background: url(../../Images/Buttons/yes-gray2.png) bottom; }
+
+#ButtonCancel, #ButtonCancel:hover {
+  background: url(../../Images/Buttons/cancel-blue2.png) top;
+  width: 101px; }
+
+#ButtonCancel:hover {
+  background: url(../../Images/Buttons/cancel-blue2.png) bottom; }
+
+.InventoryItemContainerInner {
+  width: 60px;
+  z-index: 1; }
+
+.InventoryItemContainerInner, .InventoryItemContainerInner:hover {
+  background: #FFF;
+  border: 0;
+  outline: 0;
+  overflow: visible;
+  position: absolute;
+  margin: 0;
+  padding: 0; }
+
+.InventoryItemContainerInner:hover {
+  position: absolute; }
+
+.SmallInventoryItem {
+  background: #FFF;
+  border: 1px solid #ccc;
+  height: 60px;
+  position: relative;
+  width: 60px; }
+
+.SmallInventoryItem .InventoryItemContainerInner {
+  height: 60px;
+  position: relative;
+  width: 60px; }
+
+.SmallInventoryItem .BuildersClubOverlay {
+  width: 40px; }
+
+.SmallInventoryItem:hover .InventoryItemContainerInner {
+  border: 1px solid #ccc;
+  height: 178px;
+  left: -25px;
+  top: -28px;
+  width: 109px;
+  z-index: 6; }
+
+.LargeInventoryItem .InventoryItemContainerInner {
+  height: 94px;
+  width: 76px; }
+
+.LargeInventoryItem:hover .InventoryItemContainerInner {
+  border: 1px solid #ccc;
+  height: 205px;
+  left: -17px;
+  top: -25px;
+  width: 109px;
+  z-index: 6; }
+
+.LargeInventoryItem, .RobuxTradeRequestItem {
+  background: #FFF;
+  border: 1px solid #ccc;
+  height: 94px;
+  position: relative;
+  width: 76px; }
+
+.RobuxTradeRequestItem {
+  float: left;
+  top: 4px;
+  height: 94px;
+  margin: 0 2px; }
+
+#TradeRequest .LargeInventoryItem:hover .InventoryItemContainerInner {
+  border: 1px solid #ccc;
+  height: 185px;
+  left: -17px;
+  top: -25px;
+  width: 109px;
+  z-index: 6; }
+
+.InventoryItemName {
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  width: 69px; }
+
+.BuildersClubOverlay {
+  position: relative;
+  left: 0px;
+  top: -20px; }
+
+.SmallInventoryItem .InventoryItemName {
+  display: none;
+  height: 30px;
+  padding: 0 2px;
+  overflow: hidden;
+  margin: auto; }
+
+.LargeInventoryItem .InventoryItemName {
+  display: block;
+  height: 30px;
+  overflow: hidden;
+  text-align: center;
+  line-height: 14px; }
+
+.InventoryItemContainerInner:hover .InventoryItemName {
+  display: block;
+  text-align: center;
+  width: 96%;
+  margin: 0; }
+
+.InventoryItemContainerInner:hover .BuildersClubOverlay {
+  top: -110px;
+  left: 5px; }
+
+.ItemInfoLabel, .InventoryItemContainerInner:hover .ItemInfoLabel {
+  color: #666;
+  display: none;
+  font-size: 9px;
+  margin-left: 6px;
+  margin-right: 3px;
+  text-align: left;
+  padding: 0; }
+
+.ItemInfoData, .InventoryItemContainerInner:hover .ItemInfoData {
+  color: #006c00;
+  display: none;
+  font-size: 9px;
+  margin-left: 2px;
+  padding: 0; }
+
+.InventoryItemContainerInner .InventoryItemSerial,
+.InventoryItemContainerInner .SerialNumberTotal {
+  color: #000;
+  display: none;
+  font-size: 9px;
+  margin: 0;
+  padding: 0; }
+
+.InventoryItemContainerInner .HoverContent {
+  display: block; }
+
+.InventoryItemContainerInner .ItemImg {
+  border: 0;
+  height: 60px;
+  outline: 0;
+  text-align: center;
+  width: 60px;
+  padding: 0; }
+
+.LargeInventoryItem:hover .ItemImg {
+  height: 83px;
+  width: 83px;
+  margin: 5px 5px 5px 2px; }
+
+.SmallInventoryItem:hover .ItemImg {
+  margin-left: -1px;
+  margin-top: -3px; }
+
+.InventoryItemContainerOuter {
+  float: left;
+  padding: 4px 2px; }
+
+div.ItemLinkDiv {
+  height: 60px;
+  width: 60px;
+  margin: auto; }
+
+#TradeConfirmModal {
+  padding: 5px; }
+
+.LargeInventoryItem:hover div.ItemLinkDiv {
+  height: 88px;
+  width: 88px; }
+
+div.TradeItemSilverButtonContainer, .InventoryItemContainerInner:hover div.TradeItemSilverButtonContainer {
+  display: none;
+  left: 5px;
+  padding-top: 6px;
+  width: 94px;
+  margin: auto; }
+
+.InventoryItemContainerInner:hover div.TradeItemSilverButtonContainer {
+  display: block; }
+
+a.TradeItemSilverButton, a.TradeItemSilverButton:hover, a.TradeItemSilverButtonDisabled {
+  background: url(../../Images/Buttons/btn-small_silver_tile.png) repeat-x top;
+  border: 1px solid #a7a7a7;
+  color: #000;
+  display: block;
+  font-size: 11px;
+  font-weight: normal;
+  height: 15px;
+  padding-top: 1px;
+  text-align: center;
+  text-decoration: none !important; }
+
+a.TradeItemSilverButton:hover {
+  background-position: bottom;
+  border-color: #777; }
+
+a.TradeItemSilverButtonDisabled {
+  border: 1px solid #CCC;
+  color: #A7A7A7;
+  cursor: default; }
+
+.SendTrade, .SendTrade:hover {
+  background: url(../../Images/Buttons/sendTrade2.png) top;
+  cursor: pointer;
+  height: 50px;
+  width: 176px;
+  margin: 50px auto 10px; }
+
+.SendTrade:hover {
+  background: url(../../Images/Buttons/sendTrade2.png) bottom; }
+
+.TradeDivider {
+  border-top: 1px solid #A7A7A7;
+  height: 15px;
+  margin-left: 5px;
+  width: 574px; }
+
+.ErrorText {
+  font-size: 12px;
+  font-weight: normal;
+  text-align: left; }
+
+.ErrorTextContainer {
+  background-color: #FAE5E5;
+  border: 1px solid #C00;
+  width: 258px;
+  margin-left: 20px;
+  margin-top: 5px;
+  padding: 5px;
+  display: none;
+  float: left; }
+
+.ModalButtonContainer {
+  margin: 0px 102px 0px 102px;
+  height: 60px; }
+
+.BlankItem {
+  background: #FFF;
+  border: 1px solid #ccc;
+  float: left;
+  height: 60px;
+  width: 60px;
+  margin: 4px 2px 0; }
+
+.BlankItem.LargeInventoryItem {
+  background: #FFF;
+  border: 1px solid #ccc;
+  height: 94px;
+  position: relative;
+  width: 73px;
+  margin: 4px 2px 0; }
+
+.MissingItemContainer {
+  border: 1px solid #ccc;
+  height: 93px;
+  position: relative;
+  width: 73px;
+  float: left;
+  margin: 4px 2px 0; }
+
+.MissingItem {
+  height: 80px;
+  width: 60px;
+  background: url(../../Images/missing_user_asset.png) no-repeat;
+  margin: 5px auto; }
+
+.MissingItem.Deleted {
+  background: url(../../Images/deleted_user_asset.png) no-repeat; }
+
+.RBXImg {
+  margin: 0 2px;
+  position: relative;
+  top: 2px; }
+
+.OfferValue, .RobuxCost {
+  color: #006800;
+  margin-right: 5px;
+  font-weight: bold; }
+
+.OfferValueContainer {
+  clear: both;
+  font-size: 11px;
+  text-align: right;
+  display: inline;
+  float: right;
+  margin-top: 2px; }
+
+.Offer .OfferValueContainer {
+  margin-right: 5px; }
+
+.OpenTradeButton, .OpenTradeButton:hover {
+  background: url(../../Images/Buttons/tradeItems.png) top;
+  cursor: pointer;
+  float: right;
+  height: 23px;
+  margin-right: 10px;
+  width: 91px; }
+
+.OpenTradeButton:hover {
+  background: url(../../Images/Buttons/tradeItems.png) bottom; }
+
+#ButtonAcceptTrade, #ButtonAcceptTrade:hover, #ButtonDeclineTrade, #ButtonDeclineTrade:hover {
+  margin-right: 5px;
+  cursor: pointer; }
+
+#ButtonCancelTrade, #ButtonCancelTrade:hover {
+  cursor: pointer;
+  margin-left: 5px; }
+
+div#TradeRequest {
+  width: 593px;
+  padding: 5px; }
+
+#TradeRequest div.ActionButtonContainer {
+  padding-bottom: 10px;
+  margin: 30px auto -3px auto;
+  text-align: center; }
+
+#TradeRequest .ButtonOK, #TradeRequest .ButtonOK:hover {
+  float: left;
+  cursor: pointer;
+  position: relative; }
+
+#TradeRequest div.ReviewButtonContainer {
+  padding-bottom: 10px;
+  text-align: center;
+  margin: 30px auto -3px auto; }
+
+#TradeRequest .ViewButtonContainer {
+  padding-bottom: 10px;
+  width: 100px;
+  margin: 30px auto -3px auto; }
+
+.TradePartnerName {
+  color: #095fb5; }
+
+#TradeRequest .TradeExpiration {
+  color: #666;
+  font-size: 11px;
+  text-align: center; }
+
+#TradeRequest .TradeRequestText {
+  color: #343434;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center; }
+
+#TradeRequest .roblox-avatar-image img[Title] {
+  height: 126px;
+  width: 126px; }
+
+#TradeRequest .roblox-avatar-image img[style] {
+  left: 11px !important;
+  bottom: 6px !important; }
+
+#TradeRequestExpiration.Red {
+  color: #C00; }
+
+#TradeRequest .roblox-avatar-image {
+  margin: 12px auto -12px; }
+
+#TradeRequest .LeftContentContainer {
+  border-right: 1px solid #CCC;
+  display: inline;
+  float: left;
+  height: 321px;
+  width: 148px;
+  margin: 12px 0 0 0; }
+
+#TradeRequest .closeBtnCircle_20h {
+  cursor: pointer;
+  margin-left: 573px;
+  position: absolute;
+  top: 5px; }
+
+#TradeRequest .OfferHeaderWrapper {
+  padding: 5px 0 5px 5px;
+  width: 410px; }
+
+.InventoryContainer .InventoryDropDowns, .TradeWindowContainer .Inventories {
+  float: right; }
+
+.Inventories {
+  width: 580px; }
+
+.InventoryItemContainerInner .RBXImg, div.FooterButtonPlaceHolder, .HeaderButtonPlaceHolder {
+  display: none; }
+
+div.InventoryItemContentContainer {
+  text-align: center;
+  position: relative;
+  margin-left: -2px;
+  padding: 0 2px; }
+
+div.InventoryDropDownContainer.noItems {
+  text-align: center;
+  font-size: 11px; }
+
+div.LargeInventoryItem div.InventoryNameWrapper {
+  overflow: hidden;
+  text-align: center;
+  height: 30px;
+  padding: 0 2px; }
+
+.InventoryItemContainerInner:hover .ItemInfoLabel, .InventoryItemContainerInner:hover .ItemInfoData, .InventoryItemContainerInner:hover .InventoryItemSerial, .InventoryItemContainerInner:hover .SerialNumberTotal, .InventoryItemContainerInner:hover .RBXImg {
+  display: inline; }
+
+a.ViewTradeLink, .AddToOffer, .RequestFor {
+  cursor: pointer; }
+
+.InventoryItemContainerInner .InventoryItemLink, #TradeRequest .roblox-avatar-image div {
+  text-align: center; }
+
+.Offer .OfferRobuxWrapper {
+  height: 50px;
+  margin: 5px auto;
+  text-align: center; }
+
+.Offer img.OfferRobux {
+  position: relative;
+  top: 2px; }
+
+.Offer.TradeSystemRobux .AddRobuxBox {
+  font-weight: normal;
+  font-size: 11px;
+  width: 80px;
+  border: 1px solid #A7A7A7;
+  height: 17px;
+  padding: 1px 0px 0px 3px; }
+
+.Asterisk {
+  font-size: 17px;
+  line-height: 14px;
+  position: relative;
+  top: 5px;
+  font-weight: bold;
+  padding-left: 1px; }
+
+.ValueEntered {
+  display: none;
+  color: #006800;
+  font-weight: bold; }
+
+#TradeRequest .OfferContainer {
+  min-height: 290px;
+  margin-bottom: 5px;
+  margin-top: 7px;
+  width: 417px;
+  float: left; }
+
+#TradeRequest.TradeSystemRobux .RobuxItemAsterisk {
+  display: none;
+  margin-left: 3px; }
+
+#TradeRequest .RobuxAmountWrapper {
+  font-weight: bold;
+  font-size: 10px;
+  text-align: center;
+  height: 27px;
+  padding: 0 2px 10px 2px; }
+
+.FeeNote {
+  margin-left: 5px;
+  font-weight: normal; }
+
+.TradeWindowContainer .FeeNote {
+  margin-left: 20px;
+  margin-top: 5px;
+  font-size: 10px;
+  float: left; }
+
+.Offer .RobuxTopLinePositionElement {
+  display: inline;
+  position: relative;
+  margin: 0 auto; }
+
+#TradeRequest .FeeNote {
+  font-size: 11px; }
+
+#TradeRequest .FeeNoteContainer {
+  padding-top: 40px;
+  height: 17px;
+  padding-bottom: 5px; }
+
+.paging_previous:hover {
+  cursor: pointer;
+  background-position: left 72px; }
+
+.paging_next:hover {
+  cursor: pointer;
+  background-position: left 120px; }
+
+.paging_pagenums_container .selected {
+  font-weight: bold; }
+
+.paging_previous, .paging_next {
+  height: 24px;
+  width: 24px;
+  background: url(../../Images/Sets/blue_arrow_btns_sprite.png);
+  background-position: left top;
+  display: inline-block; }
+
+.InventoryContainer .paging_previous, .InventoryContainer .paging_next {
+  display: inline-block; }
+
+.paging_previous {
+  background-position: left 96px; }
+
+.paging_previous.disabled {
+  cursor: default;
+  background-position: left 24px; }
+
+.paging_next.disabled {
+  background-position: left 48px;
+  cursor: default; }
+
+.paging_wrapper {
+  position: relative;
+  top: -6px;
+  margin: 0px 10px;
+  display: inline-block; }
+
+/* ---- Groups.css ---- */
+textarea {
+    resize:none;
+}
+#GroupsPeopleContainer .StandardTabGrayActive, #GroupsPeopleContainer .StandardTabGray
+{
+    position:relative;
+    cursor:pointer;
+}
+.groupEmblemThumbnail
+{
+    position:relative;
+    top:-4px;
+    cursor:pointer;
+}
+.groupEmblemThumbnail
+{
+    margin-top:10px;
+    margin-bottom: 10px;
+    margin-left: 8px;
+    margin-right: 8px;
+	text-align: center;
+	width: 105px;
+	overflow: hidden;	
+}
+#GroupThumbnails
+{
+    text-align:center;
+    margin-bottom: 10px;
+}
+
+.GroupDescriptionThumbnail
+{
+    float: left;
+    clear: none;
+    margin: 0px 10px 10px 0px;   
+}
+
+.GroupMembers
+{
+    width: 100%;   
+}
+
+.GroupMembers tr
+{
+    padding-bottom: 10px;
+}
+
+.GroupMembers td
+{
+    padding: 0px 5px 10px 5px;
+    text-align: center;
+}
+
+.IncompleteFormField
+{
+    color: red;
+}
+
+.GroupWallPostButton
+{
+    width: 69px;
+    height: 53px;
+    margin: 3px 0px 4px 0px;
+    float: right;
+}
+
+.GroupWallPostText
+{
+    width: 375px;
+    height: 53px;
+    float: left;
+}
+    
+.GroupDescriptionEdit
+{
+    border: none;  
+    border-style:none;
+}
+
+.EmblemAdminImage
+{
+   margin: 0x;
+}
+
+.CreateNewGroup
+{
+    padding-bottom:10px;
+    margin-bottom:10px;
+    display:block;
+    text-align: center;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.CreateNewGroupError
+{
+    color: Red;
+}
+
+.GroupMembersAdminTable tr
+{
+    text-align: left;
+}
+
+.GroupMembersAdminTable td
+{
+    width: 85px;
+    margin: 2px;
+}
+
+#GroupSearchResults thead tr
+{
+    background-color: #B0C4DE;
+    color: Black;
+}
+
+#GroupSearchResults .GroupEmblemImg
+{
+    border: solid 2px #B0C4DE;
+    padding: 2px;
+}
+.selectedSmallThumb
+{
+    border: solid 2px #FFE390;
+}
+.nonSelectedSmallThumb
+{
+    border: solid 2px transparent;
+}
+
+
+#left-column, #mid-column, #right-column
+{
+    float:left;
+    position:relative;
+    min-height: 100px;
+}
+#left-column .StandardBox, #mid-column .StandardBox, #right-column .StandardBox
+{
+    background: url(../../Images/cssspecific/rbx2/standardBox_01_bkg.png) top repeat-x white;
+    color:#000;
+}
+#left-column .StandardBox a, #mid-column .StandardBox a, #right-column .StandardBox a
+{
+    color: #095fb5;
+}
+#left-column .StandardBox .ReportAbuse .AbuseButton a, #mid-column .StandardBox .ReportAbuse .AbuseButton a, #right-column .StandardBox .ReportAbuse .AbuseButton a
+{
+    color:Red;
+}
+#left-column 
+{
+    width: 166px;
+    margin: 0 0 0 5px;
+}
+#right-column 
+{
+    width: 166px;
+}
+#mid-column 
+{
+    width:505px;
+    margin: 0px 20px;
+}
+#mid-column.GroupsPage
+{
+    width:661px;
+}
+#mid-column .ReportAbuse
+{
+    text-align: right;
+}
+#GroupThumbnails
+{
+    overflow:hidden;
+    margin:0;
+    width:100%;
+    position:relative;
+}
+.GroupListItemContainer
+{
+    clear:left;
+    padding: 5px 0px 5px 14px;
+}
+.GroupListItemContainer a
+{
+    display:block;
+}
+.GroupListItemContainer:hover, .GroupListItemContainer.selected:hover
+{
+    background-color: #fff;
+    cursor:pointer;
+}
+.GroupListItemContainer.selected
+{
+    background: url(../../Images/gamesPage_filterArrow.png) 4px center no-repeat;
+}
+.selected .GroupListName
+{
+    font-weight:bold;
+}
+.GroupListImageContainer, .GroupListName
+{
+    float:left;
+    font-size:11px;
+}
+.GroupListName a, .GroupListName a:hover, .GroupListName a:visited 
+{
+    color:#000;
+    text-decoration:none;
+}
+.GroupListImageContainer img
+{
+    background-color: #fff;
+    border: 1px solid #fff;
+}
+.GroupListName
+{
+    overflow:hidden;
+    width:90px;
+    height: 32px;
+    text-align: left;
+    position:relative;
+    padding: 0 7px;
+    padding-top:12px;
+}
+#left-column .StandardBox
+{
+    overflow:hidden;
+    float: left;
+    text-align:center;
+    width:100%;
+    background: #E8E8E8;
+}
+#CreateGroupBtn
+{
+    width: 130px;
+    position:relative;
+    *left:0px;
+    margin: 5px 0 10px 0;
+}
+.GroupPanelContainer
+{
+    overflow:hidden;
+    padding:10px;
+}
+.GroupPanelContainer .left-col
+{
+    width:25%;
+    float:left;
+    margin-right:2%;
+    overflow:hidden;
+}
+.GroupPanelContainer .left-col div
+{
+    text-align:left;
+}
+.GroupPanelContainer .right-col
+{
+    float:left;
+    width:73%;
+}
+.GroupPanelContainer .right-col p
+{
+    overflow:hidden;
+}
+.GroupOwner
+{
+    color:gray;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+.MyRank
+{
+    width: 100%;
+    font-size: 14px;
+    color:Gray;
+    margin-top: 10px;
+}
+.MyRank span
+{
+    color:#000;
+}
+.AdvertiseGroup
+{
+    margin-top:10px;
+}
+.ReportAbuse
+{
+    font-size:11px;
+}
+#GroupRoleSetsMembersPane .ReportAbusePanel
+{
+    float: right;
+    margin-top: 2px;
+}
+.GroupWallPostBtn
+{
+    padding: 3px 6px;
+    position: relative;
+    top: 32px;
+    left: 5px;
+}
+.GroupControlsBox div
+{
+    margin: 6px 0;
+    text-align: center;
+}
+#SearchControls
+{
+    width: 865px;
+    height: 28px;
+    clear: both;
+    display: block;
+    background: #C4C4C4; 
+    border: 1px solid #AAA;
+    margin: 0 0 15px 0;
+    left: 5px;
+    position: relative;
+    padding: 2px 5px;
+    top:-5px;
+}
+.MyGroupsPage #SearchControls
+{
+    top:0px;
+    text-align:center;
+}
+#SearchControls .content
+{
+    text-align:center;
+}
+.content .SearchKeyword
+{
+    width:350px;
+}
+#SearchControls .label
+{
+    font-weight: bold;
+    width: 200px;
+    font-size: 16px;
+    position: relative;
+    top: 1px;
+    margin-right: 7px;
+}
+.ClaimOwnershipPanel
+{
+    border: 2px solid black;
+    padding: 2px;
+    margin-bottom: 10px;
+}
+.GroupListContainer
+{
+    padding:0;
+}
+.JoinGroupDiv
+{
+    margin-top:10px;
+}
+.AlreadyRequestedInvite
+{
+    margin-top: 10px;
+}
+
+.RepeaterImage
+{
+    width:20%;
+    overflow:hidden;
+    float:left;
+}
+.RepeaterImage img
+{
+    clear:both;
+}
+.RepeaterText
+{
+    width:75%;
+    float:right;
+}
+.GroupWall_PostContainer
+{
+    overflow:hidden;
+    width:100%;
+    margin-bottom: 5px;
+}
+input.default
+{
+    font-style:italic;
+    color:#888;
+}
+.GroupWallPane
+{
+    padding-bottom:10px;
+    position:relative;
+    overflow:hidden;
+}
+.GroupWallPane .AlternatingItemTemplateEven
+{
+    background-color:#fff;
+    clear:both;
+    padding:10px;
+}
+.GroupWallPane .AlternatingItemTemplateOdd
+{
+    background-color:#F2F2F2;
+    clear:both;
+    padding:10px;
+}
+.GroupControlsBox input, .GroupControlsBox button
+{
+    width:125px;
+}
+.InsideBoxHeader
+{
+    font-size:18px;
+    font-weight:bold;
+    color:#000;
+    display:block;
+    clear:both;
+    padding: 3px;
+    margin-bottom:5px;
+}
+.StatusView .top
+{
+    background: url(../../Images/Groups/bg-speech_top.png) no-repeat;
+    padding:5px;
+    width:317px;
+}
+.StatusView .bottom
+{
+    background: url(../../Images/Groups/bg-speech_bottom.png) no-repeat;
+    padding:5px;
+    padding-right: 0;
+}
+.StatusView .bottom .content
+{
+    float: left;
+    position: relative;
+    left: 28px;
+}
+.StatusView .ReportAbuse
+{
+    display: inline-block;
+    float: right;
+}
+#GroupDescP
+{
+    word-wrap:break-word;
+}
+#GroupDescP a:hover
+{
+    cursor:pointer;
+}
+.GroupsPeopleTabs_Container
+{
+    display:block;
+    height:30px;
+}
+.GroupsPeopleTabs_Container div
+{
+    float:left;
+    margin:0;
+}
+#GroupRoleSetsMembersPane .loading
+{
+    display:none;
+    height:69px;
+    width:100%;
+    background: url(../../Images/spinners/spinner16x16.gif) no-repeat center;
+    *float:left;
+}
+.GroupWallPane .loading
+{
+    display:none;
+    position:absolute;
+    top:0;
+    height:100%;
+    width:100%;
+}
+.GroupWallPane .loading .content
+{
+    position:absolute;
+    top:0;
+    height:100%;
+    width:100%;
+    background: url(../../Images/ProgressIndicator4.gif) no-repeat center;
+    z-index:1;
+}
+.GroupWallPane .loading .background
+{
+    position:absolute;
+    top:0;
+    height:100%;
+    width:100%;
+    background: #fff;
+}
+div.MyAuditPage
+{
+    *padding-top:10px;
+    position:relative;
+}
+.AuditLog 
+{
+    width: 100%;
+    font-size: 14px;
+}
+.AuditLogContainer
+{    
+    clear:both;
+    border-top:1px solid #afafaf;
+}
+.AuditLogContainer td 
+{
+    margin:0;
+}
+.AuditLogContainer .header td
+{
+    border-right: 1px solid #CCC;
+    border-bottom: 1px solid #ccc;
+    border-top:none;
+    padding:4px;
+}
+.AuditLogContainer .header td.Description
+{
+    border-right: 1px solid #F1F1F1;
+}
+.AuditLogContainer tr.header td
+{
+    font-weight:bold;
+    background-color:#f1f1f1;
+}
+.AuditLogContainer td.User
+{
+    width:126px;
+}
+.AuditLogContainer td.Rank
+{
+    width:80px;
+}
+.AuditLogContainer td.Rank span 
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 80px;
+}
+.AuditLogContainer td.Description
+{
+    width:500px;
+}
+.AuditLogContainer td.Date
+{
+    width:85px;
+}
+#AuditPage 
+{
+    padding-top: 20px;
+}
+.AuditLogContainer .datarow 
+{
+    padding-top: 10px;
+    height: 34px;
+}
+.AuditLogContainer .datarow td
+{
+    padding: 4px;
+    border-bottom:1px solid #ccc;
+}
+.GroupAdmin .StandardBox #searchbox {
+    float: right;
+    max-width:100%;
+}
+
+.GroupAdmin .StandardBox .RoleSetDropDownList {
+    max-width: 220px;
+}
+#AuditPage div.SortsAndFilters {
+    margin: 5px 0 7px 5px;
+    float: right;
+}
+#AuditPage .SortsAndFilters .SortFilterLabel {
+    font: 12px arial;
+    color: black;
+    font-weight: bold;
+}
+#AuditPage .SortsAndFilters select {
+    font-size: 11px;
+}
+#AuditPage .roblox-avatar-image img {
+    width: 13px;
+    height: 7px;
+}
+#AuditPage .roblox-avatar-image img:first-child {
+    width: 24px;
+    height: 24px;
+}
+#AuditPage .roblox-avatar-image
+{
+    float:left;
+}
+#AuditPage td.User span.username {
+    padding-left: 3px;
+    top: 4px;
+    position: relative;
+}
+#AuditPage #PagingContainerDivBottom {
+    margin-top: 30px;
+}
+#AuditPage h1 a, #AuditPage h1 a:hover {
+    color: #363636;
+    text-decoration: none;
+}
+#AuditPage h1 a:hover {
+    cursor: pointer;
+}
+#AuditPage #submitButton { 
+    background: url(../../Images/UI/catalog/bg-27px_silver_btn.png) repeat-x;
+    font: bold 11px Arial,Helvetica,sans-serif;
+    color: black;
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid #aaa;
+    background-position: top left;
+    padding-top: 1px;
+    width: 26px;
+    text-align: center;
+    height: 15px;
+    cursor: pointer;
+    position: relative;
+    margin-left: 3px;
+}
+#AuditPage #usernameTextbox {
+    margin: 0;
+    padding: 0;
+    font-size:11px;
+}
+#AuditPage #userHidden {
+    padding-top: 2px;
+    float: left;
+    display: none;
+    padding-left: 5px;
+}
+#AuditPage .secondLevelHeader {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;    
+}
+#AuditPage .secondLevelHeader a {    
+    color: black;
+}
+#AuditPage .secondLevelHeader a:hover {
+    text-decoration: none;
+}
+#AuditPage div.ErrorMessage {
+    background-color: #FAE4EB;
+    border: 1px solid #CC0005;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    padding: 3px;
+    height: 15px;
+    width: 330px;
+}
+
+/* ---- Membership.css ---- */
+.foo {} 
+
+
+
+
+.AspNet-Login
+{
+
+}
+
+.AspNet-Login label,
+.AspNet-Login input
+{
+}
+
+.AspNet-Login input
+{
+    font-size: 1em;  
+}
+
+.AspNet-Login div
+{
+}
+
+
+.AspNet-Login label em
+{
+    text-decoration: underline;
+    font-style: normal;
+}
+
+.AspNet-Login .AspNet-Login-TitlePanel
+{
+}
+
+.AspNet-Login .AspNet-Login-FailurePanel
+{
+    color: #FF0000;
+}
+
+.AspNet-Login .AspNet-Login-UserPanel,
+.AspNet-Login .AspNet-Login-PasswordPanel,
+.AspNet-Login .AspNet-Login-RememberMePanel,
+.AspNet-Login .AspNet-Login-SubmitPanel
+{
+    padding: 0.25em 0.1em 0 0;
+}
+
+.AspNet-Login .AspNet-Login-UserPanel,
+.AspNet-Login .AspNet-Login-PasswordPanel,
+.AspNet-Login .AspNet-Login-SubmitPanel
+{
+    text-align: left;
+}
+
+.AspNet-Login .AspNet-Login-UserPanel label,
+.AspNet-Login .AspNet-Login-PasswordPanel label,
+#PaneLogin .TextboxLabel	
+{
+    font-weight:bold;
+}
+
+.AspNet-Login .AspNet-Login-UserPanel input,
+.AspNet-Login .AspNet-Login-PasswordPanel input
+{
+    width: 9em;
+}
+
+.AspNet-Login .AspNet-Login-SubmitPanel input
+{
+
+}
+
+.AspNet-Login .AspNet-Login-InstructionPanel,
+.AspNet-Login .AspNet-Login-HelpPanel,
+.AspNet-Login .AspNet-Login-PasswordPanel,
+.AspNet-Login .AspNet-Login-RememberMePanel,
+.AspNet-Login .AspNet-Login-CreateUserPanel,
+.AspNet-Login .AspNet-Login-PasswordRecoveryPanel
+{
+}
+
+#PaneNewUser
+{
+	float: right;
+	width: 170px;
+	background-color: #dcdcdc;
+	padding: 0 22px 22px;
+}
+
+#PaneLogin
+{
+    width: 18em;
+    padding: 0;
+}
+
+#PaneLogin .AspNet-Login div
+{
+	margin: 10px;
+}
+
+#LoginView
+{
+	border: solid 1px Black;
+	width: 150px;
+	height: 250px;
+}
+
+#LoginView h5
+{
+	background-color: #cccccc;
+	border-bottom: solid 1px #000000;
+	margin: 0;
+}
+
+#LoginView #AlreadySignedIn
+{
+	background-color: #eeeeee;
+}
+
+#LoginView .Label
+{
+	font-weight: bold;
+}
+
+#LoginView .Text
+{
+	width: 133px;
+}
+
+#LoginView .AspNet-Login
+{
+	height: 225px;
+	background-color: #eeeeee;
+}
+
+#LoginView .AspNet-Login .AspNet-Login-InstructionPanel,
+#LoginView .AspNet-Login .AspNet-Login-HelpPanel,
+#LoginView .AspNet-Login .AspNet-Login-UserPanel,
+#LoginView .AspNet-Login .AspNet-Login-PasswordPanel,
+#LoginView .AspNet-Login .AspNet-Login-RememberMePanel
+{
+	padding: 3px 5px 3px 5px;
+	text-align: left;
+}
+
+#LoginView .AspNet-Login .AspNet-Login-SubmitPanel, 
+#LoginView .AspNet-Login .AspNet-Create-Account
+{
+	padding: 10px 5px 5px 10px;
+    text-align: center;
+}
+
+#LoginView .AspNet-Login .AspNet-Login-PasswordRecoveryPanel
+{
+	padding: 5px 5px 5px 5px;
+    text-align: center;
+}
+
+#LoginView .AspNet-Login .AspNet-Login-PasswordRecoveryPanel a
+{
+	color: #999999;
+	font: normal 9px/normal Verdana, sans-serif;
+	padding: 5px 5px 5px 5px;
+    text-align: center;
+}
+
+#LoginView .AspNet-Login .AspNet-Login-PasswordRecoveryPanel a:hover
+{
+	color: Blue;
+}
+
+
+
+#Sidebars
+{
+	float: right;
+	width: 250px;
+	
+
+}
+
+#AlreadyRegistered,
+#TermsAndConditions
+{
+	background-color: #eee;
+	border: solid 1px #000;
+	color: #555;
+	font: normal 12px/normal Verdana, sans-serif;
+	margin-top: 10px;
+	padding: 0px 20px 10px 20px;
+}
+
+#AlreadyRegistered h3,
+#TermsAndConditions h3
+{
+	background-color: #ccc;
+	border-bottom: solid 1px #000;
+	color: #333;
+	font-weight: bold;
+	margin: 0 -20px 0 -20px;
+	padding: 4px;
+	text-align: center;
+}
+
+#TermsAndConditions
+{
+	margin-top: 20px;
+}
+
+.Registration
+{
+	background-color: #eee;
+	border: solid 1px #000;
+	color: #555;
+	float: left;
+	margin-top: 10px;
+	width: 620px;
+}
+
+.Registration h2
+{
+	background-color: #ccc;
+	border-bottom: solid 1px #000;
+	color: #333;
+	font-size: x-large;
+	margin: 0;
+	text-align: center;
+}
+
+.Registration h3
+{
+	margin: 10px 0 0 0;
+	text-align: center;
+}
+
+.Registration fieldset
+{
+	font-size: 1.2em;
+	margin: 15px 0 0 0;
+}
+
+.Registration .TextBox
+{
+	vertical-align: middle;
+	width: 150px;
+}
+
+.Registration .Label
+{
+	vertical-align: middle;
+}
+
+.Registration #EnterUsername,
+.Registration #EnterPassword,
+.Registration #EnterEmail,
+.Registration #EnterAgeGroup,
+.Registration #EnterChatMode
+{
+    margin: 0 auto;
+    width: 80%; 
+}
+
+.Registration .PasswordRow,
+.Registration .ConfirmPasswordRow,
+.Registration .EmailRow
+{
+	height: 5em;
+	line-height: 5em;
+    padding: 3px;
+    text-align: right;
+}
+.Registration .UsernameRow
+{
+    height: 5em;
+    line-height: 5em;
+    padding: 3px;
+    text-align: left;
+}
+.Registration .PasswordErrorMessage 
+{
+    font-size: 11px;
+    font-weight: bold;
+}
+.Registration .PasswordRow,
+.Registration .ConfirmPasswordRow
+{
+	height: 3em;
+	line-height: 3em;
+}
+
+.Registration .AgeGroupRow,
+.Registration .ChatModeRow
+{
+	font-size: .9em;
+	margin: 10px 0 10px 100px;
+}
+
+.Registration .Confirm
+{
+    margin: 20px 0 20px 0;
+    text-align: center;
+}
+
+.Registration .Validators
+{
+	margin-left: 9px;
+}
+
+.Registration .Legend
+{
+	color: Blue;
+	margin-left: 9px;
+}
+
+.Registration .Suggestion
+{
+	font: normal .8em/normal Verdana, sans-serif;
+	padding-left: 9px;
+}
+
+.Registration label
+{
+    margin-right: 5px
+}
+
+.AgeOptions
+{
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 490px;
+}
+
+.AgeOptions #Under13,
+.AgeOptions #Over12
+{
+    margin: 0;
+    padding: 0 20px;
+    width: 200px;
+    text-align: center;
+}
+
+.AgeOptions #ParentAccount
+{
+	margin: 0;
+	padding: 0px 0px 0px 40px;
+	width: 400px;
+	text-align: center;
+}
+
+#AgeOptions .Label
+{
+    text-align: center;
+}
+
+/* ---- MyItem.css ---- */
+
+#ItemContainer #Summary #DescriptionLabel{margin-bottom:.4em;margin-top:.7em;}.resetPlacePadding{padding:10px;}#EditItem{color:#555;float:left;margin:0;}#EditItemContainer{margin:0 5px;}#EditItemContainer h2{background-color:#ccc;border-bottom:solid 1px #000;color:#333;font-size:x-large;margin:0;text-align:center;}#EditItemContainer fieldset{font-size:1.2em;margin:0;color:#000;}#EditItemContainer #Confirmation{border:dashed 1px #f00;background-color:#ccc;color:#f00;margin:0 auto;margin-top:10px;padding:10px 5px;width:410px;}#EditItemContainer #ItemName{margin:0 auto;margin-top:10px;padding:0;text-align:left;width:420px;}#EditItemContainer #ItemThumbnail{border:solid 1px #555;height:230px;margin:0 auto;margin-top:10px;padding:0;text-align:center;width:420px;}#EditItemContainer #ItemDescription{margin:0 auto;margin-top:10px;padding:0;text-align:left;width:420px;}#EditItemContainer #Comments,#EditItemContainer #PlaceAccess,#EditItemContainer #PlaceCopyProtection,#EditItemContainer #AllowGear,#EditItemContainer #SetGenres,#EditItemContainer #VersionHistory,#EditItemContainer #PublicDomain,#EditItemContainer #SellThisItem,#EditItemContainer #PlaceReset,#EditItemContainer #PlaceBuildAccess,.MyItemOptions,.Configure.ProductPromotionsContainer{padding:5px;margin:10px;}#EditItemContainer #SellThisItem #Pricing{background-color:#fff;margin:15px 5px 5px 5px;padding:5px;}#EditItemContainer #SellThisItem #Price{height:28px;margin-top:10px;}#EditItemContainer #SellThisItem #Price .TextBox{padding:2px 4px;width:75px;}#EditItemContainer .CopyProtectionRow,#EditItemContainer .EnableCommentsRow,#EditItemContainer .PlayerLimit,#EditItemContainer .PlaceType,#EditItemContainer .PublicDomainRow,#EditItemContainer .SellThisItemRow,#EditItemContainer .ChatSettings,#EditItemContainer .GearSettings,#EditItemContainer .GenreSettings,#EditItemContainer .MembershipLevelSettings{font-size:.9em;margin:10px 35px;}#EditItemContainer .GenreSettings{margin:10px 0;}#EditItemContainer .GearSettings{margin:10px 40px;}#EditItemContainer .PlaceAccessRow,#EditItemContainer .ResetPlaceRow{font-size:.9em;margin:10px 0;text-align:center;}#EditItemContainer .PlaceAccessRow{margin:10px 0 10px 100px;text-align:left;}#EditItemContainer .PlayerLimit .ClassicPlace{float:left;}#EditItemContainer .PlayerLimit .MegaPlace{position:relative;left:20px;}#EditItemContainer .PlayerLimit .ClassicPlace .NumPlayers{margin:5px 0 0 22px;}#EditItemContainer .PricingLabel{float:left;font-weight:bold;line-height:24px;margin-right:5px;text-align:right;width:155px;}#EditItemContainer .PerPurchase{float:left;font-weight:bold;line-height:24px;margin-right:5px;text-align:right;}#EditItemContainer .PricingField_Robux,#EditItemContainer .PricingField_Tickets{float:left;height:24px;margin-left:5px;margin-top:5px;text-align:left;width:120px;}#EditItemContainer #PricingError,#EditItemContainer #PricingErrorMax{display:inline-block;*display:inline;*zoom:1;margin:3px 0 0 10px;}#EditItemContainer .MarketplaceFeeInRobuxLabel,#EditItemContainer .MarketplaceFeeInTicketsLabel,#EditItemContainer .UserProfitInRobuxLabel,#EditItemContainer .UserProfitInTicketsLabel{display:inline-block;*display:inline;*zoom:1;height:18px;}#EditItemContainer .Buttons{margin:10px auto;text-align:center;}#EditItemContainer .Button{border-color:#555;color:#555;cursor:pointer;}#EditItemContainer .Button:hover{background-color:#6e99c9;color:#fff;}#EditItemContainer .Label{font-size:1.2em;margin:0;padding:0;}#EditItemContainer .TextBox{margin:0;padding:5px 10px;width:400px;}#EditItemContainer .Multiline{margin:0;padding:5px 10px;width:400px;}#EditItemContainer .Suggestion{padding-left:9px;}#EditItemContainer .ItemConfigRadioButton{margin-left:20px;}#EditItemContainer .ItemConfigNotice{margin:10px 20px;font-size:.8em;color:red;}
+
+/* ---- User.css ---- */
+
+#UserAssetsPane
+{
+	margin-bottom: 10px;
+}
+
+
+.NoResults
+{
+    line-height: 1.3em;
+	padding: 10px;
+	text-align: center;
+}
+.Badge
+{
+	margin: 10px 10px;
+	text-align: center;
+}
+.Friend
+{
+	width: 125px;
+	height: 180px;
+	overflow:hidden;
+}
+.Friend .Avatar
+{
+	text-align: center;
+}
+.Friend .Summary,
+.Friend .Options
+{
+	margin-top: 5px;
+	text-align: center;
+}
+
+.AdPanel
+{
+	position:relative;
+	margin: 0 auto;
+    z-index: 999;
+}
+
+#BadgesDisplayPane input[disabled],
+#UserGroupsPane input[disabled],
+#FriendRequests input[disabled]
+{
+    background-position: 0 -27px;
+    cursor: default;
+}

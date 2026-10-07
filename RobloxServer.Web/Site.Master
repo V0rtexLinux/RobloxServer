@@ -105,6 +105,12 @@
                             <li><a href="<%: ResolveUrl("~/My/Character.aspx") %>">Character</a></li>
                             <li><a href="<%: ResolveUrl("~/Develop.aspx") %>">Places</a></li>
                             <li><a href="<%: ResolveUrl("~/Browse.aspx") %>">People</a></li>
+                            <li><a href="<%: ResolveUrl("~/Messages.aspx") %>">Messages</a></li>
+                            <li><a href="<%: ResolveUrl("~/Friends.aspx") %>">Friends</a></li>
+                            <li><a href="<%: ResolveUrl("~/Inventory.aspx") %>">Stuff</a></li>
+                            <li><a href="<%: ResolveUrl("~/Groups.aspx") %>">Groups</a></li>
+                            <li><a href="<%: ResolveUrl("~/Trade.aspx") %>">Trade</a></li>
+                            <li><a href="<%: ResolveUrl("~/BuildersClub.aspx") %>">Builders Club</a></li>
                             <li><a href="<%: ResolveUrl("~/Install/Download.ashx?client=Launcher") %>">Download</a></li>
                             <asp:PlaceHolder ID="AdminSubLink" runat="server" Visible="false">
                                 <li><a href="<%: ResolveUrl("~/Admin.aspx") %>">Admin</a></li>

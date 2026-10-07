@@ -13,8 +13,13 @@ feita pela comunidade [RobloxLabs](https://github.com/RobloxLabs/web) (licença 
 | Build | `Develop.aspx` | aba *Places* com a lista no estilo 2013 (Public/Private, visitas, engrenagem) e *Create New Place* |
 | Games | `/Games` | lista de jogos com filtros de ordem e gênero |
 | People | `Browse.aspx`, `/People` | busca de usuários |
+| Catalog | `Catalog.aspx` | grade com categorias (Hats, Hair, Face, Neck, Shoulder, Front, Back, Waist, Shirts, Pants, T-Shirts, Faces, Gear), busca, ordem e detalhe do item com **Download .rbxm** (`Asset/Rbxm.ashx?id=`). Só itens da conta ROBLOX criados entre 2007 e 2013; o admin carrega a lista em **Sync catalog** |
+| Messages | `Messages.aspx` | Inbox, Sent, ler, responder e escrever mensagens |
+| Friends | `Friends.aspx` | pedidos de amizade, lista com status online, adicionar por nome |
+| My Stuff | `Inventory.aspx` | itens que você pegou no Catalog, por categoria, com download do .rbxm |
+| Groups | `Groups.aspx` | criar, buscar, entrar e sair de grupos (limite de grupos pelo Builders Club) |
+| Trade | `Trade.aspx` | troca de 1 item por 1 item entre dois usuários |
+| Builders Club | `BuildersClub.aspx` | BC / Turbo / Outrageous; sem pagamento, quem concede é o admin |
+| Forum | `Forum.aspx` | fórum com categorias, boards, threads e busca |
 
-O submenu de quem está logado segue o de 2013: Home, Profile, Character, Places, People, Download.
-
-Ainda não existem (precisam de sistemas novos no servidor): Catalog, Inventory, Friends, Groups, Forum, Messages,
-Trade e Builders Club.
+Dados dos sistemas novos ficam em `App_Data` (Catalog.xml, Messages.xml, Friendships.xml, Inventory.xml, Groups.xml, GroupMembers.xml, Trades.xml, BuildersClub.xml).

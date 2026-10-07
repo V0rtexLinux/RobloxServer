@@ -1,4 +1,4 @@
-<%@ Page Title="Catalog" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Catalog.aspx.cs" Inherits="RobloxServer.Pages.Catalog" %>
+<%@ Page Title="My Stuff" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Inventory.aspx.cs" Inherits="RobloxServer.Pages.Inventory" %>
 <asp:Content ID="Head" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="~/Content/Pages/Social2013.css" rel="stylesheet" type="text/css" runat="server" />
 </asp:Content>
