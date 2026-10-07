@@ -99,7 +99,7 @@ Cada máquina pareada recebe uma chave própria; o site guarda só o hash em `Ap
 O pareamento exige `https://` (ou rede local), porque a chave viaja na resposta.
 
 **Deixar rodando 24/7:** o `IniciarServidor.exe` e o launcher são apps de janela e precisam de uma sessão do Windows aberta
-(não rodam bem como serviço). Use login automático e uma Tarefa Agendada "ao fazer logon" para cada um, e desligue a suspensão.
+(não rodam bem como serviço). Use login automático e uma Tarefa Agendada "ao fazer logon" para cada um, e desligue a suspensão. O script `hospedagem/instalar-hospedagem.ps1` (PowerShell como Administrador) faz isso tudo: cria as duas tarefas, libera as portas UDP dos bots, desliga a suspensão (inclusive ao fechar a tampa) e, se você passar `-TunnelToken`, instala o Cloudflare Tunnel como serviço. `-Remove` desfaz.
 
 ### Rodando
 
