@@ -159,6 +159,7 @@
     <Content Include="Upgrade.aspx" />
     <Content Include="Content\Pages\Welcome.css" />
     <Content Include="Login\HeaderLogin.ashx" />
+    <Content Include="Login\Facebook.ashx" />
     <Content Include="Images\Forum\board.png" />
     <Content Include="Images\Forum\ico-home.png" />
     <Content Include="Images\Forum\ico-search.png" />
@@ -429,6 +430,9 @@
     </Compile>
     <Compile Include="Login\HeaderLogin.ashx.cs">
       <DependentUpon>HeaderLogin.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Login\Facebook.ashx.cs">
+      <DependentUpon>Facebook.ashx</DependentUpon>
     </Compile>
     <Compile Include="Forum.aspx.cs">
       <DependentUpon>Forum.aspx</DependentUpon>

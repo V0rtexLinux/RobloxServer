@@ -26,6 +26,7 @@
                             <div id="forgotPasswordPanel">Forgot your password? Ask an administrator.</div>
                             <div id="signInButtonPanel">
                                 <asp:Button ID="LoginButton" runat="server" Text="Sign In" CssClass="btn-medium btn-neutral" OnClick="LoginButton_Click" />
+                                <% if (!string.IsNullOrEmpty(RobloxServer.Config.FacebookAppId)) { %><a href="<%: ResolveUrl("~/Login/Facebook.ashx") %>" class="btn-medium btn-neutral" style="margin-left:6px;background:#3b5998;color:#fff">Login with Facebook</a><% } %>
                             </div>
                             <div class="clearFloats"></div>
                         </div>

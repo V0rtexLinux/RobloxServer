@@ -35,6 +35,9 @@ namespace RobloxServer.Data
         /// <summary>"Male", "Female" or null (2013 landing page signup).</summary>
         public string Gender { get; set; }
 
+        /// <summary>Facebook user id when the account signs in with Facebook (null otherwise).</summary>
+        public string FacebookId { get; set; }
+
         /// <summary>Set only if the user consented, at signup, to link their real Roblox username.</summary>
         public bool RobloxVerified { get; set; }
 

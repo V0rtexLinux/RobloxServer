@@ -113,6 +113,18 @@ namespace RobloxServer
         /// <summary>RCC-style shared secret passed as ?apiKey= by game servers (2015 behaviour).</summary>
         public static string ApiKey { get { return Get("ApiKey", ""); } }
 
+        /// <summary>Facebook app id (public). The secret comes from the ROBLOXSERVER_FACEBOOK_SECRET environment variable.</summary>
+        public static string FacebookAppId { get { return Get("FacebookAppId", ""); } }
+
+        public static string FacebookAppSecret
+        {
+            get
+            {
+                string fromEnvironment = System.Environment.GetEnvironmentVariable("ROBLOXSERVER_FACEBOOK_SECRET");
+                return !string.IsNullOrEmpty(fromEnvironment) ? fromEnvironment : Get("FacebookAppSecret", "");
+            }
+        }
+
         public static bool RegistrationOpen { get { return GetBool("RegistrationOpen", true); } }
 
         /// <summary>User names that are site administrators ("Roblox" staff).</summary>
