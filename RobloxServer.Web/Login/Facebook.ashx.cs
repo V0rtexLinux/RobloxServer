@@ -129,7 +129,7 @@ namespace RobloxServer.Handlers.Login
                 string tokenJson = Get(Api + "oauth/access_token?client_id=" + Uri.EscapeDataString(appId)
                     + "&redirect_uri=" + Uri.EscapeDataString(RedirectUri())
                     + "&client_secret=" + Uri.EscapeDataString(secret) + "&code=" + Uri.EscapeDataString(code));
-                string token = Regex.Match(tokenJson, "\"access_token\"\s*:\s*\"([^\"]+)\"").Groups[1].Value;
+                string token = Regex.Match(tokenJson, "\"access_token\"\\s*:\\s*\"([^\"]+)\"").Groups[1].Value;
                 if (token.Length == 0)
                 {
                     Fail("Facebook did not accept the login. Please try again.");
@@ -141,8 +141,8 @@ namespace RobloxServer.Handlers.Login
                     proof = Hex(hmac.ComputeHash(Encoding.UTF8.GetBytes(token)));
                 }
                 string me = Get(Api + "me?fields=id,name&access_token=" + Uri.EscapeDataString(token) + "&appsecret_proof=" + proof);
-                fbId = Regex.Match(me, "\"id\"\s*:\s*\"(\d+)\"").Groups[1].Value;
-                fbName = Regex.Match(me, "\"name\"\s*:\s*\"((?:[^\"\\\\]|\\\\.)*)\"").Groups[1].Value;
+                fbId = Regex.Match(me, "\"id\"\\s*:\\s*\"(\\d+)\"").Groups[1].Value;
+                fbName = Regex.Match(me, "\"name\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"").Groups[1].Value;
                 try { fbName = Regex.Unescape(fbName); } catch (ArgumentException) { }
             }
             catch (Exception ex)
