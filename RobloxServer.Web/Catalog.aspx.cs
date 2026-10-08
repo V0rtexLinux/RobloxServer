@@ -19,11 +19,22 @@ namespace RobloxServer.Pages
 
         protected override string Handle(string verb, long id, User user)
         {
-            if (verb == "buy")
+            if (verb == "buy" || verb == "buytix")
             {
                 CatalogItem item = CatalogService.Items.Find(i => i.Id == id);
                 if (item == null) return "That item does not exist.";
-                if (!SocialStore.AddItem(user.Id, item.Id)) return "You already own this item.";
+                if (SocialStore.Owns(user.Id, item.Id)) return "You already own this item.";
+                int robux = verb == "buy" ? item.Price : 0;
+                int tix = verb == "buytix" ? item.Price * Economy.TixPerRobux : 0;
+                if ((robux > 0 || tix > 0) && !Economy.TryCharge(user.Id, robux, tix))
+                {
+                    return verb == "buy" ? "You do not have enough Robux." : "You do not have enough Tix.";
+                }
+                if (!SocialStore.AddItem(user.Id, item.Id))
+                {
+                    Economy.Grant(user.Id, robux, tix);
+                    return "You already own this item.";
+                }
                 CatalogService.Items.Update(i => i.Id == id, i => i.Sales++);
                 NextUrl = Url("Inventory.aspx");
                 return null;
@@ -149,7 +160,7 @@ namespace RobloxServer.Pages
             sb.Append("<div><b>Category:</b> <a href=\"" + Url("Catalog.aspx?c=" + Uri.EscapeDataString(item.Category ?? "")) + "\">" + E(item.Category) + "</a></div>");
             sb.Append("<div><b>Created:</b> " + item.Created.ToString("MMM d, yyyy", System.Globalization.CultureInfo.InvariantCulture) + "</div>");
             sb.Append("<div><b>Sales:</b> " + item.Sales + "</div>");
-            sb.Append("<div><b>Price:</b> " + (item.Price > 0 ? "R$ " + item.Price + " (free on this server)" : "Free") + "</div>");
+            sb.Append("<div><b>Price:</b> " + (item.Price > 0 ? "R$ " + item.Price + " or T$ " + (item.Price * Economy.TixPerRobux) : "Free") + "</div>");
             sb.Append("<p>" + E(item.Description) + "</p>");
             sb.Append("<div>" + Hidden(user));
             if (user == null)
@@ -162,7 +173,14 @@ namespace RobloxServer.Pages
             }
             else
             {
-                sb.Append(Btn("Get this item", "buy:" + item.Id) + " ");
+                if (item.Price > 0)
+                {
+                    sb.Append(Btn("Buy with R$ " + item.Price, "buy:" + item.Id) + " " + Btn("Buy with T$ " + (item.Price * Economy.TixPerRobux), "buytix:" + item.Id) + " ");
+                }
+                else
+                {
+                    sb.Append(Btn("Get this item", "buy:" + item.Id) + " ");
+                }
             }
             sb.Append("<a class=\"Button\" href=\"" + Url("Asset/Rbxm.ashx?id=" + item.Id) + "\">Download .rbxm</a>");
             sb.Append("</div></div></div>");
