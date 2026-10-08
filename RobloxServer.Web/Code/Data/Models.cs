@@ -24,6 +24,14 @@ namespace RobloxServer.Data
 
         public string BodyColors { get; set; }
 
+        /// <summary>Virtual currency (Robux and Tix). No real money is involved.</summary>
+        public int Robux { get; set; }
+
+        public int Tix { get; set; }
+
+        /// <summary>Last UTC day the daily Tix and Builders Club stipend were paid.</summary>
+        public DateTime LastDaily { get; set; }
+
         /// <summary>"Male", "Female" or null (2013 landing page signup).</summary>
         public string Gender { get; set; }
 
