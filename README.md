@@ -72,6 +72,13 @@ Um **Raspberry Pi Zero 2W** faz o port forwarding, o UPnP e o DNS da rede. Veja 
 
 Veja [docs/security-2015.md](docs/security-2015.md) para a lista completa das medidas de segurança (e das fraquezas mantidas de propósito).
 
+### Login com Facebook
+
+1. Em developers.facebook.com crie um app, adicione o produto **Facebook Login** e em *Valid OAuth Redirect URIs* coloque `https://SEUSITE/Login/Facebook.ashx` (o mesmo endereço do `BaseUrl`).
+2. No `Web.config` defina `<add key="FacebookAppId" value="SEU_APP_ID" />`.
+3. O **segredo do app não vai no Git**: defina a variável de ambiente `ROBLOXSERVER_FACEBOOK_SECRET` no servidor (e reinicie o site).
+4. Os botões "Login with Facebook" só aparecem quando o `FacebookAppId` está definido. Quem entra pela primeira vez ganha uma conta nova (usuário gerado a partir do nome); quem já está logado e clica no botão liga o Facebook à conta atual. A primeira conta do site (admin) precisa ser criada com usuário e senha.
+
 ### Modo bot (servidores 24/7)
 
 Todo jogo publicado (os que já existem e os novos) ganha um servidor mantido por um bot chamado **HOST**, sem ninguém

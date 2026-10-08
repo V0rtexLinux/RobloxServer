@@ -54,6 +54,7 @@
                                     </asp:Panel>
                                     <br />
                                     <div id="login-footer" class="sign-up-row">
+                                        <div style="margin-bottom:6px"><% if (!string.IsNullOrEmpty(RobloxServer.Config.FacebookAppId)) { %><a href="<%: ResolveUrl("~/Login/Facebook.ashx") %>" class="btn-medium btn-neutral" style="background:#3b5998;color:#fff">Login with Facebook</a><% } %></div>
                                         <div>Don't have an account? <a href="#" id="show-signup">Sign up</a></div>
                                     </div>
                                 </div>
