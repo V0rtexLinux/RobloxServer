@@ -43,6 +43,7 @@ namespace RobloxServer.Pages
             PlaceLauncher.Attributes["data-login-url"] = ResolveUrl("~/Login.aspx?ReturnUrl=" + Server.UrlEncode(Request.RawUrl));
             PlaceLauncher.Attributes["data-logged-in"] = user != null ? "true" : "false";
             HostPanel.Visible = PlaceService.CanHost(user, place);
+            PlaceLauncher.Attributes["data-can-edit"] = PlaceService.CanEdit(user, place) ? "true" : "false";
             DownloadLink.HRef = ResolveUrl("~/asset/?id=" + place.Id);
             ThumbnailImage.Src = PlaceThumb(place.Id, "420x230");
             ThumbnailImage.Alt = place.Name;

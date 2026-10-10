@@ -22,6 +22,8 @@
             <div class="ItemRight">
                 <div id="PlaceLauncher" runat="server">
                     <a class="btn-large btn-play" href="#" data-launch-mode="play">Play</a>
+                    <style>[data-can-edit="true"] .btn-studio { display: inline-block !important; }</style>
+                    <a class="btn-medium btn-neutral btn-studio" href="#" data-launch-mode="studio" style="display: none">Edit in Studio</a>
                     <asp:PlaceHolder ID="HostPanel" runat="server" Visible="false" />
                 </div>
                 <div class="PlayInstructions">
