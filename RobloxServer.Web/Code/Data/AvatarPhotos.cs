@@ -9,14 +9,12 @@ namespace RobloxServer.Data
     /// <summary>
     /// Foto de perfil real (PNG) do personagem do jogador, tirada pelo proprio cliente dentro do jogo
     /// (Join.lua: camera de frente + ThumbnailGenerator) e enviada para Game/AvatarPhoto.ashx.
-    /// Arquivos em App_Data/Photos/{userId}.png. O site so pede uma foto nova quando as cores do corpo mudaram
-    /// ou a foto tem mais de 7 dias.
+    /// Arquivos em App_Data/Photos/{userId}.png. O cliente manda uma foto nova assim que a aparencia muda.
     /// </summary>
     public static class AvatarPhotos
     {
         const int MaxBytes = 600000;
-        static readonly TimeSpan MaxAge = TimeSpan.FromDays(7);
-        static readonly TimeSpan MinInterval = TimeSpan.FromSeconds(30);
+        static readonly TimeSpan MinInterval = TimeSpan.FromSeconds(1);
         static readonly object Sync = new object();
 
         static string Dir
@@ -64,27 +62,18 @@ namespace RobloxServer.Data
 
         public static bool NeedsPhoto(User user)
         {
-            if (user == null || Noli.Is(user))
-            {
-                return false;
-            }
-            string png = PngPath(user.Id);
-            if (!File.Exists(png) || DateTime.UtcNow - File.GetLastWriteTimeUtc(png) > MaxAge)
-            {
-                return true;
-            }
-            string hashFile = HashPath(user.Id);
-            return !File.Exists(hashFile) || File.ReadAllText(hashFile).Trim() != Fingerprint(user);
+            // O cliente confere a aparencia a cada segundo e so manda foto quando ela muda: o site sempre aceita.
+            return user != null && !Noli.Is(user);
         }
 
-        /// <summary>Link assinado (6 h) que vai dentro do Join.lua; vazio quando nao precisa de foto nova.</summary>
+        /// <summary>Link assinado (24 h) que vai dentro do Join.lua; vazio quando nao precisa de foto nova.</summary>
         public static string UrlFor(User user)
         {
             if (!NeedsPhoto(user))
             {
                 return "";
             }
-            long expires = NowSeconds() + 6 * 3600;
+            long expires = NowSeconds() + 24 * 3600;
             return Config.BaseUrl + "Game/AvatarPhoto.ashx?userId=" + user.Id + "&expires=" + expires + "&sig=" + Sig(user, expires);
         }
 
