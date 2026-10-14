@@ -177,6 +177,7 @@
     <Content Include="Game\LuaWebService\HandleSocialRequest.ashx" />
     <Content Include="Game\PlaceLauncher.ashx" />
     <Content Include="Game\Servers.ashx" />
+    <Content Include="Game\AvatarPhoto.ashx" />
     <Content Include="Game\Studio.ashx" />
     <Content Include="Game\ValidateTicket.ashx" />
     <Content Include="Game\Visit.ashx" />
@@ -382,6 +383,7 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Code\Data\Catalog.cs" />
+    <Compile Include="Code\Data\AvatarPhotos.cs" />
     <Compile Include="Code\Data\Economy.cs" />
     <Compile Include="Code\Data\Social.cs" />
     <Compile Include="Code\Web\SocialPage.cs" />
@@ -480,6 +482,9 @@
     </Compile>
     <Compile Include="Game\Servers.ashx.cs">
       <DependentUpon>Servers.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Game\AvatarPhoto.ashx.cs">
+      <DependentUpon>AvatarPhoto.ashx</DependentUpon>
     </Compile>
     <Compile Include="Game\Studio.ashx.cs">
       <DependentUpon>Studio.ashx</DependentUpon>

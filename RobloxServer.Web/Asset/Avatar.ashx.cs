@@ -29,6 +29,14 @@ namespace RobloxServer.Handlers.Asset
         protected override void Handle()
         {
             User user = Db.FindUser(QueryLong("userId"));
+            byte[] photo = AvatarPhotos.Load(user);
+            if (photo != null)
+            {
+                // Foto real do personagem (PNG) tirada dentro do jogo; sem foto ainda, cai no desenho de bonecos.
+                Response.ContentType = "image/png";
+                Response.BinaryWrite(photo);
+                return;
+            }
             Response.ContentType = "image/svg+xml";
             Response.Write(user == null || Noli.Is(user) ? QuestionMark(Noli.Is(user)) : Robloxian(BodyColors.XmlFor(user)));
         }
