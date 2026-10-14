@@ -171,44 +171,74 @@ if (PingUrl ~= "") then
 	end)
 end
 
--- Foto de perfil (so quando o site pede): com o personagem carregado, vira a camera de frente, tira a foto
--- com o ThumbnailGenerator e manda para o site (Game/AvatarPhoto.ashx). Se algo falhar, so avisa o motivo.
+-- Foto de perfil instantanea: a cada segundo confere se a aparencia do personagem mudou (cores, roupas,
+-- acessorios) e, so quando mudou, vira a camera de frente por um instante, tira a foto com o
+-- ThumbnailGenerator e manda para o site (Game/AvatarPhoto.ashx). Se algo falhar, avisa o motivo uma vez e para.
 if (PhotoUrl ~= "") then
 	delay(0, function()
 		local function Report(reason)
 			pcall(function() game:HttpGet(PhotoUrl .. "&status=" .. reason, true) end)
 		end
 
-		local head, torso
-		for i = 1, 60 do
+		local function Signature(character)
+			local parts = {}
+			for _, child in ipairs(character:GetChildren()) do
+				local part = child.ClassName .. ":" .. child.Name
+				pcall(function()
+					if (child.ClassName == "Shirt") then part = part .. tostring(child.ShirtTemplate) end
+					if (child.ClassName == "Pants") then part = part .. tostring(child.PantsTemplate) end
+					if (child.ClassName == "BodyColors") then
+						part = part .. tostring(child.HeadColor) .. tostring(child.TorsoColor) .. tostring(child.LeftArmColor)
+							.. tostring(child.RightArmColor) .. tostring(child.LeftLegColor) .. tostring(child.RightLegColor)
+					end
+				end)
+				table.insert(parts, part)
+			end
+			table.sort(parts)
+			return table.concat(parts, ";")
+		end
+
+		local function TakePhoto(torso)
+			local camera = workspace.CurrentCamera
+			local oldType
+			pcall(function() oldType = camera.CameraType end)
+			local posed = pcall(function()
+				camera.CameraType = Enum.CameraType.Scriptable
+				local focus = torso.Position + Vector3.new(0, 1, 0)
+				camera.CoordinateFrame = CFrame.new(focus + torso.CFrame.lookVector * 7, focus)
+				camera.Focus = CFrame.new(focus)
+			end)
+			wait(0.3)
+			local png
+			local taken = pcall(function() png = game:GetService("ThumbnailGenerator"):Click("PNG", 420, 420, true) end)
+			pcall(function() camera.CameraType = oldType or Enum.CameraType.Custom end)
+			if (not posed) then Report("nocamera") end
+			if (not taken or type(png) ~= "string" or png == "") then Report("nogenerator") return false end
+			if (not pcall(function() game:HttpPost(PhotoUrl, png, true) end)) then Report("nopost") return false end
+			return true
+		end
+
+		local last
+		local waited = 0
+		while true do
 			wait(1)
-			local found = pcall(function()
-				local character = game:GetService("Players").LocalPlayer.Character
+			local character, head, torso
+			pcall(function()
+				character = game:GetService("Players").LocalPlayer.Character
 				head = character and character:FindFirstChild("Head")
 				torso = character and (character:FindFirstChild("Torso") or character:FindFirstChild("UpperTorso"))
 			end)
-			if (found and head and torso) then break end
-			head, torso = nil, nil
+			if (head and torso) then
+				local signature = Signature(character)
+				if (signature ~= last) then
+					wait(1.5) -- roupas e acessorios terminam de carregar
+					if (not TakePhoto(torso)) then return end
+					pcall(function() last = Signature(character) end)
+				end
+			else
+				waited = waited + 1
+				if (last == nil and waited > 60) then Report("nocharacter") return end
+			end
 		end
-		if (not head) then Report("nocharacter") return end
-		wait(5) -- roupas e acessorios terminam de carregar
-
-		local camera = workspace.CurrentCamera
-		local oldType
-		pcall(function() oldType = camera.CameraType end)
-		local posed = pcall(function()
-			camera.CameraType = Enum.CameraType.Scriptable
-			local focus = torso.Position + Vector3.new(0, 1, 0)
-			camera.CoordinateFrame = CFrame.new(focus + torso.CFrame.lookVector * 7, focus)
-			camera.Focus = CFrame.new(focus)
-		end)
-		wait(1)
-
-		local png
-		local taken = pcall(function() png = game:GetService("ThumbnailGenerator"):Click("PNG", 420, 420, true) end)
-		pcall(function() camera.CameraType = oldType or Enum.CameraType.Custom end)
-		if (not posed) then Report("nocamera") end
-		if (not taken or type(png) ~= "string" or png == "") then Report("nogenerator") return end
-		if (not pcall(function() game:HttpPost(PhotoUrl, png, true) end)) then Report("nopost") end
 	end)
 end
