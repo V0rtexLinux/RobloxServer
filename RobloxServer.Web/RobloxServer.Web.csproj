@@ -102,6 +102,7 @@
     <Content Include="Friends.aspx" />
     <Content Include="Inventory.aspx" />
     <Content Include="Money.aspx" />
+    <Content Include="CatalogImport.aspx" />
     <Content Include="Groups.aspx" />
     <Content Include="Trade.aspx" />
     <Content Include="BuildersClub.aspx" />
@@ -366,6 +367,10 @@
       <DependentUpon>Money.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="CatalogImport.aspx.cs">
+      <DependentUpon>CatalogImport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Groups.aspx.cs">
       <DependentUpon>Groups.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -383,6 +388,7 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Code\Data\Catalog.cs" />
+    <Compile Include="Code\Data\CatalogImport.cs" />
     <Compile Include="Code\Data\AvatarPhotos.cs" />
     <Compile Include="Code\Data\Economy.cs" />
     <Compile Include="Code\Data\Social.cs" />
