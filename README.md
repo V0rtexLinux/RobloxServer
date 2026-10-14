@@ -77,6 +77,11 @@ Veja [docs/security-2015.md](docs/security-2015.md) para a lista completa das me
 
 Moedas **virtuais** (sem dinheiro de verdade). Todo dia de login rende T$ 10, e membros do Builders Club ganham também o salário diário de Robux (BC 15, TBC 35, OBC 60). No catálogo, o item custa R$ preço ou T$ preço x 10. O saldo aparece no topo; a página `Money.aspx` mostra o saldo e, para admin, permite dar ou tirar saldo de um usuário.
 
+### Importar itens para o catálogo
+
+Para adicionar **itens próprios** (que você criou ou pode distribuir): coloque os `.rbxm`/`.rbxmx` e um `items.csv` em `App_Data/CatalogImport/` e, como admin, abra `CatalogImport.aspx` e clique em **Import now**. Formato do `items.csv` (separado por `;`, `#` = comentário):
+`arquivo;nome;categoria;preco;descricao;criador;data;thumb` (só as 4 primeiras colunas são obrigatórias; categorias: Hats, Hair, Face Accessories, Neck, Shoulder, Front, Back, Waist, Shirts, Pants, T-Shirts, Faces, Gear). Os itens ganham ids a partir de 8.000.000.000.000 e repetir a importação não duplica.
+
 ### Modo bot (servidores 24/7)
 
 Todo jogo publicado (os que já existem e os novos) ganha um servidor mantido por um bot chamado **HOST**, sem ninguém
