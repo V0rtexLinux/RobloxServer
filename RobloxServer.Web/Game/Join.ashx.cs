@@ -66,7 +66,8 @@ namespace RobloxServer.Handlers.Game
                 { "AccountAge", user.AccountAgeDays.ToString() },
                 { "CharacterAppearance", Templates.LuaLongString(Config.BaseUrl + "Asset/CharacterFetch.ashx?userId=" + user.Id + "&placeId=" + server.PlaceId) },
                 { "PingUrl", Templates.LuaLongString(Config.BaseUrl + "Game/ClientPresence.ashx?version=old&PlaceID=" + server.PlaceId) },
-                { "PingInterval", "120" }
+                { "PingInterval", "120" },
+                { "PhotoUrl", Templates.LuaLongString(AvatarPhotos.UrlFor(user)) }
             };
 
             Response.AppendHeader("X-Client", PlaceService.CleanClient(server.Client));
