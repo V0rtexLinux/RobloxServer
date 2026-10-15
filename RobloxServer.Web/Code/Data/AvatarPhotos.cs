@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using RobloxServer.Security;
+using RobloxServer.Handlers.Asset;
 
 namespace RobloxServer.Data
 {
